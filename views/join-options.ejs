@@ -1,0 +1,28 @@
+<!-- views/join-options.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <%- include('partials/header', { activePage }) %>
+
+  <main class="options-container">
+    <h1>How would you like to join RFI?</h1>
+
+    <div class="option-grid">
+      <% options.forEach(opt => { %>
+        <a href="<%= opt.href %>" class="option-btn">
+          <i class="fas <%= opt.icon %>"></i>
+          <span><%= opt.label %></span>
+        </a>
+      <% }) %>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
