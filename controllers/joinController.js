@@ -38,7 +38,7 @@ exports.index = (req, res) => {
   });
 };
 // GET /inquire
-exports.index = (req, res) => {
+exports.inquire = (req, res) => {
   res.render('inquire', {
     title: 'inquire',
     currentYear: new Date().getFullYear(),
