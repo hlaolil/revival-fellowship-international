@@ -23,7 +23,7 @@ async function getDb() {
 
 // GET /join
 exports.index = (req, res) => {
-  res.render('join', {
+  res.render('join-options', {
     title: 'Join RFI',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
