@@ -42,7 +42,7 @@ const routineServices = [
     name: "Sunday Service", 
     schedule: "Every Sunday, 10:00 - 13:00",
     image: "service.jpg",
-    contact: "Church Office +266 62233969"
+    contact: "Church Office +266 6223 3969"
   },
 ];
 
