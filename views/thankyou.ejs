@@ -1,22 +1,30 @@
-<!-- Updated views/thankyou.ejs to include membership -->
-<%- include('partials/header') -%>
-<link rel="stylesheet" href="/styles/thankyou.css">
-<script defer src="/scripts/thankyou.js"></script>
-<main>
-    <header>
-        <h1>Thank You!</h1>
-    </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main class="container">
+    <h1>Thank You!</h1>
     <p>We appreciate your interest in Revival Fellowship International. Below are the details you submitted:</p>
+
     <div class="submission-details">
-        <p><strong>First Name:</strong> <span id="submitted-first-name"><%= firstName %></span></p>
-        <p><strong>Last Name:</strong> <span id="submitted-last-name"><%= lastName %></span></p>
-        <p><strong>Email:</strong> <span id="submitted-email"><%= email %></span></p>
-        <p><strong>Phone:</strong> <span id="submitted-phone"><%= phone %></span></p>
-        <p><strong>Enquiry Type:</strong> <span id="submitted-membership"><%= membership %></span></p>
-        <p><strong>Message:</strong> <span id="submitted-message"><%= description %></span></p>
-        <p><strong>Submission Time:</strong> <span id="submitted-timestamp"><%= timestamp %></span></p>
+      <p><strong>First Name:</strong> <span id="submitted-first-name"><%= firstName %></span></p>
+      <p><strong>Last Name:</strong> <span id="submitted-last-name"><%= lastName %></span></p>
+      <p><strong>Email:</strong> <span id="submitted-email"><%= email %></span></p>
+      <p><strong>Phone:</strong> <span id="submitted-phone"><%= phone %></span></p>
+      <p><strong>Membership Type:</strong> <span id="submitted-membership"><%= membership %></span></p>
+      <p><strong>Message:</strong> <span id="submitted-message"><%= message %></span></p>
+      <p><strong>Submitted on:</strong> <span id="submitted-timestamp"><%= timestamp %></span></p>
     </div>
-    <p>Our consultant will get back to you as soon as possible</p>
-    <a href="/">Back to Home</a>
-</main>
-<%- include('partials/footer') -%>
+
+    <a href="/join">← Back to Join Form</a>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
