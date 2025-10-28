@@ -1,0 +1,39 @@
+<!-- views/partials/header.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Letlotlo Hlaoli">
+    <meta name="description" content="Revival Fellowship International">
+    <title><%= title %> - Letlotlo Hlaoli</title>
+    <link rel="stylesheet" href="/../styles/normalize.css">
+    <link rel="stylesheet" href="/styles/rfi.css">
+    <script defer src="/scripts/rfihome.js"></script>
+    <link rel="icon" href="/images/fav.jpg" type="image/x-icon">
+
+    <!-- Open Graph Meta Properties for Facebook -->
+    <meta property="og:title" content="Revival Fellowship International Home Page - Letlotlo Hlaoli">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="An assembly of faithful stewards of the manifold grace of God">
+    <meta property="og:image" content="https://hlaolil.github.io/wdd231/project/images/hero.webp">
+    <meta property="og:url" content="https://hlaolil.github.io/wdd231/project/index.html">
+</head>
+<body>
+    <header>
+        <img src="/images/logo.webp" alt="RFI Logo" width="150">
+        <!-- Hamburger Icon for mobile -->
+        <div class="ham-button" role="button" aria-expanded="false" aria-controls="navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <nav id="navigation">
+            <ul class="navigation">
+                <li><a href="/" class="<%= activePage === 'home' ? 'active' : '' %>">Home</a></li>
+                <li><a href="/about" class="<%= activePage === 'about' ? 'active' : '' %>">About Us</a></li>
+                <li><a href="/ministries" class="<%= activePage === 'ministries' ? 'active' : '' %>">Ministries</a></li>
+                <li><a href="/join" class="<%= activePage === 'join' ? 'active' : '' %>">Get Involved</a></li>
+            </ul>    
+        </nav>
+    </header>
