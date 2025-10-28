@@ -37,6 +37,15 @@ exports.index = (req, res) => {
     ],
   });
 };
+// GET /inquire
+exports.index = (req, res) => {
+  res.render('inquire', {
+    title: 'inquire',
+    currentYear: new Date().getFullYear(),
+    lastModified: new Date().toLocaleString(),
+    activePage: 'inquire'
+  });
+};
 
 // POST /join  (unchanged – just kept for context)
 exports.submit = async (req, res) => {
