@@ -1,3 +1,8 @@
+"scripts": {
+  "start": "node app.js",
+  "dev": "nodemon app.js",
+  "build": "npm ci"
+}
 
 {
   "name": "revival-fellowship-international",
