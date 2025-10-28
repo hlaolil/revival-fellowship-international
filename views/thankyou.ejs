@@ -17,12 +17,15 @@
       <p><strong>Last Name:</strong> <span id="submitted-last-name"><%= lastName %></span></p>
       <p><strong>Email:</strong> <span id="submitted-email"><%= email %></span></p>
       <p><strong>Phone:</strong> <span id="submitted-phone"><%= phone %></span></p>
-      <p><strong>Membership Type:</strong> <span id="submitted-membership"><%= membership %></span></p>
+      <p><strong>Enquiry Type:</strong> <span id="submitted-membership"><%= membership %></span></p>
       <p><strong>Message:</strong> <span id="submitted-message"><%= message %></span></p>
-      <p><strong>Submitted on:</strong> <span id="submitted-timestamp"><%= timestamp %></span></p>
+      <p><strong>Submission Time:</strong> <span id="submitted-timestamp"><%= timestamp %></span></p>
     </div>
 
-    <a href="/join">← Back to Join Form</a>
+    <!-- THIS LINE IS ADDED / CONFIRMED -->
+    <p>Our consultant will get back to you as soon as possible.</p>
+
+    <a href="/join">Back to Join Form</a>
   </main>
 
   <%- include('partials/footer') %>
