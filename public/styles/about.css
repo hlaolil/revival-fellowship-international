@@ -1,0 +1,161 @@
+/* public/styles/about.css */
+header {
+    padding: 20px;
+    margin: 1rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    background-color: teal;
+    border-radius: 10px;
+}
+
+.navigation {
+    display: flex;
+    list-style: none;
+    background-color: orange;
+    border-radius: 5px;
+}
+
+.navigation li {
+    flex: 1; 
+}
+
+.navigation a {
+    display: block;
+    color: white;
+    padding: 20px;
+    transition: font-weight 0.3s, background-color 0.3s;
+    text-decoration: none;
+}
+
+.navigation a:hover,
+.navigation a:focus {
+    font-weight: 700;
+    background-color: var(--nav-hover-background-color);
+}
+
+.ham-button {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    position: absolute;
+    top: 25px;
+    right: 15px;
+}
+
+.ham-button .bar {
+    width: 25px;
+    height: 3px;
+    background-color:orange;
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .ham-button {
+        display: flex;
+    }
+    .navigation {
+        display: none;
+        transition: max-height 0.3s ease-out;
+        overflow: hidden;
+        max-height: 0;
+    }
+    .navigation.show {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background-color: orange;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        z-index: 1000;
+        padding: 10px;
+        text-align: left;
+        max-height: 500px;
+    }
+    .navigation a {
+        color: #ffffff;
+    }
+}
+
+.hero {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.hero h1 {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.6em;
+    font-family: var(--heading-font);
+    background-color: rgba(12, 12, 12, 0.6);
+    padding: 2px;
+    border-radius: 5px;
+}
+
+footer {
+    background-color: teal;
+    padding: 20px 0;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.sociallinks img {
+    width: 24px;
+    height: 24px;
+}
+
+h2 {
+    background-color: teal;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
+    margin: 10px auto;
+    width: 80%;
+}
+
+nav ul li a.active {
+    color: teal;
+    background-color: #e0e0e0;
+}
+header img {
+    aspect-ratio: auto;
+    max-width: 10%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.about {
+    margin: 20px auto;
+    width: 60%;
+    text-align: center;
+}
+article {
+    margin: 50px;
+}
