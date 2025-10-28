@@ -1,0 +1,30 @@
+// package.json
+{
+  "name": "revival-fellowship-international",
+  "version": "1.0.0",
+  "description": "Node.js MVC version of Revival Fellowship International website",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "church",
+    "ministry",
+    "express",
+    "ejs",
+    "mvc"
+  ],
+  "author": "Letlotlo Hlaoli (converted to Node.js MVC)",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
