@@ -22,6 +22,7 @@ app.get('/', homeController.index);
 app.get('/about', aboutController.index);
 app.get('/ministries', ministriesController.index);
 app.get('/join', joinController.index);
+app.get('/inquire', joinController.inquire);
 app.post('/join', joinController.submit);
 
 // 404
