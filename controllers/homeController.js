@@ -12,14 +12,14 @@ const events = [
   { name: "Leadership training", date: "01-May" },
   { name: "Marriage seminar", date: "05-Apr" },
   { name: "Open air evangelism", date: "14-Jun" },
-  { name: "Children’s conference", date: "21-Jun" },
+  { name: "Children's conference", date: "21-Jun" },
   { name: "Ketekelo ea mosali ea khabane", date: "1-Aug" },
   { name: "Expedition Saturday Fun Walk from Sekubu", date: "30-Aug" },
   { name: "Rally for missions", date: "2-Nov" },
   { name: "Healing campaign & personal evangelism", date: "29-Nov" },
   { name: "Small business development training", date: "03-Dec" },
   { name: "Revival Speaker", date: "5-Dec" },
-  { name: "Children’s dedication and baptism", date: "15-Dec" },
+  { name: "Children's dedication and baptism", date: "15-Dec" },
   { name: "Prison visits", date: "ad hoc" },
   { name: "Bible study", date: "Every Sunday" },
   { name: "Church service", date: "Every Sunday" },
@@ -70,7 +70,7 @@ exports.index = (req, res) => {
   res.render('index', {
     title: 'RFI Home Page',
     currentYear: new Date().getFullYear(),
-    lastModified: document.lastModified || new Date().toLocaleString(),
+    lastModified: new Date().toLocaleString(),  // ✅ FIXED: Server-side date
     upcomingEvents,
     routineServices,
     activePage: 'home'
