@@ -32,7 +32,7 @@ exports.index = (req, res) => {
     options: [
   { value: 'give',      label: 'Give',      icon: 'fa-heart',           href: '/give' },
   { value: 'volunteer', label: 'Volunteer', icon: 'fa-hands-helping',   href: '/volunteer' },
-  { value: 'register',  label: 'Register',  icon: 'fa-user-plus',       href: '/register' },
+  { value: 'register',  label: 'Register Membership',  icon: 'fa-user-plus',       href: '/register' },
   { value: 'inquire',   label: 'Inquire',   icon: 'fa-question-circle', href: '/inquire' },
 ],
     
