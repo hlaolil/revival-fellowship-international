@@ -1,0 +1,59 @@
+<!-- views/index.ejs -->
+<%- include('partials/header') %>
+<main>
+    <section class="hero">
+        <picture>
+            <source srcset="/images/hero.webp" media="(min-width: 1200px)">
+            <img src="/images/hero1.webp" alt="Chamber hero">
+        </picture>
+        <h1>Revival Fellowship International</h1>
+        <a href="/join" class="join-button">Get Involved</a>
+    </section>
+    <section class="home">
+        <div class="events">
+            <h2>Upcoming Events</h2>
+            <ul class="events-list">
+                <% upcomingEvents.forEach(event => { %>
+                    <li><%= event.name %> - <%= event.date %></li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="contacts">
+            <h2>Contacts</h2>
+            <p id="contacts">A1 Road<br>
+                Opposite Usave, Behind BEDCO<br>
+                Butha-Buthe 400<br>
+                Lesotho<br><br>
+                Coordinates: -28.768825, 28.248058<br><br>
+                Email: tlokza@gmail.com<br>
+                Phone: +266 62233969
+            </p>
+        </div>
+        <div class="location">
+            <h2>Location</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m11!1m3!1d148.756110514829!2d28.247278940819278!3d-28.768949888210944!2m2!1f0!2f45!3m2!1i1024!2i768!4f35!3m3!1m2!1s0x1e8d6b0078426b1b%3A0x38bd9241773bb276!2sRevival%20Fellowship%20International!5e1!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls" width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+    <section>
+        <div class="spotlight">
+            <% routineServices.forEach(service => { %>
+                <div class="spotlight-card">
+                    <% if (service.videoLink) { %>
+                        <div class="video-container">
+                            <iframe width="400" height="315" src="<%= service.videoLink %>" 
+                            title="YouTube video player" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen></iframe>
+                        </div>
+                    <% } else { %>
+                        <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="service-image" loading="lazy">
+                        <h3><%= service.name %></h3>
+                        <p><strong>Schedule:</strong> <%= service.schedule %></p>
+                        <p><strong>Contact:</strong> <%= service.contact %></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+</main>
+<%- include('partials/footer') %>
