@@ -4,35 +4,40 @@
   <meta charset="UTF-8">
   <title><%= title %></title>
   <link rel="stylesheet" href="/styles/ministries.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <%- include('partials/header') %>
 
-  <main class="container">
+  <main class="discover-section">
     <h1>Our Ministries</h1>
 
     <% if (ministries && ministries.length > 0) { %>
-      <div class="ministries-grid">
+      <div class="grid-container">
         <% ministries.forEach(ministry => { %>
-          <article class="ministry-card">
+          <div class="card place-card">
             <% if (ministry.image) { %>
-              <img 
-                src="/images/ministries/<%= ministry.image %>" 
-                alt="<%= ministry.name %>"
-                loading="lazy"
-              >
+              <figure>
+                <img 
+                  src="/images/ministries/<%= ministry.image %>" 
+                  alt="<%= ministry.name %>"
+                  loading="lazy"
+                >
+              </figure>
             <% } else { %>
-              <div class="placeholder-img">Image</div>
+              <figure style="background:#eee;height:200px;display:flex;align-items:center;justify-content:center;color:#999;">
+                No Image
+              </figure>
             <% } %>
 
             <h2><%= ministry.name %></h2>
             <p><strong>Schedule:</strong> <%= ministry.schedule %></p>
             <p><strong>Contact:</strong> <%= ministry.contact %></p>
-          </article>
+          </div>
         <% }) %>
       </div>
     <% } else { %>
-      <p>No ministries available at the moment.</p>
+      <p style="text-align:center;">No ministries listed yet. Check back soon!</p>
     <% } %>
   </main>
 
