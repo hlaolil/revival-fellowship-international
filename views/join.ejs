@@ -1,0 +1,55 @@
+<!-- views/join.ejs -->
+<%- include('partials/header') -%>
+<link rel="stylesheet" href="/styles/join.css">
+<main>
+    <section class="hero">
+        <picture>
+            <source srcset="/images/hero.webp" media="(min-width: 1200px)">
+            <img src="/images/hero1.webp" alt="Chamber hero">
+        </picture>
+        <h1>Enquiry Form</h1>
+    </section>
+    <form method="POST" action="/join">
+        <!-- Applicant's First Name -->
+        <label for="first-name" class="form-label">First Name <span class="required">*</span></label>
+        <input type="text" id="first-name" name="first-name" required title="Enter your first name" autocomplete="given-name" placeholder="John">
+
+        <!-- Applicant's Last Name -->
+        <label for="last-name" class="form-label">Last Name <span class="required">*</span></label>
+        <input type="text" id="last-name" name="last-name" required title="Enter your last name" autocomplete="family-name" placeholder="Doe">
+
+        <!-- Email Address -->
+        <label for="email" class="form-label">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required title="Enter a valid email address" autocomplete="email" placeholder="example@email.com">
+
+        <!-- Mobile Phone Number -->
+        <label for="phone" class="form-label">Mobile Phone <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" required title="Enter your mobile phone number" autocomplete="tel" placeholder="+1-234-567-890">
+
+        <!-- Enquiry Category -->
+        <label for="membership" class="form-label">Enquiry Type<span class="required">*</span></label>
+        <select id="membership" name="membership" required>
+            <option value="">Select an option</option>
+            <option value="non-profit">Prayer Request</option>
+            <option value="bronze">Apointment Request</option>
+            <option value="silver">Membership Request</option>
+            <option value="gold">Infromation Request</option>
+        </select>
+
+        <!-- Message -->
+        <label for="message" class="form-label">Message</label>
+        <textarea id="organization-description" name="message" title="Enter a brief description of your enquiry" placeholder="Type message here"></textarea>
+
+        <!-- Timestamp (Hidden) -->
+        <input type="hidden" id="timestamp" name="timestamp">
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('timestamp').value = new Date().toLocaleString();
+    });
+</script>
+<%- include('partials/footer') -%>
