@@ -5,7 +5,6 @@ const { MongoClient } = require('mongodb');
 const MONGODB_URI = process.env.MONGODB_URI; // Set in Render > Environment
 const DB_NAME = 'rfi';
 const COLLECTION = 'submissions';
-
 let client;
 let db;
 
@@ -13,7 +12,6 @@ let db;
 async function getDb() {
   if (db) return db;
   if (!MONGODB_URI) throw new Error('MONGODB_URI not set');
-
   client = new MongoClient(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -29,23 +27,29 @@ exports.index = (req, res) => {
     title: 'Join RFI',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
-    activePage: 'join'
+    activePage: 'join',
+    // expose the four options to the template
+    options: [
+      { value: 'give',      label: 'Give',      icon: 'fa-heart' },
+      { value: 'volunteer', label: 'Volunteer', icon: 'fa-hands-helping' },
+      { value: 'register',  label: 'Register',  icon: 'fa-user-plus' },
+      { value: 'inquire',   label: 'Inquire',   icon: 'fa-question-circle' },
+    ],
   });
 };
 
-// POST /join
+// POST /join  (unchanged – just kept for context)
 exports.submit = async (req, res) => {
   console.log('Form submitted:', req.body);
-
   const submission = {
     firstName: req.body['first-name'] || '',
     lastName: req.body['last-name'] || '',
     email: req.body.email || '',
     phone: req.body.phone || '',
-    membership: req.body.membership || '',
+    membership: req.body.membership || '',   // <-- now populated by the button click
     message: req.body.message || '',
     timestamp: req.body.timestamp || new Date().toLocaleString(),
-    submittedAt: new Date()
+    submittedAt: new Date(),
   };
 
   try {
@@ -56,16 +60,15 @@ exports.submit = async (req, res) => {
     console.error('MongoDB save failed:', err);
     return res.status(500).render('error', {
       title: 'Error',
-      message: 'Failed to save your submission. Please try again.'
+      message: 'Failed to save your submission. Please try again.',
     });
   }
 
-  // Render thank-you page
   res.render('thankyou', {
     title: 'Thank You',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: 'join',
-    ...submission // pass all fields
+    ...submission,
   });
 };
