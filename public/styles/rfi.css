@@ -279,6 +279,7 @@ header img {
 .spotlight a {
     color: black;
 }
-.box {
+
+body {
   margin: 0 100px;  /* top/bottom: 0, left/right: 50px */
 }
