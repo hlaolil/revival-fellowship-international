@@ -17,7 +17,7 @@ exports.index = (req, res) => {
   res.render('ministries', {
     title: 'RFI Ministries Info',
     currentYear: new Date().getFullYear(),
-    lastModified: document.lastModified || new Date().toLocaleString(),
+    lastModified: new Date().toLocaleString(),  // ✅ FIXED
     ministries: ministriesData,
     activePage: 'ministries'
   });
