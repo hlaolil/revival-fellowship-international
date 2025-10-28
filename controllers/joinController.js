@@ -9,7 +9,7 @@ exports.index = (req, res) => {
 };
 
 exports.submit = (req, res) => {
-  console.log('Form data:', req.body);
+  console.log('Form submitted:', req.body);
   res.render('join-success', {
     title: 'Thank You',
     currentYear: new Date().getFullYear(),
