@@ -16,7 +16,6 @@ const homeController = require('./controllers/homeController');
 const aboutController = require('./controllers/aboutController');
 const ministriesController = require('./controllers/ministriesController');
 const joinController = require('./controllers/joinController');
-const joinController = require('./controllers/joinController');   // <-- ADD THIS
 
 // Routes
 app.get('/', homeController.index);
