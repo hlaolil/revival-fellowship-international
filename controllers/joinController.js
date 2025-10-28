@@ -47,7 +47,7 @@ exports.inquire = (req, res) => {
   });
 };
 
-// POST /join  (unchanged – just kept for context)
+// POST /inquire  (unchanged – just kept for context)
 exports.submit = async (req, res) => {
   console.log('Form submitted:', req.body);
   const submission = {
