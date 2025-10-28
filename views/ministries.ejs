@@ -1,31 +1,41 @@
-<!-- views/ministries.ejs -->
-<%- include('partials/header') %>
-<script defer src="/scripts/ministries.js"></script>
-<link rel="stylesheet" href="/styles/ministries.css">
-<main>
-    <section class="hero">
-        <picture>
-            <source srcset="/images/hero.webp" media="(min-width: 1200px)">
-            <img src="/images/hero1.webp" alt="Chamber hero">
-        </picture>
-        <h1>Ministries</h1>
-    </section>
-    <section>
-        <div class="grid-container" id="ministriesGrid">
-            <!-- Dynamically populated by client-side JS -->
-        </div>
-    </section>
-    <!-- Modal Structure -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modal-title"></h2>
-            <p id="modal-description"></p>
-        </div>
-    </div>
-</main>
-<script>
-    // Pass data to client-side for dynamic population
-    const ministriesData = <%- JSON.stringify(ministries) %>;
-</script>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles/ministries.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main class="container">
+    <h1>Our Ministries</h1>
+
+    <% if (ministries && ministries.length > 0) { %>
+      <div class="ministries-grid">
+        <% ministries.forEach(ministry => { %>
+          <article class="ministry-card">
+            <% if (ministry.image) { %>
+              <img 
+                src="/images/ministries/<%= ministry.image %>" 
+                alt="<%= ministry.name %>"
+                loading="lazy"
+              >
+            <% } else { %>
+              <div class="placeholder-img">Image</div>
+            <% } %>
+
+            <h2><%= ministry.name %></h2>
+            <p><strong>Schedule:</strong> <%= ministry.schedule %></p>
+            <p><strong>Contact:</strong> <%= ministry.contact %></p>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p>No ministries available at the moment.</p>
+    <% } %>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
