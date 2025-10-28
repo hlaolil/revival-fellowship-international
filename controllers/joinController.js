@@ -30,11 +30,12 @@ exports.index = (req, res) => {
     activePage: 'join',
     // expose the four options to the template
     options: [
-      { value: 'give',      label: 'Give',      icon: 'fa-heart' },
-      { value: 'volunteer', label: 'Volunteer', icon: 'fa-hands-helping' },
-      { value: 'register',  label: 'Register',  icon: 'fa-user-plus' },
-      { value: 'inquire',   label: 'Inquire',   icon: 'fa-question-circle' },
-    ],
+  { value: 'give',      label: 'Give',      icon: 'fa-heart',           href: '/give' },
+  { value: 'volunteer', label: 'Volunteer', icon: 'fa-hands-helping',   href: '/volunteer' },
+  { value: 'register',  label: 'Register',  icon: 'fa-user-plus',       href: '/register' },
+  { value: 'inquire',   label: 'Inquire',   icon: 'fa-question-circle', href: '/inquire' },
+],
+    
   });
 };
 // GET /inquire
