@@ -293,7 +293,7 @@ body {
 }
 .option-btn {
   display: flex; flex-direction: column; align-items: center;
-  padding: 1.5rem 1rem; background: #0066cc; color: #fff;
+  padding: 1.5rem 1rem; background: teal; color: #fff;
   text-decoration: none; border-radius: .5rem; font-size: 1.1rem;
   transition: background .2s;
 }
