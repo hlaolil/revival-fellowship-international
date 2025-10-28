@@ -1,0 +1,27 @@
+// data/ministries.json (moved from document)
+[
+    { 
+        "name": "Youth Meeting", 
+        "schedule": "Every Saturday, 15:00",
+        "image": "youth.jpg",
+        "contact": "Youth Leader - +266 5912 6226"
+    },
+    { 
+        "name": "Women’s Meeting", 
+        "schedule": "Every Thursday, 14:00",
+        "image": "women.jpg",
+        "contact": "Women’s Ministry - +266 63135521"
+    },
+    {
+        "name": "Children's Ministry",
+        "schedule": "Every Sunday, 10:30 - 11:30",
+        "image": "children.jpg",
+        "contact": "Teacher - +266 5919 3208"
+    },
+    {
+        "name": "Men’s Fellowship",
+        "schedule": "Every Monday, 18:00",
+        "image": "men.jpg",
+        "contact": "Men’s Ministry - +266 5987 4521"
+    }
+]
