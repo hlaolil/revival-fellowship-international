@@ -21,7 +21,7 @@ app.get('/about', aboutController.index);
 app.get('/ministries', ministriesController.index);
 app.get('/join', joinController.index);
 app.get('/inquire', joinController.inquire);
-app.post('/inquire', joinController.submitInquire); // ← fix if needed
+app.post('/inquire', joinController.submit); // ← fix if needed
 
 // 404 Page - MUST come AFTER all routes
 app.use((req, res, next) => {
