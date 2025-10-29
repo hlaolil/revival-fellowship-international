@@ -28,7 +28,7 @@ const events = [
   { name: "Passover Conference", date: "17-Apr" },
 ];
 
-const routineServices = [
+const routineService = [
   { 
     name: "Wednesday Prayer Meeting", 
     schedule: "Every Wednesday, 17:00 - 18:00",
@@ -72,7 +72,7 @@ exports.index = (req, res) => {
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),  // ✅ FIXED: Server-side date
     upcomingEvents,
-    routineServices,
+    routineService,
     activePage: 'home'
   });
 };
