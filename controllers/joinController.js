@@ -12,10 +12,8 @@ let db;
 async function getDb() {
   if (db) return db;
   if (!MONGODB_URI) throw new Error('MONGODB_URI not set');
-  client = new MongoClient(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  client = new MongoClient(MONGODB_URI);
+  
   await client.connect();
   db = client.db(DB_NAME);
   return db;
