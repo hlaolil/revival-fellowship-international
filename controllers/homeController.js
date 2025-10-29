@@ -33,7 +33,7 @@ const routineServices = [
     name: "Wednesday Prayer Meeting", 
     schedule: "Every Wednesday, 17:00 - 18:00",
     image: "prayer.jpg",
-    contact: "Kelebone Lekunya +266 6320 6940"
+    contacts: "Kelebone Lekunya +266 6320 6940"
   },
   { 
     videoLink: "https://www.youtube.com/embed/wFws66W_Ftc?si=0ZHiZiXZBCDN7bwY"
