@@ -21,7 +21,7 @@ app.get('/about', aboutController.index);
 app.get('/ministries', ministriesController.index);
 app.get('/join', joinController.index);
 app.get('/inquire', joinController.inquire);
-app.post('/inquire', joinController.submit); // ← fix if needed
+app.post('/inquire', joinController.submit);
 
 // 404 Page - MUST come AFTER all routes
 app.use((req, res, next) => {
@@ -48,9 +48,27 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
+// === HTTPS & RENDER FIXES START HERE ===
+
+// Force HTTPS on Render (Production)
+app.use((req, res, next) => {
+  const isRender = !!process.env.RENDER;
+  const isHttps = req.headers['x-forwarded-proto'] === 'https';
+
+  if (isRender && !isHttps) {
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+
+// Dynamic PORT & Host
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const HOST = process.env.RENDER_EXTERNAL_HOSTNAME || `localhost:${PORT}`;
+const PROTOCOL = process.env.RENDER ? 'https' : 'http';
+
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on ${PROTOCOL}://${HOST}`);
 });
 
 module.exports = app;
