@@ -28,7 +28,23 @@ const events = [
   { name: "Passover Conference", date: "17-Apr" },
 ];
 
-
+const routineServices = [
+  { 
+    name: "Wednesday Prayer Meeting", 
+    schedule: "Every Wednesday, 17:00 - 18:00",
+    image: "prayer.jpg",
+    contacts: "Kelebone Lekunya +266 6320 6940"
+  },
+  { 
+    videoLink: "https://www.youtube.com/embed/wFws66W_Ftc?si=0ZHiZiXZBCDN7bwY"
+  },
+  { 
+    name: "Sunday Service", 
+    schedule: "Every Sunday, 10:00 - 13:00",
+    image: "service.jpg",
+    contacts: "Church Office +266 6223 3969"
+  },
+];
 
 exports.index = (req, res) => {
   const today = new Date();
