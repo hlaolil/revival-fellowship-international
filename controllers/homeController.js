@@ -26,12 +26,12 @@ const events = [
   { name: "Wednesday prayer meeting (Needs modification)", date: "TBD" },
   { name: "Passover Conference", date: "17-Apr" },
 ];
-const routineService = [
+const routineServices = [
   {
     name: "Wednesday Prayer Meeting",
     schedule: "Every Wednesday, 17:00 - 18:00",
     image: "prayer.jpg",
-    contacts: "Kelebone Lekunya +266 6320 6940"
+    contact: "Kelebone Lekunya +266 6320 6940"
   },
   {
     videoLink: "https://www.youtube.com/embed/wFws66W_Ftc?si=0ZHiZiXZBCDN7bwY"
@@ -40,7 +40,7 @@ const routineService = [
     name: "Sunday Service",
     schedule: "Every Sunday, 10:00 - 13:00",
     image: "service.jpg",
-    contacts: "59193208"
+    contact: "59193208"
   },
 ];
 exports.index = (req, res) => {
@@ -66,7 +66,7 @@ exports.index = (req, res) => {
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),  // ✅ FIXED: Server-side date
     upcomingEvents,
-    routineService,
+    routineServices,
     activePage: 'home'
   });
 };
