@@ -56,7 +56,7 @@ exports.submit = async (req, res) => {
     lastName: req.body['last-name'] || '',
     email: req.body.email || '',
     phone: req.body.phone || '',
-    membership: req.body.membership || '',   // <-- now populated by the button click
+    type: req.body.type || '',   // <-- now populated by the button click
     message: req.body.message || '',
     timestamp: req.body.timestamp || new Date().toLocaleString(),
     submittedAt: new Date(),
