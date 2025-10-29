@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "Rally for missions", date: "2-Nov" },
         { name: "Healing campaign & personal evangelism", date: "29-Nov" },
         { name: "Small business development training", date: "03-Dec" },
-        { name: "Revival Speaker", date: "5-Dec" },
+        { name: "Revival", date: "5-Dec" },
         { name: "Children’s dedication and baptism", date: "15-Dec" },
         { name: "Prison visits", date: "ad hoc" },
         { name: "Bible study", date: "Every Sunday" },
@@ -173,7 +173,7 @@ function displaySpotlight() {
                 name: "Sunday Service", 
                 schedule: "Every Sunday, 10:00 - 13:00",
                 image: "service.jpg",
-                contact: "Church Office - +266 765 4321"
+                contact: "Church Office - +266 5919 3208"
             },
         ];
 
