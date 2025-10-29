@@ -309,3 +309,6 @@ body {
         padding: 0 1rem;
     }
 }
+button {
+    background-color: teal;
+}
