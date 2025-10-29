@@ -42,7 +42,7 @@ const routineServices = [
     name: "Sunday Service", 
     schedule: "Every Sunday, 10:00 - 13:00",
     image: "service.jpg",
-    contacts: ""
+    contacts: "59193208"
   },
 ];
 
