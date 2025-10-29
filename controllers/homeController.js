@@ -50,7 +50,7 @@ exports.index = (req, res) => {
   function parseEventDate(eventDate) {
     const [day, month] = eventDate.split("-");
     const year = today.getFullYear();
-    return new Date(${month} ${day}, ${year});
+    return new Date(`${month} ${day}, ${year}`);
   }
   const upcomingEvents = events
     .filter(event => {
