@@ -299,3 +299,13 @@ body {
 }
 .option-btn:hover { background: #0055aa; }
 .option-btn i { font-size: 2rem; margin-bottom: .5rem; }
+
+/* Responsive layout for .home on small screens */
+@media (max-width: 768px) {
+    .home {
+        grid-template-columns: 1fr; /* Single column */
+        gap: 1.5rem;
+        margin: 1.5rem auto;
+        padding: 0 1rem;
+    }
+}
