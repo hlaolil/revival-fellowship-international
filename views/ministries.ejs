@@ -10,6 +10,14 @@
   <%- include('partials/header') %>
 
   <main class="discover-section">
+    <section class="hero">
+        <picture>
+            <source srcset="/images/hero.webp" media="(min-width: 500px)">
+            <img src="/images/hero1.webp" alt="Chamber hero">
+        </picture>
+        <h1>Revival Fellowship International</h1>
+        <a href="/join" class="join-button">Get Involved</a>
+    </section>
     <h1>Our Ministries</h1>
 
     <% if (ministries && ministries.length > 0) { %>
