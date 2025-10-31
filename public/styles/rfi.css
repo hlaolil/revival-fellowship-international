@@ -52,7 +52,7 @@ header {
     border-radius: 3px;
 }
 .hero{
-    height: 500px;
+    height: 350px;
 }
 
 @media (max-width: 768px) {
@@ -85,7 +85,7 @@ header {
 
 .hero {
     position: relative;
-    height: 350px;
+    height: 500px;
     overflow: hidden;
     margin-bottom: 0;
 }
