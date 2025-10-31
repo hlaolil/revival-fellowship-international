@@ -51,6 +51,9 @@ header {
     background-color:orange;
     border-radius: 3px;
 }
+.hero{
+    height: 500px;
+}
 
 @media (max-width: 768px) {
     .ham-button {
@@ -82,7 +85,7 @@ header {
 
 .hero {
     position: relative;
-    height: 400px;
+    height: 350px;
     overflow: hidden;
     margin-bottom: 0;
 }
