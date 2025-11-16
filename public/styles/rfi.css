@@ -88,6 +88,7 @@ header {
     height: 500px;
     overflow: hidden;
     margin-bottom: 0;
+    justify-content: center;
 }
 
 .hero img {
