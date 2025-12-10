@@ -1,55 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/styles/rfi.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <%- include('partials/header') %>
-  <link rel="stylesheet" href="/styles/rfi.css">
+<%- include('partials/header', { activePage: 'ministries' }) %>
 
-  <main class="discover-section">
-    <section class="hero">
-        <picture>
-            <source srcset="/images/hero.webp" media="(min-width: 500px)">
-            <img src="/images/hero1.webp" alt="Chamber hero">
-        </picture>
-        <h1>Revival Fellowship International</h1>
-        <a href="/join" class="join-button">Get Involved</a>
-    </section>
-    <h1>Our Ministries</h1>
+<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/hero.webp')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">Our Ministries</h1>
+  </div>
+</section>
 
-    <% if (ministries && ministries.length > 0) { %>
-      <div class="grid-container">
-        <% ministries.forEach(ministry => { %>
-          <div class="card place-card">
-            <% if (ministry.image) { %>
-              <figure>
-                <img 
-                  src="/images/<%= ministry.image %>" 
-                  alt="<%= ministry.name %>"
-                  loading="lazy"
-                >
-              </figure>
-            <% } else { %>
-              <figure style="background:#eee;height:200px;display:flex;align-items:center;justify-content:center;color:#999;">
-                No Image
-              </figure>
-            <% } %>
-
-            <h2><%= ministry.name %></h2>
-            <p><strong>Schedule:</strong> <%= ministry.schedule %></p>
-            <p><strong>Contact:</strong> <%= ministry.contact %></p>
+<div class="max-w-7xl mx-auto px-6 py-16">
+  <% if (ministries && ministries.length > 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+      <% ministries.forEach(ministry => { %>
+        <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4">
+          <% if (ministry.image) { %>
+            <img src="/images/<%= ministry.image %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
+          <% } else { %>
+            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">No Image</div>
+          <% } %>
+          <div class="p-6">
+            <h2 class="text-2xl font-bold text-primary mb-4 text-center"><%= ministry.name %></h2>
+            <p class="text-center"><strong>Schedule:</strong> <%= ministry.schedule %></p>
+            <p class="text-center mt-4"><strong>Contact:</strong> <%= ministry.contact %></p>
           </div>
-        <% }) %>
-      </div>
-    <% } else { %>
-      <p style="text-align:center;">No ministries listed yet. Check back soon!</p>
-    <% } %>
-  </main>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="text-center text-2xl text-gray-600 py-20">No ministries listed yet. Check back soon!</p>
+  <% } %>
+</div>
 
-  <%- include('partials/footer') %>
-</body>
-</html>
+<%- include('partials/footer') %>
