@@ -1,41 +1,71 @@
-<!-- views/partials/header.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Letlotlo Hlaoli">
-    <meta name="description" content="Revival Fellowship International">
-    <title><%= title %> - Letlotlo Hlaoli</title>
-    <link rel="stylesheet" href="/../styles/normalize.css">
-    <link rel="stylesheet" href="/styles/rfi.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
-      integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script defer src="/scripts/rfihome.js"></script>
-    <link rel="icon" href="/images/fav.jpg" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="author" content="Letlotlo Hlaoli">
+  <meta name="description" content="Revival Fellowship International - An assembly of faithful stewards">
+  <title><%= title %> - Revival Fellowship International</title>
 
-    <!-- Open Graph Meta Properties for Facebook -->
-    <meta property="og:title" content="Revival Fellowship International Home Page - Letlotlo Hlaoli">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="An assembly of faithful stewards of the manifold grace of God">
-    <meta property="og:image" content="https://hlaolil.github.io/wdd231/project/images/hero.webp">
-    <meta property="og:url" content="https://hlaolil.github.io/wdd231/project/index.html">
+  <!-- Tailwind CDN + Custom Colors -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#008080',
+            secondary: '#FFA500',
+            accent: '#006d77',
+          },
+          fontFamily: {
+            heading: ['Georgia', 'serif'],
+            body: ['system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="/images/fav.jpg" type="image/x-icon">
 </head>
-<body>
-    <header>
-        <img src="/images/logo.webp" alt="RFI Logo" width="150">
-        <!-- Hamburger Icon for mobile -->
-        <div class="ham-button" role="button" aria-expanded="false" aria-controls="navigation">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-        <nav id="navigation">
-            <ul class="navigation">
-                <li><a href="/" class="<%= activePage === 'home' ? 'active' : '' %>">Home</a></li>
-                <li><a href="/about" class="<%= activePage === 'about' ? 'active' : '' %>">About Us</a></li>
-                <li><a href="/ministries" class="<%= activePage === 'ministries' ? 'active' : '' %>">Ministries</a></li>
-                <li><a href="/join" class="<%= activePage === 'join' ? 'active' : '' %>">Get Involved</a></li>
-            </ul>    
-        </nav>
-    </header>
+<body class="bg-gray-50 text-gray-800">
+
+<header class="bg-primary text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <img src="/images/logo.webp" alt="RFI Logo" class="h-16 w-auto rounded-lg">
+      <h1 class="text-2xl font-bold hidden sm:block">Revival Fellowship International</h1>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="menu-btn" class="lg:hidden text-white focus:outline-none">
+      <i class="fas fa-bars text-3xl"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav id="nav-menu" class="hidden lg:flex space-x-1">
+      <a href="/" class="px-6 py-3 rounded-md hover:bg-secondary hover:text-white transition <%= activePage === 'home' ? 'bg-secondary text-white font-bold' : '' %>">Home</a>
+      <a href="/about" class="px-6 py-3 rounded-md hover:bg-secondary hover:text-white transition <%= activePage === 'about' ? 'bg-secondary text-white font-bold' : '' %>">About Us</a>
+      <a href="/ministries" class="px-6 py-3 rounded-md hover:bg-secondary hover:text-white transition <%= activePage === 'ministries' ? 'bg-secondary text-white font-bold' : '' %>">Ministries</a>
+      <a href="/join" class="px-6 py-3 rounded-md bg-secondary text-white font-bold hover:bg-orange-600 transition">Get Involved</a>
+    </nav>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="lg:hidden hidden bg-primary border-t border-teal-700">
+    <a href="/" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
+    <a href="/about" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About Us</a>
+    <a href="/ministries" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
+    <a href="/join" class="block px-6 py-4 bg-secondary font-bold">Get Involved</a>
+  </div>
+</header>
+
+<script>
+  document.getElementById('menu-btn').addEventListener('click', () => {
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
