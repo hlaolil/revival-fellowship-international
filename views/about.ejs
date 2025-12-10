@@ -1,39 +1,62 @@
 <%- include('partials/header', { activePage: 'about' }) %>
 
-<section class="hero relative h-56 bg-cover bg-center" style="background-image: url('/images/hero.webp')">
-  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">About Us</h1>
+<!-- HERO SECTION – Perfect fit on all devices -->
+<section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
+  <!-- Responsive Images -->
+  <picture class="absolute inset-0">
+    <source srcset="/images/hero.webp" media="(min-width: 768px)" />
+    <img 
+      src="/images/hero1.webp" 
+      alt="Revival Fellowship International" 
+      class="w-full h-full object-cover"
+    />
+  </picture>
+
+  <!-- Dark overlay + centered title -->
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center px-6">
+    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white font-heading text-center drop-shadow-2xl leading-tight">
+      About Us
+    </h1>
   </div>
 </section>
 
-<div class="max-w-4xl mx-auto px-6 py-16 space-y-12">
-  <article class="bg-white p-10 rounded-12 rounded-xl shadow-xl">
-    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Vision Statement</h2>
-    <p class="text-lg leading-loose text-center">To be a healthy assembly of faithful stewards of the manifold grace of God.</p>
+<!-- MAIN CONTENT -->
+<div class="max-w-5xl mx-auto px-6 py-16 space-y-16">
+  <!-- Vision -->
+  <article class="bg-white rounded-2xl shadow-2xl p-10 md:p-16 text-center transform hover:scale-105 transition duration-500">
+    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-8 text-center">Vision Statement</h2>
+    <p class="text-xl md:text-2xl leading-relaxed text-center text-gray-700 font-medium">
+      To be a healthy assembly of faithful stewards of the manifold grace of God.
+    </p>
   </article>
 
-  <article class="bg-white p-10-12 rounded-xl shadow-xl">
-    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Mission Statement</h2>
-    <p class="text-lg leading-loose text-center">To make disciples who will be faithful stewards of the manifold grace of God.</p>
+  <!-- Mission -->
+  <article class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-2xl p-10 md:p-16 text-center transform hover:scale-105 transition duration-500">
+    <h2 class="text-3xl md:text-4xl font-bold mb-8">Mission Statement</h2>
+    <p class="text-xl md:text-2xl leading-relaxed font-medium">
+      To make disciples who will be faithful stewards of the manifold grace of God.
+    </p>
   </article>
 
-  <article class="bg-gray-100 p-10-12 rounded-xl shadow-xl">
-    <h2 class="text-3xl font-bold text-primary mb-8 text-center">Our Goals</h2>
-    <ul class="space-y-6 text-lg leading-loose text-center">
-      <li>• Make disciples who will make disciples.</li>
-      <li>• Equip the saints for the work of the ministry.</li>
-      <li>• Send out and support workers to plant churches.</li>
+  <!-- Goals -->
+  <article class="bg-gray-50 rounded-2xl shadow-2xl p-10 md:p-16">
+    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-10 text-center">Our Goals</h2>
+    <ul class="space-y-6 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto text-center">
+      <li class="font-semibold">• Make disciples who will make disciples.</li>
+      <li class="font-semibold">• Equip the saints for the work of the ministry.</li>
+      <li class="font-semibold">• Send out and support workers to plant churches.</li>
     </ul>
   </article>
 
-  <article class="bg-white p-10-12 rounded-xl shadow-xl">
-    <h2 class="text-3xl font-bold text-primary mb-8 text-center">Our Objectives</h2>
-    <ul class="space-y-6 text-lg leading-loose text-center">
-      <li>• Multiply believers.</li>
-      <li>• Disciple new believers.</li>
-      <li>• Train church planters.</li>
-      <li>• People development.</li>
-      <li>• Provide resources to accommodate church growth.</li>
+  <!-- Objectives -->
+  <article class="bg-white rounded-2xl shadow-2xl p-10 md:p-16">
+    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-10 text-center">Our Objectives</h2>
+    <ul class="space-y-6 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto text-center">
+      <li class="font-medium">• Multiply believers.</li>
+      <li class="font-medium">• Disciple new believers.</li>
+      <li class="font-medium">• Train church planters.</li>
+      <li class="font-medium">• People development.</li>
+      <li class="font-medium">• Provide resources to accommodate church growth.</li>
     </ul>
   </article>
 </div>
