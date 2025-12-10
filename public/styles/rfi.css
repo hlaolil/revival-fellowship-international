@@ -1,321 +1,386 @@
-/* public/styles/rfi.css */
+/* ============================================================= */
+/*  RFI – SINGLE MASTER STYLESHEET (rfi.css)                    */
+/*  Works for Revival Fellowship International – 2025            */
+/* ============================================================= */
+
+:root {
+    --primary: teal;
+    --secondary: orange;
+    --text-light: #fff;
+    --text-dark: #333;
+    --nav-hover-bg: #e69500;
+    --heading-font: "Georgia", serif;
+}
+
+/* ====================== RESET & BASIC ====================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0 5px;
+    background: #f9f9f9;
+}
+
+/* ====================== HEADER & NAV ====================== */
 header {
     padding: 20px;
     margin: 1rem auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 100%;
-    background-color: teal;
+    background: var(--primary);
     border-radius: 10px;
+    position: relative;
 }
 
-.navigation {
-    display: flex;
-    list-style: none;
-    background-color: orange;
+header img {
+    max-width: 10%;
+    min-width: 80px;
+    height: auto;
     border-radius: 5px;
 }
 
-.navigation li {
-    flex: 1; 
+/* Navigation – Desktop */
+.navigation {
+    display: flex;
+    list-style: none;
+    background: var(--secondary);
+    border-radius: 5px;
 }
+
+.navigation li { flex: 1; }
 
 .navigation a {
     display: block;
-    color: white;
-    padding: 20px;
-    transition: font-weight 0.3s, background-color 0.3s;
+    color: var(--text-light);
+    text-align: center;
+    padding: 15px;
     text-decoration: none;
+    transition: background 0.3s, font-weight 0.3s;
 }
 
 .navigation a:hover,
-.navigation a:focus {
+.navigation a:focus,
+.navigation a.active {
+    background: var(--nav-hover-bg);
     font-weight: 700;
-    background-color: var(--nav-hover-background-color);
 }
 
+/* Hamburger */
 .ham-button {
     display: none;
     flex-direction: column;
-    cursor: pointer;
     gap: 5px;
+    cursor: pointer;
     position: absolute;
     top: 25px;
     right: 15px;
 }
 
 .ham-button .bar {
-    width: 25px;
-    height: 3px;
-    background-color:orange;
+    width: 28px;
+    height: 4px;
+    background: var(--secondary);
     border-radius: 3px;
 }
-.hero{
-    height: 350px;
-}
 
+/* Mobile Navigation */
 @media (max-width: 768px) {
-    .ham-button {
-        display: flex;
-    }
+    .ham-button { display: flex; }
+
     .navigation {
         display: none;
-        transition: max-height 0.3s ease-out;
+        flex-direction: column;
+        background: var(--secondary);
+        position: absolute;
+        top: 70px;
+        right: 10px;
+        width: 200px;
+        border-radius: 8px;
         overflow: hidden;
         max-height: 0;
+        transition: max-height 0.4s ease-out;
     }
+
     .navigation.show {
         display: flex;
-        flex-direction: column;
-        gap: 15px;
-        background-color: orange;
-        position: absolute;
-        top: 60px;
-        right: 10px;
-        z-index: 1000;
-        padding: 10px;
-        text-align: left;
         max-height: 500px;
+        padding: 15px 0;
     }
-    .navigation a {
-        color: #ffffff;
-    }
+
+    .navigation a { padding: 12px 20px; }
 }
 
+/* ====================== HERO SECTION ====================== */
 .hero {
     position: relative;
-    height: 500px;
+    height: 400px;
     overflow: hidden;
-    margin-bottom: 0;
-    justify-content: center;
+    margin-bottom: 1rem;
 }
 
+.hero picture,
 .hero img {
-    display: block;
-    max-width: 100%;
+    width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 5px;
-    margin: 0 auto; /* This centers the image */
+    display: block;
 }
 
 .hero h1 {
     position: absolute;
-    top: 5%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.6);
     color: white;
-    font-size: 1.5em;
-    font-family: var(--heading-font);
-    background-color: rgba(12, 12, 12, 0.6);
-    padding: 1px;
-    border-radius: 5px;
-}
-
-footer {
-    background-color: teal;
-    padding: 20px 0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: clamp(1.8rem, 5vw, 3rem);
     text-align: center;
-    color: white;
-    border-radius: 5px;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.sociallinks img {
-    width: 24px;
-    height: 24px;
-}
-
-h2 {
-    background-color: teal;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    font-size: 1.4em;
-    margin: 10px auto;
-    width: 80%;
-}
-
-nav ul li a.active {
-    color: teal;
-    background-color: #e0e0e0;
-}
-header img {
-    aspect-ratio: auto;
-    max-width: 10%;
-    height: auto;
-    border-radius: 5px;
-    min-width: 8%;
 }
 
 .join-button {
     position: absolute;
     top: 80%;
     left: 50%;
-    margin-top: 1em;
-    padding: 0.5em 0.5em;
-    background-color: teal;
+    transform: translateX(-50%);
+    padding: 12px 30px;
+    background: var(--primary);
     color: white;
     text-decoration: none;
-    font-size: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: background 0.3s, transform 0.2s;
 }
 
 .join-button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    { background: #006d77; transform: translateX(-50%) scale(1.05); }
+
+/* ====================== TYPOGRAPHY ====================== */
+h2 {
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 90%;
 }
 
+/* ====================== FOOTER ====================== */
+footer {
+    background: var(--primary);
+    color: white;
+    padding: 30px 20px;
+    margin: 30px 10px 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sociallinks a {
+    margin: 0 10px;
+}
+
+.sociallinks img {
+    width: 30px;
+    filter: brightness(0) invert(1);
+}
+
+/* ====================== HOME PAGE ====================== */
 .home {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(minmax(300px, 1fr)));
     gap: 2rem;
-    margin: 2rem auto;
     max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
 .events, .contacts, .location {
-    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.events ul {
-    list-style-type: none;
-    padding: 0;
+.events ul,
+.location ul {
+    list-style: none;
+    padding-left: 0;
 }
 
 .events li {
-    margin: 1em 0;
-    text-align: left;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
 }
-.location ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-}
+
+.contacts p { text-align: left; }
+
 .location iframe {
-    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    height: 300px;
+    border-radius: 8px;
 }
 
-.location li {
-    margin: 0.5em 0;
-    font-size: 1rem;
-    text-align: left;
-}
-.contacts p {
-    text-align: left;
-}
-
+/* Spotlight (routine services) */
 .spotlight {
     display: flex;
-    justify-content: space-around;
-    gap: 1rem;
-    margin: 1rem 0;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 3rem 0;
 }
 
 .spotlight-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    width: 400px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 360px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
     text-align: center;
 }
 
-.spotlight-card img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+.spotlight-card img,
+.spotlight-card iframe {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
 }
 
-.spotlight-card h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-    color: #333;
+/* ====================== MINISTRIES PAGE ====================== */
+.discover-section {
+    padding: 40px 20px;
+    text-align: center;
 }
 
-.spotlight-card p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-    color: #555;
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.spotlight-card a {
-    color: #007BFF;
-    text-decoration: none;
+.place-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.spotlight-card a:hover {
-    text-decoration: underline;
+.place-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
 
-.events-list {
-    list-style-type: disc;
-    padding-left: 20px;
+.place-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.place-card h2 {
+    background: none;
+    color: var(--text-dark);
+    padding: 15px 10px 5px;
     margin: 0;
-}
-  
-.events-list li {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #333;
-    margin-bottom: 8px;
-    text-align: left;
-}
-  
-.events-list li:hover {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
+    font-size: 1.4rem;
 }
 
-.spotlight a {
-    color: black;
+/* ====================== ABOUT PAGE ====================== */
+.about {
+    max-width: 900px;
+    margin: 40px auto;
+    text-align: center;
+    line-height: 1.8;
 }
 
-body {
-  margin: 0 5px;  /* top/bottom: 0, left/right: 50px */
+.about article {
+    margin: 50px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-.options-container, .form-container, .thankyou-container {
-  max-width: 600px; margin: 2rem auto; text-align: center; padding: 0 1rem;
-}
-.option-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem; margin: 2rem 0;
-}
-.option-btn {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 1.5rem 1rem; background: teal; color: #fff;
-  text-decoration: none; border-radius: .5rem; font-size: 1.1rem;
-  transition: background .2s;
-}
-.option-btn:hover { background: #0055aa; }
-.option-btn i { font-size: 2rem; margin-bottom: .5rem; }
 
-/* Responsive layout for .home on small screens */
-@media (max-width: 768px) {
-    .home {
-        grid-template-columns: 1fr; /* Single column */
-        gap: 1.5rem;
-        margin: 1.5rem auto;
-        padding: 0 1rem;
-    }
+/* ====================== JOIN PAGE (FORM) ====================== */
+form {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
-button {
-    background-color: teal;
+
+form label {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+form textarea { min-height: 120px; resize: vertical; }
+
+form input[type="radio"] { accent-color: var(--primary); transform: scale(1.3); }
+
+form input[type="submit"] {
+    align-self: center;
+    padding: 14px 40px;
+    background: var(--primary);
     color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+form input[type="submit"]:hover { background: #006d77; }
+
+/* ====================== UTILITIES ====================== */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 2rem; }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .hero { height: 300px; }
+    .hero h1 { font-size: 1.8rem; }
+    header img { max-width: 120px; }
+    .footer-content { flex-direction: column; gap: 15px; }
 }
