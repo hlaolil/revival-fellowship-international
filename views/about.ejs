@@ -1,37 +1,41 @@
-<!-- views/about.ejs -->
-<%- include('partials/header') %>
-<link rel="stylesheet" href="/styles/rfi.css">
-<main>
-    <section class="hero">
-        <picture>
-            <source srcset="/images/hero.webp" media="(min-width: 500px)">
-            <img src="/images/hero1.webp" alt="Chamber hero">
-        </picture>
-        <h1>About Us</h1>
-    </section>
-    <div class="about">
-        <article>
-            <h2>Vision Statement</h2>
-            <p>To be a healthy assembly of faithful stewards of the manifold grace of God.</p>
-        </article>
-        <article>
-            <h2>Mission Statement</h2>
-            <p>To make disciples who will be faithful stewards of the manifold grace of God.</p>
-        </article>
-        <article>
-            <h2>Goals</h2>
-            <p>Make disciples who will make disciples.</p>
-            <p>Equip the saints for the work of the ministry.</p>
-            <p>Send out and support workers to plant churches.</p>
-        </article>
-        <article>
-            <h2>Objectives</h2>
-            <p>Multiply believers.</p>
-            <p>Disciple new believers.</p>
-            <p>Train church planters.</p>
-            <p>People development.</p>
-            <p>Provide resources to accommodate church growth.</p>
-        </article>
-    </div>
-</main>
+<%- include('partials/header', { activePage: 'about' }) %>
+
+<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/hero.webp')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">About Us</h1>
+  </div>
+</section>
+
+<div class="max-w-4xl mx-auto px-6 py-16 space-y-12">
+  <article class="bg-white p-10 rounded-12 rounded-xl shadow-xl">
+    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Vision Statement</h2>
+    <p class="text-lg leading-loose text-center">To be a healthy assembly of faithful stewards of the manifold grace of God.</p>
+  </article>
+
+  <article class="bg-white p-10-12 rounded-xl shadow-xl">
+    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Mission Statement</h2>
+    <p class="text-lg leading-loose text-center">To make disciples who will be faithful stewards of the manifold grace of God.</p>
+  </article>
+
+  <article class="bg-gray-100 p-10-12 rounded-xl shadow-xl">
+    <h2 class="text-3xl font-bold text-primary mb-8 text-center">Our Goals</h2>
+    <ul class="space-y-6 text-lg leading-loose text-center">
+      <li>• Make disciples who will make disciples.</li>
+      <li>• Equip the saints for the work of the ministry.</li>
+      <li>• Send out and support workers to plant churches.</li>
+    </ul>
+  </article>
+
+  <article class="bg-white p-10-12 rounded-xl shadow-xl">
+    <h2 class="text-3xl font-bold text-primary mb-8 text-center">Our Objectives</h2>
+    <ul class="space-y-6 text-lg leading-loose text-center">
+      <li>• Multiply believers.</li>
+      <li>• Disciple new believers.</li>
+      <li>• Train church planters.</li>
+      <li>• People development.</li>
+      <li>• Provide resources to accommodate church growth.</li>
+    </ul>
+  </article>
+</div>
+
 <%- include('partials/footer') %>
