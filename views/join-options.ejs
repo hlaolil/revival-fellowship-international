@@ -1,26 +1,36 @@
-<%- include('partials/header') -%>
-<link rel="stylesheet" href="/styles/rfi.css">
-  <main class="options-container">
-    <section class="hero">
-        <picture>
-            <source srcset="/images/hero.webp" media="(min-width: 500px)">
-            <img src="/images/hero1.webp" alt="Chamber hero">
-        </picture>
-        <h1>Revival Fellowship International</h1>
-        <a href="/join" class="join-button">Get Involved</a>
-    </section>
-    <h1>How would you like to get involved?</h1>
+<%- include('partials/header', { activePage: 'join' }) %>
 
-    <div class="option-grid">
-      <% options.forEach(opt => { %>
-        <a href="<%= opt.href %>" class="option-btn">
-          <i class="fas <%= opt.icon %>"></i>
-          <span><%= opt.label %></span>
-        </a>
-      <% }) %>
-    </div>
-  </main>
+<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/hero.webp')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">Get Involved</h1>
+  </div>
+</section>
 
-  <%- include('partials/footer') %>
-</body>
-</html>
+<div class="max-w-5xl mx-auto px-6 py-16 text-center">
+  <h2 class="text-4xl md:text-4xl font-bold mb-12">How would you like to get involved?</h2>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <a href="/inquire?type=prayer-request" class="bg-primary text-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition">
+      <i class="fas fa-pray text-5xl mb-4 text-secondary"></i>
+      <p class="text-2xl font-bold text-white">Prayer Request</p>
+    </a>
+    </a>
+
+    <a href="/inquire?type=appointment-request" class="bg-primary text-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition">
+      <i class="fas fa-calendar-check text-5xl mb-4 text-secondary"></i>
+      <p class="text-2xl font-bold text-white">Book Appointment</p>
+    </a>
+
+    <a href="/inquire?type=membership-request" class="bg-primary text-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition">
+      <i class="fas fa-users text-5xl mb-4 text-secondary"></i>
+      <p class="text-2xl font-bold text-white">Become a Member</p>
+    </a>
+
+    <a href="/inquire?type=information-request" class="bg-primary text-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition">
+      <i class="fas fa-info-circle text-5xl mb-4 text-secondary"></i>
+      <p class="text-2xl font-bold text-white">General Inquiry</p>
+    </a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
