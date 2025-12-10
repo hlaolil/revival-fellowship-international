@@ -4,17 +4,30 @@
 <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
   <img src="/images/hero.webp" alt="Worship" class="w-full h-full object-cover hidden md:block">
   <img src="/images/hero1.webp" alt="Worship" class="w-full h-full object-cover md:hidden">
-  
+ 
   <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="text-center text-white px-6">
-      <h1 class="text-4xl md:text-6xl font-bold font-heading mb-6">Revival Fellowship International</h1>
-      <a href="/join" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition">Get Involved</a>
+    <div class="text-center text-white px-6 w-full">
+      
+      <!-- Animated Moving H1 - Smooth continuous marquee -->
+      <div class="overflow-hidden">
+        <h1 class="inline-block text-4xl md:text-6xl font-bold font-heading mb-6 animate-marquee whitespace-nowrap">
+          Revival Fellowship International
+          <!-- Duplicated text with spacing for seamless loop -->
+          <span class="ml-16 opacity-0">Revival Fellowship International</span>
+          <span class="ml-16">Revival Fellowship International</span>
+        </h1>
+      </div>
+
+      <a href="/join" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition">
+        Get Involved
+      </a>
     </div>
   </div>
 </section>
 
+<!-- Rest of your page (unchanged) -->
 <main class="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
-  <div class="bg-white p-8 rounded-xl rounded-xl shadow-lg">
+  <div class="bg-white p-8 rounded-xl shadow-lg">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">Upcoming Events</h2>
     <ul class="space-y-3">
       <% upcomingEvents.forEach(event => { %>
@@ -22,7 +35,6 @@
       <% }) %>
     </ul>
   </div>
-
   <div class="bg-white p-8 rounded-xl shadow-lg">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">Contact Us</h2>
     <p class="text-left leading-relaxed">
@@ -33,7 +45,6 @@
       Phone: +266 62233969
     </p>
   </div>
-
   <div class="bg-white p-8 rounded-xl shadow-lg">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">Location</h2>
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
