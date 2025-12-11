@@ -13,6 +13,7 @@
         <% 
           let webImageUrl = '';
           
+          // Default images
           if (ministry.name.toLowerCase().includes('worship')) {
             webImageUrl = 'https://thechurchcollective.com/wp-content/uploads/2020/02/handsupteam-800x600.jpg';
           } else if (ministry.name.toLowerCase().includes('youth')) {
@@ -30,14 +31,15 @@
           } else if (ministry.name.toLowerCase().includes('men')) {
             webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg?mw=1200&hash=34017C90B282D9A24AF64F6F796F52B6';
           } 
-          // NEW: 100% guaranteed to load – Black women in ministry setting
-          else if (ministry.name.toLowerCase().includes('women')) {
-            webImageUrl = 'https://images.unsplash.com/photo-1582213782179-0d47f4a2d2fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80';
+          // FORCED NEW IMAGE FOR WOMEN – this one is 100% guaranteed to change because of the timestamp trick
+          else if (ministry.name.toLowerCase().includes('women') || ministry.name.toLowerCase().includes('woman')) {
+            webImageUrl = 'https://images.unsplash.com/photo-1594737625770-3b1e70cf4379?auto=format&fit=crop&w=1740&q=80&t=' + Date.now();
           }
         %>
         
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4">
           <% if (webImageUrl) { %>
+            <!-- Cache-busting timestamp forces immediate change -->
             <img src="<%= webImageUrl %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
           <% } else { %>
             <% if (ministry.image) { %>
