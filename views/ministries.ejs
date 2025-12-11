@@ -10,11 +10,43 @@
   <% if (ministries && ministries.length > 0) { %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
       <% ministries.forEach(ministry => { %>
+        <% 
+          let webImageUrl = '';
+          let imageCaption = ministry.name + ' Ministry';
+          
+          // Assign high-quality web-sourced images based on ministry name (case-insensitive partial match)
+          if (ministry.name.toLowerCase().includes('worship')) {
+            webImageUrl = 'https://thechurchcollective.com/wp-content/uploads/2020/02/handsupteam-800x600.jpg';
+          } else if (ministry.name.toLowerCase().includes('youth')) {
+            webImageUrl = 'https://www.newcovenantgj.org/wp-content/uploads/2016/05/youthgroup-1.png';
+          } else if (ministry.name.toLowerCase().includes('children') || ministry.name.toLowerCase().includes('sunday school') || ministry.name.toLowerCase().includes('kids')) {
+            webImageUrl = 'https://dq5pwpg1q8ru0.cloudfront.net/2023/09/26/10/00/33/a7034417-25bd-449f-8aff-2270c8a8575e/istockphoto-1205606503-612x612.jpg';
+          } else if (ministry.name.toLowerCase().includes('prayer')) {
+            webImageUrl = 'https://images.squarespace-cdn.com/content/v1/64e47261734e15442f306693/1724797432570-3P4IQECSWIYY63R3Q833/Prayer+Meeting+copy.jpg';
+          } else if (ministry.name.toLowerCase().includes('outreach') || ministry.name.toLowerCase().includes('community') || ministry.name.toLowerCase().includes('service')) {
+            webImageUrl = 'https://www.churchtrac.com/articles/images/blog_church_outreach_program_ideas_feature.jpg';
+          } else if (ministry.name.toLowerCase().includes('bible') || ministry.name.toLowerCase().includes('study')) {
+            webImageUrl = 'https://media.swncdn.com/cms/CW/faith/47910-church-fellowship-1200.1200w.tn.jpg';
+          } else if (ministry.name.toLowerCase().includes('choir') || ministry.name.toLowerCase().includes('music') || ministry.name.toLowerCase().includes('worship') && !webImageUrl) {
+            webImageUrl = 'https://images.squarespace-cdn.com/content/v1/597128506f4ca3125f8bdf84/1520466386197-SGFQ3IRMLA2OH5E2LJNO/Choir.jpg';
+          } else if (ministry.name.toLowerCase().includes('men')) {
+            webImageUrl = 'http://www.ccfalamo.org/uploads/9/1/8/8/9188259/published/818502.jpg?1591736753';
+          } else if (ministry.name.toLowerCase().includes('women')) {
+            webImageUrl = 'https://www.vancopayments.com/hubfs/Group%20of%20Women%20Outside%20Church.jpg';
+          }
+          // Add more conditions above for additional specific ministries as needed
+        %>
+        
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4">
-          <% if (ministry.image) { %>
-            <img src="/images/<%= ministry.image %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
+          <% if (webImageUrl) { %>
+            <img src="<%= webImageUrl %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
           <% } else { %>
-            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">No Image</div>
+            <!-- Fallback to local image if exists and no web match, or placeholder -->
+            <% if (ministry.image) { %>
+              <img src="/images/<%= ministry.image %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
+            <% } else { %>
+              <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">No Image</div>
+            <% } %>
           <% } %>
           <div class="p-6">
             <h2 class="text-2xl font-bold text-primary mb-4 text-center"><%= ministry.name %></h2>
