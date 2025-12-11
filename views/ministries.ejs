@@ -14,21 +14,21 @@
           let webImageUrl = '';
           const nameLower = ministry.name.toLowerCase();
 
-          // Youth Ministry
+          // Youth Meeting
           if (nameLower.includes('youth')) {
             webImageUrl = 'https://www.newcovenantgj.org/wp-content/uploads/2016/05/youthgroup-1.png';
           }
           // Children's Ministry
-          else if (nameLower.includes('children') || nameLower.includes('child')) {
+          else if (nameLower.includes('children')) {
             webImageUrl = 'https://dq5pwpg1q8ru0.cloudfront.net/2023/09/26/10/00/33/a7034417-25bd-449f-8aff-2270c8a8575e/istockphoto-1205606503-612x612.jpg';
           }
-          // Men's Fellowship (checked AFTER women's to avoid overlap if name has both, but unlikely)
+          // Men’s Fellowship
           else if (nameLower.includes('men')) {
             webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg';
           }
-          // Women’s Meeting – NEW RELIABLE IMAGE OF BLACK WOMEN ONLY
-          else if (nameLower.includes('women') || nameLower.includes('woman') || nameLower.includes('ladies')) {
-            webImageUrl = 'https://i.ibb.co/4T0bYhP/black-women-church-prayer-group.jpg';
+          // Women’s Meeting – NEW: Beautiful group of Black women in joyful worship/prayer
+          else if (nameLower.includes('women')) {
+            webImageUrl = 'https://www.umnews.org/-/media/umc-media/2025/10/24/21/54/women-of-substance-1-mountain-prayer-praise-1200x800px.jpg';
           }
         %>
 
