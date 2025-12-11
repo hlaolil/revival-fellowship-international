@@ -1,72 +1,103 @@
-<%- include('partials/header', { activePage: 'home' }) %>
-<!-- Hero -->
-<section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
-  <img src="/images/hero.webp" alt="Worship" class="w-full h-full object-cover hidden md:block">
-  <img src="/images/hero1.webp" alt="Worship" class="w-full h-full object-cover md:hidden">
-  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="text-center text-white px-6 w-full">
-     
-      <!-- Animated Moving H1 - Smooth continuous marquee -->
-      <div class="overflow-hidden">
-        <h1 class="inline-block text-4xl md:text-6xl font-bold font-heading mb-6 animate-marquee whitespace-nowrap">
-          Revival Fellowship International
-          <!-- Duplicated text with spacing for seamless loop -->
-          <span class="ml-16 opacity-0">Revival Fellowship International</span>
-          <span class="ml-16">Revival Fellowship International</span>
-        </h1>
-      </div>
-      <a href="/join" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition">
-        Get Involved
-      </a>
-    </div>
-  </div>
-</section>
-<!-- Rest of your page (unchanged) -->
-<main class="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
-  <div class="bg-white p-8 rounded-xl shadow-lg">
-    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Upcoming Events</h2>
-    <ul class="space-y-3">
-      <% upcomingEvents.forEach(event => { %>
-        <li class="border-b pb-2"><strong><%= event.name %></strong><br><em><%= event.date %></em></li>
-      <% }) %>
-    </ul>
-  </div>
-  <div class="bg-white p-8 rounded-xl shadow-lg">
-    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Contact Us</h2>
-    <p class="text-left leading-relaxed">
-      A1 Road, Opposite Usave<br>
-      Behind BEDCO, Butha-Buthe 400<br>
-      Lesotho<br><br>
-      Email: tlokza@gmail.com<br>
-      Phone: +266 62233969
-    </p>
-  </div>
-  <div class="bg-white p-8 rounded-xl shadow-lg">
-    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Location</h2>
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
-      class="w-full h-64 rounded-lg border-0" allowfullscreen="" loading="lazy"></iframe>
-  </div>
-</main>
-<!-- Spotlight Services -->
-<section class="bg-gray-100 py-16">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
-    <div class="grid md:grid-cols-3 gap-10">
-      <% routineServices.forEach(service => { %>
-        <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-2">
-          <% if (service.videoLink) { %>
-            <iframe class="w-full h-64" src="<%= service.videoLink %>" allowfullscreen></iframe>
-          <% } else { %>
-            <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="w-full h-64 object-cover">
-          <% } %>
-          <div class="p-6 text-center">
-            <h3 class="text-xl font-bold text-primary"><%= service.name %></h3>
-            <p class="mt-4"><strong>Schedule:</strong> <%= service.schedule %></p>
-            <p><strong>Contact:</strong> <%= service.contact %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Revival Fellowship International</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .font-heading { font-family: 'Playfair Display', serif; }
+    @keyframes marquee {
+      0%   { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      animation: marquee 25s linear infinite;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-50">
+
+  <%- include('partials/header', { activePage: 'home' }) %>
+
+  <!-- Hero – full-bleed image, content respects max-w-7xl margins -->
+  <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
+    <img src="/images/hero.webp" alt="Worship" class="w-full h-full object-cover hidden md:block">
+    <img src="/images/hero1.webp" alt="Worship" class="w-full h-full object-cover md:hidden">
+
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="w-full max-w-7xl mx-auto px-6">
+        <div class="text-center text-white">
+          <div class="overflow-hidden">
+            <h1 class="inline-block text-4xl md:text-6xl font-bold font-heading mb-8 animate-marquee whitespace-nowrap">
+              Revival Fellowship International
+              <span class="ml-16 opacity-0">Revival Fellowship International</span>
+              <span class="ml-16">Revival Fellowship International</span>
+            </h1>
           </div>
+          <a href="/join" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition duration-300">
+            Get Involved
+          </a>
         </div>
-      <% }) %>
+      </div>
     </div>
-  </div>
-</section>
-<%- include('partials/footer') %>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10 w-full">
+    <div class="bg-white p-8 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-bold text-primary mb-4 text-center">Upcoming Events</h2>
+      <ul class="space-y-3">
+        <% upcomingEvents.forEach(event => { %>
+          <li class="border-b pb-2"><strong><%= event.name %></strong><br><em><%= event.date %></em></li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-bold text-primary mb-4 text-center">Contact Us</h2>
+      <p class="text-left leading-relaxed">
+        A1 Road, Opposite Usave<br>
+        Behind BEDCO, Butha-Buthe 400<br>
+        Lesotho<br><br>
+        Email: tlokza@gmail.com<br>
+        Phone: +266 62233969
+      </p>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-bold text-primary mb-4 text-center">Location</h2>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
+        class="w-full h-64 rounded-lg border-0" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </main>
+
+  <!-- Spotlight Services -->
+  <section class="bg-gray-100 py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+      <div class="grid md:grid-cols-3 gap-10">
+        <% routineServices.forEach(service => { %>
+          <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-2">
+            <% if (service.videoLink) { %>
+              <iframe class="w-full h-64" src="<%= service.videoLink %>" allowfullscreen></iframe>
+            <% } else { %>
+              <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="w-full h-64 object-cover">
+            <% } %>
+            <div class="p-6 text-center">
+              <h3 class="text-xl font-bold text-primary"><%= service.name %></h3>
+              <p class="mt-4"><strong>Schedule:</strong> <%= service.schedule %></p>
+              <p><strong>Contact:</strong> <%= service.contact %></p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+
+</body>
+</html>
