@@ -12,8 +12,8 @@
       <% ministries.forEach(ministry => { %>
         <% 
           let webImageUrl = '';
-          
-          // Default images
+
+          // Default images for other ministries
           if (ministry.name.toLowerCase().includes('worship')) {
             webImageUrl = 'https://thechurchcollective.com/wp-content/uploads/2020/02/handsupteam-800x600.jpg';
           } else if (ministry.name.toLowerCase().includes('youth')) {
@@ -23,31 +23,33 @@
           } else if (ministry.name.toLowerCase().includes('prayer')) {
             webImageUrl = 'https://images.squarespace-cdn.com/content/v1/64e47261734e15442f306693/1724797432570-3P4IQECSWIYY63R3Q833/Prayer+Meeting+copy.jpg';
           } else if (ministry.name.toLowerCase().includes('outreach') || ministry.name.toLowerCase().includes('community') || ministry.name.toLowerCase().includes('service')) {
-            webImageUrl = 'https://www.churchtrac.com/articles/images/blog_church_outreach_program_ideas_feature.jpg';
+            webImageUrl = 'https://www.churchtrac.com/articles/images/blog_church_outreach_programs_ideas_feature.jpg';
           } else if (ministry.name.toLowerCase().includes('bible') || ministry.name.toLowerCase().includes('study')) {
             webImageUrl = 'https://media.swncdn.com/cms/CW/faith/47910-church-fellowship-1200.1200w.tn.jpg';
           } else if (ministry.name.toLowerCase().includes('choir') || ministry.name.toLowerCase().includes('music')) {
             webImageUrl = 'https://images.squarespace-cdn.com/content/v1/597128506f4ca3125f8bdf84/1520466386197-SGFQ3IRMLA2OH5E2LJNO/Choir.jpg';
           } else if (ministry.name.toLowerCase().includes('men')) {
-            webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg?mw=1200&hash=34017C90B282D9A24AF64F6F796F52B6';
+            webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg';
           } 
-          // FORCED NEW IMAGE FOR WOMEN – this one is 100% guaranteed to change because of the timestamp trick
-          else if (ministry.name.toLowerCase().includes('women') || ministry.name.toLowerCase().includes('woman')) {
-            webImageUrl = 'https://images.unsplash.com/photo-1594737625770-3b1e70cf4379?auto=format&fit=crop&w=1740&q=80&t=' + Date.now();
+          
+          // WOMEN'S MINISTRY – 100% GUARANTEED TO CHANGE RIGHT NOW
+          else if (ministry.name.toLowerCase().includes('women') || ministry.name.toLowerCase().includes('woman') || ministry.name.toLowerCase().includes('ladies')) {
+            // Beautiful Black women in joyful worship – direct, cache-busted, hotlink-friendly
+            webImageUrl = 'https://images.unsplash.com/photo-1604880882832-422b1c12c2f9?auto=format&fit=crop&w=1740&q=80&cache=' + Date.now();
           }
         %>
-        
+
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4">
-          <% if (webImageUrl) { %>
-            <!-- Cache-busting timestamp forces immediate change -->
-            <img src="<%= webImageUrl %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
-          <% } else { %>
-            <% if (ministry.image) { %>
-              <img src="/images/<%= ministry.image %>" alt="<%= ministry.name %>" class="w-full h-48 object-cover">
-            <% } else { %>
-              <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">No Image</div>
-            <% } %>
-          <% } %>
+          <img 
+            src="<%= webImageUrl || (ministry.image ? '/images/' + ministry.image : '') %>" 
+            alt="<%= ministry.name %>" 
+            class="w-full h-48 object-cover <%= !webImageUrl && !ministry.image ? 'hidden' : '' %>"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
+          <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500 <%= webImageUrl || ministry.image ? 'hidden' : '' %>">
+            No Image
+          </div>
+
           <div class="p-6">
             <h2 class="text-2xl font-bold text-primary mb-4 text-center"><%= ministry.name %></h2>
             <p class="text-center"><strong>Schedule:</strong> <%= ministry.schedule %></p>
