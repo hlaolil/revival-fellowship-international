@@ -1,152 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Revival Fellowship International | Home</title>
-
-  <!-- Tailwind CSS CDN (recommended for fast prototyping) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Custom Font (Heading) - Optional: Playfair Display or similar -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    .font-heading { font-family: 'Playfair Display', serif; }
-    .animate-marquee {
-      animation: marquee 30s linear infinite;
-    }
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    /* Smooth hover effect on service cards */
-    .service-card {
-      transition: all 0.4s ease;
-    }
-    .service-card:hover {
-      transform: translateY(-12px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-800">
-
-  <!-- Fixed Header (with background & shadow) -->
-  <%- include('partials/header', { 
-      activePage: 'home',
-      headerClasses: 'fixed top-0 left-0 right-0 z-50 bg-white shadow-lg' 
-  }) %>
-
-  <!-- Hero Section - Full screen on desktop, proper spacing on mobile -->
-  <section class="relative h-96 md:h-screen max-h-screen overflow-hidden mt-16 md:mt-0">
-    <!-- Desktop Hero Image -->
-    <img src="/images/hero.webp" alt="Worship Service" class="absolute inset-0 w-full h-full object-cover hidden md:block">
-    <!-- Mobile Hero Image -->
-    <img src="/images/hero1.webp" alt="Worship Service" class="absolute inset-0 w-full h-full object-cover md:hidden">
-
-    <!-- Dark Overlay + Content -->
-    <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-      <div class="text-center text-white px-6 max-w-5xl mx-auto">
-        
-        <!-- Continuous Marquee Title -->
-        <div class="overflow-hidden py-4">
-          <h1 class="inline-block text-4xl md:text-6xl lg:text-7xl font-bold font-heading mb-8 animate-marquee whitespace-nowrap">
-            Revival Fellowship International
-            <span class="ml-16 opacity-0">Revival Fellowship International</span>
-            <span class="ml-16">Revival Fellowship International</span>
-          </h1>
-        </div>
-
-        <p class="text-lg md:text-2xl mb-10 font-light max-w-3xl mx-auto opacity-90">
-          A place of worship, revival, and community in Butha-Buthe, Lesotho
-        </p>
-
-        <a href="/join" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-xl py-5 px-12 rounded-full shadow-2xl transform hover:scale-110 transition duration-300">
-          Get Involved Today
-        </a>
+<%- include('partials/header', { activePage: 'home' }) %>
+<!-- Hero -->
+<section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
+  <img src="/images/hero.webp" alt="Worship" class="w-full h-full object-cover hidden md:block">
+  <img src="/images/hero1.webp" alt="Worship" class="w-full h-full object-cover md:hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="text-center text-white px-6 w-full">
+     
+      <!-- Animated Moving H1 - Smooth continuous marquee -->
+      <div class="overflow-hidden">
+        <h1 class="inline-block text-4xl md:text-6xl font-bold font-heading mb-6 animate-marquee whitespace-nowrap">
+          Revival Fellowship International
+          <!-- Duplicated text with spacing for seamless loop -->
+          <span class="ml-16 opacity-0">Revival Fellowship International</span>
+          <span class="ml-16">Revival Fellowship International</span>
+        </h1>
       </div>
+      <a href="/join" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition">
+        Get Involved
+      </a>
     </div>
-  </section>
-
-  <!-- Main Content Cards - Overlaps hero slightly for modern look -->
-  <main class="relative z-10 -mt-12 md:-mt-20 max-w-7xl mx-auto px-6">
-    <div class="grid md:grid-cols-3 gap-8 mb-16">
-      <!-- Upcoming Events -->
-      <div class="bg-white p-8 rounded-2xl shadow-xl">
-        <h2 class="text-2xl font-bold text-yellow-600 mb-6 text-center">Upcoming Events</h2>
-        <ul class="space-y-4 text-gray-700">
-          <% upcomingEvents.forEach(event => { %>
-            <li class="border-b border-gray-200 pb-3">
-              <strong class="block text-lg"><%= event.name %></strong>
-              <em class="text-sm text-gray-500"><%= event.date %></em>
-            </li>
-          <% }) %>
-          <% if (upcomingEvents.length === 0) { %>
-            <li class="text-center text-gray-500">No upcoming events</li>
+  </div>
+</section>
+<!-- Rest of your page (unchanged) -->
+<main class="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
+  <div class="bg-white p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Upcoming Events</h2>
+    <ul class="space-y-3">
+      <% upcomingEvents.forEach(event => { %>
+        <li class="border-b pb-2"><strong><%= event.name %></strong><br><em><%= event.date %></em></li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="bg-white p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Contact Us</h2>
+    <p class="text-left leading-relaxed">
+      A1 Road, Opposite Usave<br>
+      Behind BEDCO, Butha-Buthe 400<br>
+      Lesotho<br><br>
+      Email: tlokza@gmail.com<br>
+      Phone: +266 62233969
+    </p>
+  </div>
+  <div class="bg-white p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-primary mb-4 text-center">Location</h2>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
+      class="w-full h-64 rounded-lg border-0" allowfullscreen="" loading="lazy"></iframe>
+  </div>
+</main>
+<!-- Spotlight Services -->
+<section class="bg-gray-100 py-16">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+    <div class="grid md:grid-cols-3 gap-10">
+      <% routineServices.forEach(service => { %>
+        <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-2">
+          <% if (service.videoLink) { %>
+            <iframe class="w-full h-64" src="<%= service.videoLink %>" allowfullscreen></iframe>
+          <% } else { %>
+            <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="w-full h-64 object-cover">
           <% } %>
-        </ul>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="bg-white p-8 rounded-2xl shadow-xl">
-        <h2 class="text-2xl font-bold text-yellow-600 mb-6 text-center">Contact Us</h2>
-        <div class="text-gray-700 leading-relaxed text-center space-y-2">
-          <p>A1 Road, Opposite Usave<br>
-          Behind BEDCO, Butha-Buthe 400<br>
-          Lesotho</p>
-          <p class="mt-6">
-            <strong>Email:</strong> <a href="mailto:tlokza@gmail.com" class="text-yellow-600 hover:underline">tlokza@gmail.com</a><br>
-            <strong>Phone:</strong> <a href="tel:+26662233969" class="text-yellow-600 hover:underline">+266 62233969</a>
-          </p>
-        </div>
-      </div>
-
-      <!-- Location Map -->
-      <div class="bg-white p-8 rounded-2xl shadow-xl overflow-hidden">
-        <h2 class="text-2xl font-bold text-yellow-600 mb-6 text-center">Our Location</h2>
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
-          class="w-full h-64 rounded-lg border-0"
-          allowfullscreen=""
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
-  </main>
-
-  <!-- Our Services Section -->
-  <section class="bg-gray-100 py-20">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800 font-heading">
-        Our Services
-      </h2>
-
-      <div class="grid md:grid-cols-3 gap-10">
-        <% routineServices.forEach(service => { %>
-          <div class="bg-white rounded-2xl overflow-hidden shadow-xl service-card">
-            <% if (service.videoLink) { %>
-              <iframe class="w-full h-64" src="<%= service.videoLink %>" title="<%= service.name %>" allowfullscreen></iframe>
-            <% } else { %>
-              <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="w-full h-64 object-cover">
-            <% } %>
-
-            <div class="p-8 text-center">
-              <h3 class="text-2xl font-bold text-yellow-600 mb-4"><%= service.name %></h3>
-              <p class="text-gray-600 mb-2"><strong>Schedule:</strong> <%= service.schedule %></p>
-              <p class="text-gray-600"><strong>Contact:</strong> <%= service.contact %></p>
-            </div>
+          <div class="p-6 text-center">
+            <h3 class="text-xl font-bold text-primary"><%= service.name %></h3>
+            <p class="mt-4"><strong>Schedule:</strong> <%= service.schedule %></p>
+            <p><strong>Contact:</strong> <%= service.contact %></p>
           </div>
-        <% }) %>
-      </div>
+        </div>
+      <% }) %>
     </div>
-  </section>
-
-  <!-- Footer with generous top margin -->
-  <%- include('partials/footer', { 
-      footerClasses: 'mt-0 bg-gray-900 text-white py-16' 
-  }) %>
-
-</body>
-</html>
+  </div>
+</section>
+<%- include('partials/footer') %>
