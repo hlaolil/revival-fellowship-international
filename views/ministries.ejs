@@ -57,21 +57,21 @@
           ) {
             webImageUrl = 'https://images.squarespace-cdn.com/content/v1/597128506f4ca3125f8bdf84/1520466386197-SGFQ3IRMLA2OH5E2LJNO/Choir.jpg';
 
-          // Men's Ministry
-          } else if (name.includes('men')) {
-            webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg';
-
-          // -------- WOMEN'S MINISTRY (CORRECTED WITH CURLY APOSTROPHE) --------
+          // -------- WOMEN'S MINISTRY (MUST BE CHECKED BEFORE MEN) --------
           } else if (
-            name.includes('women’s') ||   // curly apostrophe ← YOUR ACTUAL NAME
+            name.includes('women’s') ||   // curly apostrophe
             name.includes("women's") ||   // straight apostrophe
             name.includes('womens') ||
             name.includes('women') ||
-            name.includes('woman') ||
+            name.includes('lady') ||
             name.includes('ladies') ||
-            name.includes('lady')
+            name.includes('woman')
           ) {
             webImageUrl = 'https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=1740&q=80&cache=' + Date.now();
+
+          // Men's Ministry
+          } else if (name.includes('men')) {
+            webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg';
           }
         %>
 
