@@ -12,7 +12,6 @@
       <% ministries.forEach(ministry => { %>
         <% 
           let webImageUrl = '';
-          let imageCaption = ministry.name + ' Ministry';
           
           // Assign high-quality web-sourced images based on ministry name (case-insensitive partial match)
           if (ministry.name.toLowerCase().includes('worship')) {
@@ -27,12 +26,12 @@
             webImageUrl = 'https://www.churchtrac.com/articles/images/blog_church_outreach_program_ideas_feature.jpg';
           } else if (ministry.name.toLowerCase().includes('bible') || ministry.name.toLowerCase().includes('study')) {
             webImageUrl = 'https://media.swncdn.com/cms/CW/faith/47910-church-fellowship-1200.1200w.tn.jpg';
-          } else if (ministry.name.toLowerCase().includes('choir') || ministry.name.toLowerCase().includes('music') || ministry.name.toLowerCase().includes('worship') && !webImageUrl) {
+          } else if (ministry.name.toLowerCase().includes('choir') || ministry.name.toLowerCase().includes('music')) {
             webImageUrl = 'https://images.squarespace-cdn.com/content/v1/597128506f4ca3125f8bdf84/1520466386197-SGFQ3IRMLA2OH5E2LJNO/Choir.jpg';
           } else if (ministry.name.toLowerCase().includes('men')) {
-            webImageUrl = 'http://www.ccfalamo.org/uploads/9/1/8/8/9188259/published/818502.jpg?1591736753';
+            webImageUrl = 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
           } else if (ministry.name.toLowerCase().includes('women')) {
-            webImageUrl = 'https://www.vancopayments.com/hubfs/Group%20of%20Women%20Outside%20Church.jpg';
+            webImageUrl = 'https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
           }
           // Add more conditions above for additional specific ministries as needed
         %>
