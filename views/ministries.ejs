@@ -17,11 +17,11 @@
 
           // Worship Ministry
           if (name.includes('worship')) {
-            webImageUrl = '/images/worship.jpg';
+            webImageUrl = 'https://thechurchcollective.com/wp-content/uploads/2020/02/handsupteam-800x600.jpg';
 
           // Youth Ministry
           } else if (name.includes('youth')) {
-            webImageUrl = '/images/youth.jpg';
+            webImageUrl = 'https://www.newcovenantgj.org/wp-content/uploads/2016/05/youthgroup-1.png';
 
           // Children Ministry
           } else if (
@@ -29,11 +29,11 @@
             name.includes('sunday school') ||
             name.includes('kids')
           ) {
-            webImageUrl = '/images/children.jpg';
+            webImageUrl = 'https://dq5pwpg1q8ru0.cloudfront.net/2023/09/26/10/00/33/a7034417-25bd-449f-8aff-2270c8a8575e/istockphoto-1205606503-612x612.jpg';
 
           // Prayer Ministry
           } else if (name.includes('prayer')) {
-            webImageUrl = '/images/prayer.jpg';
+            webImageUrl = 'https://images.squarespace-cdn.com/content/v1/64e47261734e15442f306693/1724797432570-3P4IQECSWIYY63R3Q833/Prayer+Meeting+copy.jpg';
 
           // Outreach Ministry
           } else if (
@@ -41,23 +41,23 @@
             name.includes('community') ||
             name.includes('service')
           ) {
-            webImageUrl = '/images/outreach.jpg';
+            webImageUrl = 'https://www.churchtrac.com/articles/images/blog_church_outreach_programs_ideas_feature.jpg';
 
           // Bible Study
           } else if (
             name.includes('bible') ||
             name.includes('study')
           ) {
-            webImageUrl = '/images/bible-study.jpg';
+            webImageUrl = 'https://media.swncdn.com/cms/CW/faith/47910-church-fellowship-1200.1200w.tn.jpg';
 
           // Choir / Music
           } else if (
             name.includes('choir') ||
             name.includes('music')
           ) {
-            webImageUrl = '/images/choir.jpg';
+            webImageUrl = 'https://images.squarespace-cdn.com/content/v1/597128506f4ca3125f8bdf84/1520466386197-SGFQ3IRMLA2OH5E2LJNO/Choir.jpg';
 
-          // -------- WOMEN'S MINISTRY (LOCAL IMAGE) --------
+          // -------- WOMEN'S MINISTRY (CHECK FIRST!) --------
           } else if (
             name.includes('women’s') ||   // curly apostrophe
             name.includes("women's") ||   // straight apostrophe
@@ -67,22 +67,28 @@
             name.includes('ladies') ||
             name.includes('woman')
           ) {
-            webImageUrl = '/images/womens-ministry.jpg';
+            // Proper women ministry image
+            webImageUrl = 'https://images.unsplash.com/photo-1604880882832-422b1c12c2f9?auto=format&fit=crop&w=1740&q=80&cache=' + Date.now();
 
           // Men's Ministry
           } else if (name.includes('men')) {
-            webImageUrl = '/images/men.jpg';
+            webImageUrl = 'https://www.resourceumc.org/-/media/umc-media/2019/05/06/18/11/mens-bible-study-group-lightstock_31971-shaun-menaryjpg.jpg';
           }
         %>
 
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4">
 
-          <!-- ALWAYS use default category image -->
+          <!-- PRIORITY: default image ALWAYS shows -->
           <img 
-            src="<%= webImageUrl ? webImageUrl : '/images/no-image.jpg' %>" 
+            src="<%= webImageUrl ? webImageUrl : (ministry.image ? '/images/' + ministry.image : '') %>" 
             alt="<%= ministry.name %>" 
-            class="w-full h-48 object-cover"
+            class="w-full h-48 object-cover <%= !webImageUrl && !ministry.image ? 'hidden' : '' %>"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           >
+
+          <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500 <%= webImageUrl || ministry.image ? 'hidden' : '' %>">
+            No Image
+          </div>
 
           <div class="p-6">
             <h2 class="text-2xl font-bold text-primary mb-4 text-center"><%= ministry.name %></h2>
