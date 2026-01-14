@@ -7,10 +7,10 @@ const events = [
   { name: "Wednesday Service", date: "Every Wednesday at 20:30" },
 
   // Prayer & Board Meetings (2026 dates)
-  { name: "Prayer & Board Meeting", date: "27-Feb-2026" },
-  { name: "Prayer & Board Meeting", date: "24-Apr-2026" },
-  { name: "Prayer & Board Meeting", date: "07-Aug-2026" },
-  { name: "Prayer & Board Meeting", date: "02-Oct-2026" },
+  { name: "Night Prayer & Board Meeting", date: "27-Feb-2026" },
+  { name: "Night Prayer & Board Meeting", date: "24-Apr-2026" },
+  { name: "Night Prayer & Board Meeting", date: "07-Aug-2026" },
+  { name: "Night Prayer & Board Meeting", date: "02-Oct-2026" },
 
   // Fasting Sundays (2026 dates)
   { name: "Fasting Sunday", date: "04-Jan-2026" },
@@ -42,8 +42,8 @@ const events = [
   { name: "Expedition Khukhune", date: "29-Aug-2026" },
   { name: "Rally", date: "01-Nov-2026" },
   { name: "Crusade", date: "04-Dec-2026" },  // Assuming 2026 based on document context
-  { name: "Joint Service", date: "29-Mar-2026" },
-  { name: "Joint Service", date: "25-Oct-2026" }
+  { name: "Joint Service with Khukhune", date: "29-Mar-2026" },
+  { name: "Joint Service with Khukhune", date: "25-Oct-2026" }
 ];
 const routineServices = [
   {
