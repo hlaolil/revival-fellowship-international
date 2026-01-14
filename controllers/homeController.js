@@ -2,29 +2,48 @@
 const fs = require('fs');
 const path = require('path');
 const events = [
-  { name: "Year planning", date: "11-Jan" },
-  { name: "Board meeting", date: "18-Jan" },
-  { name: "Giving to the less privileged", date: "25-Jan" },
-  { name: "Prayer and fasting", date: "2-Feb" },
-  { name: "Communion service", date: "23-Feb" },
-  { name: "Night prayer", date: "21-Feb" },
-  { name: "Leadership training", date: "01-May" },
-  { name: "Marriage seminar", date: "05-Apr" },
-  { name: "Open air evangelism", date: "14-Jun" },
-  { name: "Children's conference", date: "21-Jun" },
-  { name: "Ketekelo ea mosali ea khabane", date: "1-Aug" },
-  { name: "Expedition Saturday Fun Walk from Sekubu", date: "30-Aug" },
-  { name: "Rally for missions", date: "2-Nov" },
-  { name: "Healing campaign & personal evangelism", date: "29-Nov" },
-  { name: "Small business development training", date: "03-Dec" },
-  { name: "Revival", date: "5-Dec" },
-  { name: "Children's dedication and believers' baptism", date: "15-Dec" },
-  { name: "Prison visits", date: "ad hoc" },
-  { name: "Bible study", date: "Every Sunday" },
-  { name: "Church service", date: "Every Sunday" },
-  { name: "Intercession", date: "Every Sunday" },
-  { name: "Wednesday prayer meeting (Needs modification)", date: "TBD" },
-  { name: "Passover Conference", date: "17-Apr" },
+  // Regular/Recurring services
+  { name: "Sunday Services", date: "Every Sunday" },
+  { name: "Wednesday Service", date: "Every Wednesday at 20:30" },
+
+  // Prayer & Board Meetings (2026 dates)
+  { name: "Prayer & Board Meeting", date: "27-Feb-2026" },
+  { name: "Prayer & Board Meeting", date: "24-Apr-2026" },
+  { name: "Prayer & Board Meeting", date: "07-Aug-2026" },
+  { name: "Prayer & Board Meeting", date: "02-Oct-2026" },
+
+  // Fasting Sundays (2026 dates)
+  { name: "Fasting Sunday", date: "04-Jan-2026" },
+  { name: "Fasting Sunday", date: "01-Feb-2026" },
+  { name: "Fasting Sunday", date: "01-Mar-2026" },
+  { name: "Fasting Sunday", date: "03-May-2026" },
+  { name: "Fasting Sunday", date: "07-Jun-2026" },
+  { name: "Fasting Sunday", date: "05-Jul-2026" },
+  { name: "Fasting Sunday", date: "02-Aug-2026" },
+  { name: "Fasting Sunday", date: "06-Sep-2026" },
+  { name: "Fasting Sunday", date: "04-Oct-2026" },
+  { name: "Fasting Sunday", date: "01-Nov-2026" },
+  { name: "Fasting Sunday", date: "06-Dec-2026" },
+
+  // Leadership Training (2026 dates)
+  { name: "Leadership Training", date: "11-Mar-2026" },
+  { name: "Leadership Training", date: "25-May-2026" },
+  { name: "Leadership Training", date: "17-Jul-2026" },
+  { name: "Leadership Training", date: "05-Oct-2026" },
+
+  // Special / One-time events (2026 unless noted)
+  { name: "Giving to the Less Privileged", date: "Ad hoc" },
+  { name: "Holy Communion", date: "Ad hoc" },
+  { name: "Marriage Seminar", date: "27-Jun-2026" },
+  { name: "Children’s Dedication", date: "20-Jun-2026" },
+  { name: "Mosali ea Khabane", date: "09-Aug-2026" },
+  { name: "Prison Visits (Bo-mme)", date: "Every quarter" },
+  { name: "Hospital Visits (Bacha)", date: "Bi-annually" },
+  { name: "Expedition Khukhune", date: "29-Aug-2026" },
+  { name: "Rally", date: "01-Nov-2026" },
+  { name: "Crusade", date: "04-Dec-2026" },  // Assuming 2026 based on document context
+  { name: "Joint Service", date: "29-Mar-2026" },
+  { name: "Joint Service", date: "25-Oct-2026" }
 ];
 const routineServices = [
   {
