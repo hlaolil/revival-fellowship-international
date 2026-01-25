@@ -53,7 +53,7 @@ const routineServices = [
     contact: "Kelebone Lekunya +266 6320 6940"
   },
   {
-    videoLink: "https://www.youtube.com/embed/wFws66W_Ftc?si=0ZHiZiXZBCDN7bwY"
+    videoLink: "https://www.youtube.com/shorts/5VWxxSnWsR4?feature=share"
   },
   {
     name: "Sunday Service",
