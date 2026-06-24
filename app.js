@@ -15,6 +15,16 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
+// Force HTTPS on Render (must be before routes)
+app.use((req, res, next) => {
+  const isRender = !!process.env.RENDER;
+  const isHttps = req.headers['x-forwarded-proto'] === 'https';
+  if (isRender && !isHttps) {
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+
 // Routes
 app.get('/', homeController.index);
 app.get('/about', aboutController.index);
@@ -29,6 +39,7 @@ app.use((req, res, next) => {
   res.render('404', {
     title: 'Page Not Found',
     currentYear: new Date().getFullYear(),
+    lastModified: new Date().toLocaleString(),
     activePage: ''
   }, (err, html) => {
     if (err) {
@@ -46,19 +57,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
-});
-
-// === HTTPS & RENDER FIXES START HERE ===
-
-// Force HTTPS on Render (Production)
-app.use((req, res, next) => {
-  const isRender = !!process.env.RENDER;
-  const isHttps = req.headers['x-forwarded-proto'] === 'https';
-
-  if (isRender && !isHttps) {
-    return res.redirect(301, `https://${req.headers.host}${req.url}`);
-  }
-  next();
 });
 
 // Dynamic PORT & Host

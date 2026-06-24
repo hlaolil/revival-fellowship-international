@@ -1,4 +1,4 @@
-// controllers/joinController.js
+﻿// controllers/joinController.js
 const { MongoClient } = require('mongodb');
 
 // ---- CONFIG ----
@@ -26,23 +26,17 @@ exports.index = (req, res) => {
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: 'join',
-    // expose the four options to the template
-    options: [
-  { value: 'give',      label: 'Give',      icon: 'fa-heart',           href: '/give' },
-  { value: 'volunteer', label: 'Volunteer', icon: 'fa-hands-helping',   href: '/volunteer' },
-  { value: 'register',  label: 'Register Membership',  icon: 'fa-user-plus',       href: '/register' },
-  { value: 'inquire',   label: 'Inquire',   icon: 'fa-question-circle', href: '/inquire' },
-],
-    
+        
   });
 };
 // GET /inquire
 exports.inquire = (req, res) => {
   res.render('inquire', {
-    title: 'inquire',
+    title: 'Inquire',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
-    activePage: 'inquire'
+    activePage: 'join',
+    enquiryType: req.query.type || ''
   });
 };
 

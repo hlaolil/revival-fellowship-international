@@ -1,4 +1,4 @@
-<%- include('partials/header', { activePage: 'join' }) %>
+<%- include('partials/header', { activePage: 'join', title: 'Inquire' }) %>
 
 <section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/heroo.webp')">
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
@@ -15,33 +15,34 @@
       </div>
       <div class="mb-6">
         <label class="block text-lg font-bold mb-2">Last Name <span class="text-red-500">*</span></label>
-        <input type="text" name="last-name" required placeholder="Doe" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent">
+        <input type="text" name="last-name" required placeholder="Doe" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
       </div>
     </div>
 
     <div class="mb-6">
       <label class="block text-lg font-bold mb-2">Email <span class="text-red-500">*</span></label>
-      <input type="email" name="email" required placeholder="you@example.com" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent">
+      <input type="email" name="email" required placeholder="you@example.com" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
     </div>
 
     <div class="mb-6">
       <label class="block text-lg font-bold mb-2">Mobile Phone <span class="text-red-500">*</span></label>
-      <input type="tel" name="phone" required placeholder="+266 62233969" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent">
+      <input type="tel" name="phone" required placeholder="+266 62233969" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
     </div>
 
     <div class="mb-6">
       <label class="block text-lg font-bold mb-2">Enquiry Type <span class="text-red-500">*</span></label>
-      <select name="enquiry-type" required class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent">
+      <select name="enquiry-type" required class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         <option value="">Select an option</option>
-        <option value="prayer-request">Prayer Request</option>
-        <option value="appointment-request">Appointment Request</option>
-        <option value="membership-request">Membership Request</option>
+        <option value="prayer-request" <%= enquiryType === 'prayer-request' ? 'selected' : '' %>>Prayer Request</option>
+        <option value="appointment-request" <%= enquiryType === 'appointment-request' ? 'selected' : '' %>>Appointment Request</option>
+        <option value="membership-request" <%= enquiryType === 'membership-request' ? 'selected' : '' %>>Membership Request</option>
+        <option value="information-request" <%= enquiryType === 'information-request' ? 'selected' : '' %>>General Inquiry</option>
       </select>
     </div>
 
     <div class="mb-8">
       <label class="block text-lg font-bold mb-2">Message</label>
-      <textarea name="message" rows="6" placeholder="Tell us how we can help you..." class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"></textarea>
+      <textarea name="message" rows="6" placeholder="Tell us how we can help you..." class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
     </div>
 
     <input type="hidden" name="timestamp" id="timestamp">

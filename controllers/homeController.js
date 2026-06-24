@@ -1,4 +1,4 @@
-// controllers/homeController.js
+﻿// controllers/homeController.js
 const fs = require('fs');
 const path = require('path');
 const events = [
@@ -53,7 +53,10 @@ const routineServices = [
     contact: "Kelebone Lekunya +266 6320 6940"
   },
   {
-    videoLink: "https://www.youtube.com/embed/5VWxxSnWsR4?feature=share"
+    name: "Sunday Service Highlights",
+    schedule: "Watch our latest Sunday service",
+    videoLink: "https://www.youtube.com/embed/5VWxxSnWsR4?feature=share",
+    contact: "59193208"
   },
   {
     name: "Sunday Service",
@@ -67,13 +70,15 @@ exports.index = (req, res) => {
   const threeMonthsLater = new Date();
   threeMonthsLater.setMonth(today.getMonth() + 3);
   function parseEventDate(eventDate) {
-    const [day, month] = eventDate.split("-");
-    const year = today.getFullYear();
+    const parts = eventDate.split("-");
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2] ? parseInt(parts[2], 10) : today.getFullYear();
     return new Date(`${month} ${day}, ${year}`);
   }
   const upcomingEvents = events
     .filter(event => {
-      if (event.date === "ad hoc" || event.date === "Every Sunday" || event.date === "TBD") {
+      if (event.date.toLowerCase() === "ad hoc" || event.date === "Every Sunday" || event.date === "TBD") {
         return false;
       }
       const eventDate = parseEventDate(event.date);

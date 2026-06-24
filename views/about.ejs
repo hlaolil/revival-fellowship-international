@@ -1,67 +1,100 @@
-<%- include('partials/header', { activePage: 'about' }) %>
+<%- include('partials/header', { activePage: 'about', title: 'About Us' }) %>
+
 <section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/heroo.webp')">
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
     <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">About Us</h1>
   </div>
 </section>
+
 <!-- MAIN CONTENT -->
 <main class="max-w-5xl mx-auto px-6 py-16 space-y-16">
+
   <article class="bg-white rounded-2xl shadow-2xl p-10 md:p-16 text-center">
-    <h2 class="text-4xl font-bold text-primary mb-8">Vision Statement</h2>
+    <h2 class="text-4xl font-bold text-primary mb-8">
+      <i class="fas fa-eye mr-3 text-secondary"></i>Vision Statement
+    </h2>
     <p class="text-xl leading-relaxed text-gray-700 max-w-3xl mx-auto">
       To be a healthy assembly of faithful stewards of the manifold grace of God.
     </p>
   </article>
+
   <article class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl shadow-2xl p-10 md:p-16 text-center">
-    <h2 class="text-4xl font-bold text-primary mb-8">Mission Statement</h2>
+    <h2 class="text-4xl font-bold text-primary mb-8">
+      <i class="fas fa-bullseye mr-3 text-secondary"></i>Mission Statement
+    </h2>
     <p class="text-xl leading-relaxed text-gray-700 max-w-3xl mx-auto">
       To make disciples who will be faithful stewards of the manifold grace of God.
     </p>
   </article>
+
   <article class="bg-gray-100 rounded-2xl shadow-2xl p-10 md:p-16 text-center">
-    <h2 class="text-4xl font-bold text-primary mb-10">Our Goals</h2>
-    <ul class="space-y-6 text-xl text-gray-700 max-w-3xl mx-auto">
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Make disciples who will make disciples.
+    <h2 class="text-4xl font-bold text-primary mb-10">
+      <i class="fas fa-flag mr-3 text-secondary"></i>Our Goals
+    </h2>
+    <ul class="space-y-6 text-xl text-gray-700 max-w-3xl mx-auto text-left">
+      <li class="flex items-start gap-4">
+        <i class="fas fa-user-plus text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Make disciples who will make disciples.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Equip the saints for the work of the ministry.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-tools text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Equip the saints for the work of the ministry.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Send out and support workers to plant churches.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-paper-plane text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Send out and support workers to plant churches.</span>
       </li>
     </ul>
   </article>
+
   <article class="bg-white rounded-2xl shadow-2xl p-10 md:p-16 text-center">
-    <h2 class="text-4xl font-bold text-primary mb-10">Our Objectives</h2>
-    <ul class="space-y-6 text-xl text-gray-700 max-w-3xl mx-auto">
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Multiply believers.
+    <h2 class="text-4xl font-bold text-primary mb-10">
+      <i class="fas fa-crosshairs mr-3 text-secondary"></i>Our Objectives
+    </h2>
+    <ul class="space-y-6 text-xl text-gray-700 max-w-3xl mx-auto text-left">
+      <li class="flex items-start gap-4">
+        <i class="fas fa-users text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Multiply believers.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Disciple new believers.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-book-open text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Disciple new believers.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Train church planters.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-graduation-cap text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Train church planters.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Personal development.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-seedling text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Personal development.</span>
       </li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> Provide resources to accommodate church growth.
+      <li class="flex items-start gap-4">
+        <i class="fas fa-hands-helping text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span>Provide resources to accommodate church growth.</span>
       </li>
     </ul>
   </article>
+
   <article class="bg-gradient-to-br from-secondary/5 to-primary/5 rounded-2xl shadow-2xl p-10 md:p-16 text-center">
-    <h2 class="text-4xl font-bold text-primary mb-10">Our Core Values</h2>
-    <ul class="space-y-8 text-xl text-gray-700 max-w-3xl mx-auto">
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> <strong>Love and Fellowship</strong></li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> <strong>Discipleship and Church Planting</strong></li>
-      <li class="flex items-center justify-center gap-4">
-        <span class="text-secondary text-3xl">•</span> <strong>Faithfulness and Stewardship</strong></li>
+    <h2 class="text-4xl font-bold text-primary mb-10">
+      <i class="fas fa-star mr-3 text-secondary"></i>Our Core Values
+    </h2>
+    <ul class="space-y-8 text-xl text-gray-700 max-w-3xl mx-auto text-left">
+      <li class="flex items-start gap-4">
+        <i class="fas fa-heart text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span><strong>Love and Fellowship</strong></span>
+      </li>
+      <li class="flex items-start gap-4">
+        <i class="fas fa-church text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span><strong>Discipleship and Church Planting</strong></span>
+      </li>
+      <li class="flex items-start gap-4">
+        <i class="fas fa-handshake text-secondary text-2xl mt-1 flex-shrink-0"></i>
+        <span><strong>Faithfulness and Stewardship</strong></span>
+      </li>
     </ul>
   </article>
+
 </main>
+
 <%- include('partials/footer') %>
