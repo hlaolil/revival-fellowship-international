@@ -1,9 +1,9 @@
-<%- include('partials/header', { activePage: 'home', title: 'Home' }) %>
+<%- include('partials/header', { activePage: 'home', title: 'Home', metaDescription: 'Revival Fellowship International – An assembly of faithful stewards of the manifold grace of God. Join us in Butha-Buthe, Lesotho for Sunday and Wednesday services.' }) %>
 
 <!-- HERO SECTION -->
 <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
-  <img src="/images/hero.webp" alt="Worship" class="w-full h-full object-cover hidden md:block">
-  <img src="/images/hero1.webp" alt="Worship" class="w-full h-full object-cover md:hidden">
+  <img src="/images/hero.webp" alt="Worship service at RFI" class="w-full h-full object-cover hidden md:block">
+  <img src="/images/hero1.webp" alt="Worship service at RFI" class="w-full h-full object-cover md:hidden">
   <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading mb-4 hero-title">
@@ -12,15 +12,21 @@
       <p class="text-lg sm:text-xl md:text-2xl mb-10 text-gray-200 hero-tagline">
         An assembly of faithful stewards of the manifold grace of God
       </p>
-      <a href="/join" class="inline-block bg-white text-primary hover:bg-secondary hover:text-white font-bold py-4 px-12 rounded-full text-xl shadow-2xl transform hover:scale-105 transition duration-300 hero-cta">
-        Get Involved
-      </a>
+      <div class="flex flex-wrap justify-center gap-4 hero-cta">
+        <a href="/join" class="inline-block bg-white text-primary hover:bg-secondary hover:text-white font-bold py-4 px-10 rounded-full text-xl shadow-2xl transform hover:scale-105 transition duration-300">
+          Get Involved
+        </a>
+        <a href="/sermons" class="inline-block bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-bold py-4 px-10 rounded-full text-xl transform hover:scale-105 transition duration-300">
+          Watch Sermons
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- MAIN CONTENT – Three Cards -->
+<!-- THREE INFO CARDS -->
 <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-3 gap-10">
+
   <!-- Upcoming Events -->
   <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">
@@ -31,11 +37,13 @@
         <% upcomingEvents.forEach(event => { %>
           <li class="border-b pb-2">
             <strong><%= event.name %></strong><br>
-            <em class="text-sm text-gray-500"><%= event.date %></em>
+            <em class="text-sm text-gray-500">
+              <%= new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+            </em>
           </li>
         <% }) %>
       <% } else { %>
-        <li class="text-center text-gray-500">No upcoming events</li>
+        <li class="text-center text-gray-500">No upcoming events in the next 3 months</li>
       <% } %>
     </ul>
   </div>
@@ -47,13 +55,26 @@
     </h2>
     <p class="text-left leading-relaxed text-gray-700">
       <i class="fas fa-map-marker-alt text-secondary mr-2"></i>A1 Road, Opposite Usave<br>
-      <span class="ml-5">Behind BEDCO, Butha-Buthe 400</span><br>
-      <span class="ml-5">Lesotho</span>
+      <span class="ml-6">Behind BEDCO, Butha-Buthe 400</span><br>
+      <span class="ml-6">Lesotho</span>
     </p>
     <p class="text-left leading-relaxed text-gray-700 mt-4">
-      <i class="fas fa-envelope text-secondary mr-2"></i>tlokza@gmail.com<br>
-      <i class="fas fa-phone text-secondary mr-2 mt-2"></i>+266 62233969
+      <i class="fas fa-envelope text-secondary mr-2"></i>
+      <a href="mailto:tlokza@gmail.com" class="hover:text-primary transition">tlokza@gmail.com</a>
     </p>
+    <p class="text-left leading-relaxed text-gray-700 mt-2">
+      <i class="fas fa-phone text-secondary mr-2"></i>
+      <a href="tel:+26662233969" class="hover:text-primary transition">+266 62233969</a>
+    </p>
+    <p class="text-left leading-relaxed text-gray-700 mt-2">
+      <i class="fab fa-whatsapp text-green-500 mr-2"></i>
+      <a href="https://wa.me/26662233969" target="_blank" class="hover:text-green-600 transition font-semibold">Message us on WhatsApp</a>
+    </p>
+    <div class="mt-6 text-center">
+      <a href="/join" class="inline-block bg-primary text-white px-6 py-3 rounded-full hover:bg-accent transition font-semibold">
+        Make an Enquiry
+      </a>
+    </div>
   </div>
 
   <!-- Location Map -->
@@ -63,11 +84,13 @@
     </h2>
     <iframe
       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
-      class="w-full h-64 rounded-lg border-0"
+      class="w-full h-56 rounded-lg border-0"
       allowfullscreen=""
       loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade">
+      referrerpolicy="no-referrer-when-downgrade"
+      title="RFI Location Map">
     </iframe>
+    <p class="text-center text-sm text-gray-500 mt-3">A1 Road, Butha-Buthe 400, Lesotho</p>
   </div>
 </main>
 
@@ -90,11 +113,52 @@
               <p class="text-gray-700 mt-2"><strong>Contact:</strong> <%= service.contact %></p>
             <% } else { %>
               <p class="text-gray-600 mt-1"><%= service.schedule %></p>
+              <a href="/sermons" class="inline-block mt-3 text-primary font-semibold hover:underline">View All Sermons &rarr;</a>
             <% } %>
           </div>
         </div>
       <% }) %>
     </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS SECTION -->
+<% if (testimonials && testimonials.length > 0) { %>
+<section class="bg-white py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-primary">
+      <i class="fas fa-quote-left mr-2 text-secondary"></i>What Our Members Say
+    </h2>
+    <p class="text-center text-gray-500 mb-12 text-lg">Stories of faith, growth, and community from the RFI family</p>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <% testimonials.forEach(t => { %>
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col hover:shadow-lg transition">
+          <i class="fas fa-quote-left text-secondary text-2xl mb-4"></i>
+          <p class="text-gray-700 text-sm leading-relaxed flex-1 italic">"<%= t.text %>"</p>
+          <div class="mt-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+              <%= t.name.charAt(0) %>
+            </div>
+            <div>
+              <p class="font-bold text-gray-800 text-sm"><%= t.name %></p>
+              <p class="text-xs text-gray-500"><%= t.role %></p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- LATEST NEWS STRIP -->
+<section class="bg-primary text-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold mb-4"><i class="fas fa-newspaper mr-2"></i>Stay Up To Date</h2>
+    <p class="text-teal-100 mb-6 text-lg">Read the latest announcements, events, and news from RFI.</p>
+    <a href="/news" class="inline-block bg-secondary hover:bg-orange-600 text-white font-bold py-3 px-10 rounded-full text-lg transition">
+      View News &amp; Announcements
+    </a>
   </div>
 </section>
 

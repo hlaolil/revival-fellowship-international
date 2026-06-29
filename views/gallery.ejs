@@ -1,0 +1,109 @@
+<%- include('partials/header', { activePage: 'gallery', title: 'Photo Gallery', metaDescription: 'Browse photos from Revival Fellowship International – services, ministries, events, and community moments.' }) %>
+
+<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/wide.jpg')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <div class="text-center text-white">
+      <h1 class="text-5xl md:text-6xl font-bold font-heading">Photo Gallery</h1>
+      <p class="mt-4 text-xl text-gray-200">Moments from the RFI family</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-6 py-16">
+
+  <!-- Category Filter -->
+  <div class="flex flex-wrap gap-3 mb-12 justify-center">
+    <% categories.forEach(cat => { %>
+      <button onclick="filterGallery('<%= cat %>')"
+              class="gallery-btn <%= cat === 'All' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700' %> px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-primary hover:text-white"
+              data-cat="<%= cat %>">
+        <%= cat %>
+      </button>
+    <% }) %>
+  </div>
+
+  <!-- Photo Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery-grid">
+    <% photos.forEach((photo, i) => { %>
+      <div class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition cursor-pointer group"
+           data-cat="<%= photo.category %>"
+           onclick="openLightbox(<%= i %>)">
+        <div class="relative overflow-hidden">
+          <img src="/images/<%= photo.src %>"
+               alt="<%= photo.caption %>"
+               class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+          <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition duration-300 flex items-center justify-center">
+            <i class="fas fa-expand text-white text-2xl opacity-0 group-hover:opacity-100 transition"></i>
+          </div>
+        </div>
+        <div class="bg-white p-3">
+          <p class="text-sm font-semibold text-gray-700"><%= photo.caption %></p>
+          <p class="text-xs text-gray-400"><%= photo.category %></p>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center p-4">
+  <button onclick="closeLightbox()" class="absolute top-4 right-6 text-white text-4xl hover:text-secondary transition z-50">&times;</button>
+  <button onclick="prevPhoto()" class="absolute left-4 text-white text-4xl hover:text-secondary transition z-50 top-1/2 -translate-y-1/2">&#8249;</button>
+  <button onclick="nextPhoto()" class="absolute right-4 text-white text-4xl hover:text-secondary transition z-50 top-1/2 -translate-y-1/2">&#8250;</button>
+  <div class="max-w-4xl w-full text-center">
+    <img id="lightbox-img" src="" alt="" class="max-h-screen-3/4 mx-auto rounded-xl shadow-2xl max-w-full" style="max-height:80vh">
+    <p id="lightbox-caption" class="text-white mt-4 text-lg"></p>
+  </div>
+</div>
+
+<script>
+  const photos = <%- JSON.stringify(photos) %>;
+  let current = 0;
+
+  function filterGallery(cat) {
+    document.querySelectorAll('.gallery-btn').forEach(btn => {
+      btn.classList.remove('bg-primary', 'text-white');
+      btn.classList.add('bg-gray-200', 'text-gray-700');
+    });
+    const active = document.querySelector(`[data-cat="${cat}"]`);
+    if (active) {
+      active.classList.add('bg-primary', 'text-white');
+      active.classList.remove('bg-gray-200', 'text-gray-700');
+    }
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.style.display = (cat === 'All' || item.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+
+  function openLightbox(i) {
+    current = i;
+    showPhoto();
+    document.getElementById('lightbox').classList.remove('hidden');
+    document.getElementById('lightbox').classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.add('hidden');
+    document.getElementById('lightbox').classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  function showPhoto() {
+    const p = photos[current];
+    document.getElementById('lightbox-img').src = '/images/' + p.src;
+    document.getElementById('lightbox-img').alt = p.caption;
+    document.getElementById('lightbox-caption').textContent = p.caption + ' – ' + p.category;
+  }
+
+  function prevPhoto() { current = (current - 1 + photos.length) % photos.length; showPhoto(); }
+  function nextPhoto() { current = (current + 1) % photos.length; showPhoto(); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') prevPhoto();
+    if (e.key === 'ArrowRight') nextPhoto();
+  });
+</script>
+
+<%- include('partials/footer') %>

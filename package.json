@@ -1,5 +1,3 @@
-
-
 {
   "name": "revival-fellowship-international",
   "version": "1.0.0",
@@ -19,9 +17,11 @@
   "author": "Letlotlo Hlaoli (converted to Node.js MVC)",
   "license": "MIT",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "mongodb": "^6.8.0"
+    "mongodb": "^6.8.0",
+    "nodemailer": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

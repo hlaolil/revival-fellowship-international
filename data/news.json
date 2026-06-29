@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "slug": "crusade-2026-announcement",
+    "title": "Annual Crusade 2026 – Mark Your Calendar",
+    "date": "2026-06-01",
+    "author": "RFI Leadership",
+    "category": "Announcement",
+    "excerpt": "Join us for our annual crusade on 4 December 2026. This is a powerful time of evangelism, worship, and community outreach that touches lives across Butha-Buthe.",
+    "content": "We are excited to announce our Annual Crusade scheduled for 4 December 2026. This will be a powerful week of evangelism, worship, and community outreach touching lives across Butha-Buthe and beyond.\n\nThe crusade is one of RFI's flagship events of the year. We invite all members, friends, and community members to join us as we come together to proclaim the Gospel and minister to those in need.\n\nVolunteers are needed for logistics, worship, children's ministry, and prayer teams. Please speak to your ministry leader or contact the church office to sign up.",
+    "image": "service.jpg",
+    "featured": true
+  },
+  {
+    "id": "2",
+    "slug": "leadership-training-march-2026",
+    "title": "Leadership Training – March 2026",
+    "date": "2026-02-20",
+    "author": "RFI Leadership",
+    "category": "Training",
+    "excerpt": "Our first Leadership Training session of 2026 takes place on 11 March. All cell leaders and ministry heads are encouraged to attend this equipping session.",
+    "content": "RFI's Leadership Training programme continues with our March 2026 session on Wednesday 11 March. This equipping session is designed for cell leaders, ministry heads, and anyone called to serve in a leadership capacity.\n\nTopics covered will include servant leadership, discipleship strategies, and pastoral care fundamentals. The session runs from 09:00 to 16:00 and lunch will be provided.\n\nPlease RSVP by contacting the church office by 8 March so we can prepare adequate materials and catering.",
+    "image": "graduation_hands.jpg",
+    "featured": false
+  },
+  {
+    "id": "3",
+    "slug": "joint-service-khukhune-march",
+    "title": "Joint Service with Khukhune Assembly – 29 March",
+    "date": "2026-02-10",
+    "author": "RFI Leadership",
+    "category": "Special Event",
+    "excerpt": "We will be joining our brothers and sisters at Khukhune Assembly for a special joint service on 29 March 2026. All members are encouraged to attend.",
+    "content": "RFI will be hosting a Joint Service with our friends at Khukhune Assembly on Sunday 29 March 2026. This will be a beautiful time of shared worship, fellowship, and the Word.\n\nThe service will begin at the regular Sunday time of 10:00 and is expected to run until approximately 14:00. All members are warmly encouraged to attend and to bring family and friends.\n\nThis partnership reflects our commitment to unity in the body of Christ across our region.",
+    "image": "wide.jpg",
+    "featured": false
+  },
+  {
+    "id": "4",
+    "slug": "marriage-seminar-june-2026",
+    "title": "Marriage Seminar – 27 June 2026",
+    "date": "2026-05-15",
+    "author": "RFI Leadership",
+    "category": "Special Event",
+    "excerpt": "RFI is hosting a Marriage Seminar on 27 June 2026. Whether you are engaged, newly married, or have been married for decades, this seminar is for you.",
+    "content": "We are pleased to announce our Marriage Seminar on 27 June 2026. This full-day event is designed to strengthen marriages, equip couples with practical tools, and anchor relationships in biblical truth.\n\nThe seminar is open to all couples – engaged, newly married, and long-married alike. Childcare will be available for young children during the sessions.\n\nRegistration is required. Please contact the church office or fill in an inquiry form to register your place. Spaces are limited.",
+    "image": "prayer.jpg",
+    "featured": false
+  }
+]

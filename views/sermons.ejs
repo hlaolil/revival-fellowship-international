@@ -1,0 +1,110 @@
+<%- include('partials/header', { activePage: 'sermons', title: 'Sermon Archive', metaDescription: 'Watch and listen to sermons from Revival Fellowship International. Browse our archive of teachings and messages.' }) %>
+
+<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/service.jpg')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <div class="text-center text-white">
+      <h1 class="text-5xl md:text-6xl font-bold font-heading">Sermon Archive</h1>
+      <p class="mt-4 text-xl text-gray-200">Watch and be blessed by the Word</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-6 py-16">
+
+  <!-- Filter by Series -->
+  <% if (series && series.length > 0) { %>
+    <div class="flex flex-wrap gap-3 mb-12 justify-center">
+      <button onclick="filterSeries('all')" class="series-btn active-series bg-primary text-white px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-accent" data-series="all">All Series</button>
+      <% series.forEach(s => { %>
+        <button onclick="filterSeries('<%= s %>')" class="series-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-primary hover:text-white" data-series="<%= s %>"><%= s %></button>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <!-- Featured Sermon -->
+  <% const featured = sermons.find(s => s.featured); %>
+  <% if (featured) { %>
+    <div class="mb-14 bg-white rounded-2xl shadow-2xl overflow-hidden md:flex">
+      <div class="md:w-1/2">
+        <iframe class="w-full h-72 md:h-full" src="https://www.youtube.com/embed/<%= featured.videoId %>" title="<%= featured.title %>" allowfullscreen></iframe>
+      </div>
+      <div class="md:w-1/2 p-10 flex flex-col justify-center">
+        <span class="inline-block bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 w-fit">Latest Sermon</span>
+        <h2 class="text-3xl font-bold text-primary mb-3"><%= featured.title %></h2>
+        <p class="text-sm text-gray-500 mb-4">
+          <i class="fas fa-calendar mr-1"></i><%= new Date(featured.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+          &bull; <i class="fas fa-user mr-1"></i><%= featured.speaker %>
+          &bull; <i class="fas fa-book-open mr-1"></i><%= featured.series %>
+        </p>
+        <p class="text-gray-600 leading-relaxed"><%= featured.description %></p>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Sermon Grid -->
+  <div id="sermon-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <% sermons.forEach(sermon => { %>
+      <div class="sermon-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition" data-series="<%= sermon.series %>">
+        <div class="relative">
+          <img src="https://img.youtube.com/vi/<%= sermon.videoId %>/hqdefault.jpg"
+               alt="<%= sermon.title %>"
+               class="w-full h-48 object-cover cursor-pointer"
+               onclick="playVideo('<%= sermon.videoId %>', this)">
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="bg-primary bg-opacity-80 rounded-full w-14 h-14 flex items-center justify-center">
+              <i class="fas fa-play text-white text-xl ml-1"></i>
+            </div>
+          </div>
+          <iframe class="w-full h-48 hidden" id="iframe-<%= sermon.id %>"
+                  src="" title="<%= sermon.title %>" allowfullscreen></iframe>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full"><%= sermon.series %></span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1"><%= sermon.title %></h3>
+          <p class="text-xs text-gray-500 mb-2">
+            <i class="fas fa-calendar mr-1"></i><%= new Date(sermon.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+            &bull; <i class="fas fa-user mr-1"></i><%= sermon.speaker %>
+          </p>
+          <p class="text-gray-600 text-sm"><%= sermon.description %></p>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <% if (!sermons || sermons.length === 0) { %>
+    <div class="text-center py-20">
+      <i class="fas fa-video text-6xl text-gray-300 mb-6"></i>
+      <p class="text-2xl text-gray-500">No sermons yet. Check back soon!</p>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  function filterSeries(series) {
+    document.querySelectorAll('.series-btn').forEach(btn => {
+      btn.classList.remove('bg-primary', 'text-white', 'active-series');
+      btn.classList.add('bg-gray-200', 'text-gray-700');
+    });
+    const active = document.querySelector(`[data-series="${series}"]`);
+    if (active) {
+      active.classList.add('bg-primary', 'text-white', 'active-series');
+      active.classList.remove('bg-gray-200', 'text-gray-700');
+    }
+    document.querySelectorAll('.sermon-card').forEach(card => {
+      card.style.display = (series === 'all' || card.dataset.series === series) ? '' : 'none';
+    });
+  }
+
+  function playVideo(videoId, img) {
+    const card = img.closest('.relative');
+    const iframe = card.querySelector('iframe');
+    img.classList.add('hidden');
+    card.querySelector('.absolute').classList.add('hidden');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    iframe.classList.remove('hidden');
+  }
+</script>
+
+<%- include('partials/footer') %>

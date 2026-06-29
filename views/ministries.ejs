@@ -1,14 +1,17 @@
-<%- include('partials/header', { activePage: 'ministries', title: 'Ministries' }) %>
+<%- include('partials/header', { activePage: 'ministries', title: 'Ministries', metaDescription: 'Explore the ministries of Revival Fellowship International: Youth, Women, Children, and Men. Find your place to serve and grow in faith.' }) %>
 
 <section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/heroo.webp')">
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">Our Ministries</h1>
+    <div class="text-center text-white">
+      <h1 class="text-5xl md:text-7xl font-bold font-heading">Our Ministries</h1>
+      <p class="mt-4 text-xl text-gray-200">Find your place to serve and grow</p>
+    </div>
   </div>
 </section>
 
 <div class="max-w-7xl mx-auto px-6 py-16">
   <% if (ministries && ministries.length > 0) { %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
       <% ministries.forEach(ministry => { %>
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4 flex flex-col">
           <% if (ministry.resolvedImage) { %>
@@ -16,11 +19,11 @@
               src="/images/<%= ministry.resolvedImage %>"
               alt="<%= ministry.name %>"
               class="w-full h-48 object-cover"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            >
-            <div class="bg-gray-200 h-48 items-center justify-center text-gray-500 hidden">No Image</div>
+              onerror="this.style.display='none'">
           <% } else { %>
-            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">No Image</div>
+            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-400">
+              <i class="fas fa-church text-5xl"></i>
+            </div>
           <% } %>
           <div class="p-6 flex flex-col flex-1">
             <h2 class="text-2xl font-bold text-primary mb-3 text-center"><%= ministry.name %></h2>
@@ -30,6 +33,12 @@
             <div class="border-t pt-4 mt-auto space-y-2 text-sm text-center text-gray-700">
               <p><i class="fas fa-clock text-secondary mr-1"></i><strong>Schedule:</strong> <%= ministry.schedule %></p>
               <p><i class="fas fa-phone text-secondary mr-1"></i><strong>Contact:</strong> <%= ministry.contact %></p>
+            </div>
+            <div class="mt-4 text-center">
+              <a href="/ministries/<%= ministry.slug %>"
+                 class="inline-block bg-primary text-white px-5 py-2 rounded-full text-sm hover:bg-accent transition font-semibold">
+                Learn More &rarr;
+              </a>
             </div>
           </div>
         </div>

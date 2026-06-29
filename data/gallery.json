@@ -1,0 +1,13 @@
+[
+  { "src": "service.jpg", "caption": "Sunday Service", "category": "Worship" },
+  { "src": "prayer.jpg", "caption": "Wednesday Prayer Meeting", "category": "Prayer" },
+  { "src": "youth.jpg", "caption": "Youth Meeting", "category": "Youth" },
+  { "src": "women.jpg", "caption": "Women's Ministry", "category": "Women" },
+  { "src": "children.jpg", "caption": "Children's Ministry", "category": "Children" },
+  { "src": "men.jpg", "caption": "Men's Fellowship", "category": "Men" },
+  { "src": "graduation_hands.jpg", "caption": "Leadership Training", "category": "Training" },
+  { "src": "wide.jpg", "caption": "Church Community", "category": "Community" },
+  { "src": "small.webp", "caption": "Fellowship", "category": "Community" },
+  { "src": "hero.webp", "caption": "Worship Together", "category": "Worship" },
+  { "src": "heroo.webp", "caption": "Praise and Worship", "category": "Worship" }
+]
