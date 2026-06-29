@@ -19,11 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// Force HTTPS on Render
+// Force HTTPS in production (Vercel sets VERCEL=1, Render sets RENDER=1)
 app.use((req, res, next) => {
-  const isRender = !!process.env.RENDER;
+  const inCloud = process.env.VERCEL || process.env.RENDER;
   const isHttps = req.headers['x-forwarded-proto'] === 'https';
-  if (isRender && !isHttps) {
+  if (inCloud && !isHttps) {
     return res.redirect(301, `https://${req.headers.host}${req.url}`);
   }
   next();
@@ -70,12 +70,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.RENDER_EXTERNAL_HOSTNAME || `localhost:${PORT}`;
-const PROTOCOL = process.env.RENDER ? 'https' : 'http';
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on ${PROTOCOL}://${HOST}`);
-});
+// Only start a local server when running directly (not on Vercel serverless)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;
