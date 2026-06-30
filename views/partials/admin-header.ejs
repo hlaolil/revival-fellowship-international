@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | RFI Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { colors: { primary: '#008080', secondary: '#FFA500', accent: '#006d77' } } } }</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="/images/fav.jpg" type="image/x-icon">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-accent text-white flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-teal-700">
+      <a href="/" class="flex items-center gap-3 hover:opacity-80 transition">
+        <img src="/images/logo.webp" alt="RFI" class="h-10 w-auto rounded">
+        <div>
+          <p class="font-bold text-sm leading-tight">RFI Admin</p>
+          <p class="text-xs text-teal-200">Revival Fellowship Int.</p>
+        </div>
+      </a>
+    </div>
+
+    <nav class="p-3 flex-1 space-y-1">
+      <% const nav = [
+        { section: 'dashboard',    href: '/admin/dashboard',    icon: 'fa-tachometer-alt', label: 'Dashboard' },
+        { section: 'events',       href: '/admin/events',       icon: 'fa-calendar-alt',   label: 'Events' },
+        { section: 'testimonials', href: '/admin/testimonials', icon: 'fa-quote-right',    label: 'Testimonials' },
+        { section: 'news',         href: '/admin/news',         icon: 'fa-newspaper',      label: 'News' },
+        { section: 'sermons',      href: '/admin/sermons',      icon: 'fa-video',          label: 'Sermons' },
+        { section: 'content',      href: '/admin/content',      icon: 'fa-home',           label: 'Home Content' },
+      ]; %>
+      <% nav.forEach(item => { %>
+        <a href="<%= item.href %>"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-medium <%= currentSection === item.section ? 'bg-primary text-white' : 'text-teal-100 hover:bg-primary/60' %>">
+          <i class="fas <%= item.icon %> w-5 text-center"></i>
+          <span><%= item.label %></span>
+        </a>
+      <% }) %>
+    </nav>
+
+    <div class="p-3 border-t border-teal-700 space-y-1">
+      <a href="/" target="_blank"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg text-teal-200 hover:bg-primary/60 transition text-sm">
+        <i class="fas fa-external-link-alt w-5 text-center"></i><span>View Website</span>
+      </a>
+      <a href="/admin/logout"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-300 hover:bg-red-600/40 transition text-sm">
+        <i class="fas fa-sign-out-alt w-5 text-center"></i><span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="bg-white shadow-sm px-8 py-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-800"><%= title %></h1>
+      <span class="text-sm text-gray-400">Revival Fellowship International</span>
+    </header>
+    <main class="flex-1 p-8">

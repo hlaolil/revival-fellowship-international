@@ -42,11 +42,51 @@ app.get('/news/:slug',  newsController.post);
 app.get('/sermons',     sermonsController.index);
 app.get('/gallery',     galleryController.index);
 
-// Admin routes
-app.get('/admin',              adminController.login);
-app.post('/admin/login',       adminController.doLogin);
-app.get('/admin/dashboard',    adminController.requireAuth, adminController.dashboard);
-app.get('/admin/logout',       adminController.logout);
+// Admin – auth
+app.get('/admin',           adminController.login);
+app.post('/admin/login',    adminController.doLogin);
+app.get('/admin/logout',    adminController.logout);
+
+const auth = adminController.requireAuth;
+
+// Admin – dashboard
+app.get('/admin/dashboard', auth, adminController.dashboard);
+
+// Admin – events
+app.get('/admin/events',                auth, adminController.eventsList);
+app.get('/admin/events/new',            auth, adminController.eventNew);
+app.post('/admin/events/create',        auth, adminController.eventCreate);
+app.get('/admin/events/:id/edit',       auth, adminController.eventEdit);
+app.post('/admin/events/:id/update',    auth, adminController.eventUpdate);
+app.post('/admin/events/:id/delete',    auth, adminController.eventDelete);
+
+// Admin – testimonials
+app.get('/admin/testimonials',              auth, adminController.testimonialsList);
+app.get('/admin/testimonials/new',          auth, adminController.testimonialNew);
+app.post('/admin/testimonials/create',      auth, adminController.testimonialCreate);
+app.get('/admin/testimonials/:id/edit',     auth, adminController.testimonialEdit);
+app.post('/admin/testimonials/:id/update',  auth, adminController.testimonialUpdate);
+app.post('/admin/testimonials/:id/delete',  auth, adminController.testimonialDelete);
+
+// Admin – news
+app.get('/admin/news',              auth, adminController.newsList);
+app.get('/admin/news/new',          auth, adminController.newsNew);
+app.post('/admin/news/create',      auth, adminController.newsCreate);
+app.get('/admin/news/:id/edit',     auth, adminController.newsEdit);
+app.post('/admin/news/:id/update',  auth, adminController.newsUpdate);
+app.post('/admin/news/:id/delete',  auth, adminController.newsDelete);
+
+// Admin – sermons
+app.get('/admin/sermons',               auth, adminController.sermonsList);
+app.get('/admin/sermons/new',           auth, adminController.sermonNew);
+app.post('/admin/sermons/create',       auth, adminController.sermonCreate);
+app.get('/admin/sermons/:id/edit',      auth, adminController.sermonEdit);
+app.post('/admin/sermons/:id/update',   auth, adminController.sermonUpdate);
+app.post('/admin/sermons/:id/delete',   auth, adminController.sermonDelete);
+
+// Admin – home page content
+app.get('/admin/content',         auth, adminController.contentEdit);
+app.post('/admin/content/update', auth, adminController.contentUpdate);
 
 // 404
 app.use((req, res) => {

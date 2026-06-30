@@ -1,0 +1,84 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<div class="max-w-2xl">
+  <a href="/admin/sermons" class="text-sm text-gray-500 hover:text-primary transition mb-6 inline-block">&larr; Back to Sermons</a>
+
+  <% if (error) { %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
+      <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+    </div>
+  <% } %>
+
+  <div class="bg-white rounded-2xl shadow-lg p-8">
+    <form method="POST" action="<%= sermon ? '/admin/sermons/' + sermon._id + '/update' : '/admin/sermons/create' %>">
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Sermon Title <span class="text-red-500">*</span></label>
+        <input type="text" name="title" required value="<%= sermon ? sermon.title : '' %>"
+               placeholder="e.g. Walking in Faithful Stewardship"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">YouTube Video ID <span class="text-red-500">*</span></label>
+        <input type="text" name="videoId" required value="<%= sermon ? sermon.videoId : '' %>"
+               placeholder="e.g. 5VWxxSnWsR4"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        <p class="text-xs text-gray-400 mt-1">The video ID is the part after <code class="bg-gray-100 px-1 rounded">?v=</code> in a YouTube URL. E.g. for <em>youtube.com/watch?v=5VWxxSnWsR4</em> enter <strong>5VWxxSnWsR4</strong>.</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Date</label>
+          <input type="date" name="date" value="<%= sermon ? sermon.date : new Date().toISOString().split('T')[0] %>"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Speaker</label>
+          <input type="text" name="speaker" value="<%= sermon ? sermon.speaker : 'RFI Pastorate' %>"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Sermon Series <span class="text-gray-400">(optional)</span></label>
+        <input type="text" name="series" value="<%= sermon ? sermon.series || '' : '' %>"
+               placeholder="e.g. Stewardship, Prayer, Family"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Description <span class="text-gray-400">(optional)</span></label>
+        <textarea name="description" rows="4"
+                  placeholder="Brief description of the sermon..."
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"><%= sermon ? sermon.description || '' : '' %></textarea>
+      </div>
+
+      <div class="mb-8">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" name="featured" value="on" <%= sermon && sermon.featured ? 'checked' : '' %>
+                 class="w-5 h-5 rounded text-primary focus:ring-primary">
+          <span class="font-semibold text-gray-700">Mark as Featured Sermon</span>
+        </label>
+        <p class="text-xs text-gray-400 mt-1 ml-8">Featured sermons appear prominently at the top of the sermons page.</p>
+      </div>
+
+      <% if (sermon && sermon.videoId) { %>
+        <div class="mb-8 bg-gray-50 rounded-xl p-4">
+          <p class="text-sm font-bold text-gray-600 mb-3">Preview</p>
+          <img src="https://img.youtube.com/vi/<%= sermon.videoId %>/hqdefault.jpg"
+               alt="Video thumbnail" class="w-48 rounded-lg shadow">
+        </div>
+      <% } %>
+
+      <div class="flex gap-4">
+        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
+          <i class="fas fa-save mr-2"></i><%= sermon ? 'Save Changes' : 'Add Sermon' %>
+        </button>
+        <a href="/admin/sermons" class="border-2 border-gray-300 text-gray-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/admin-footer') %>

@@ -1,0 +1,45 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<div class="flex justify-between items-center mb-8">
+  <p class="text-gray-500"><%= testimonials.length %> testimonial<%= testimonials.length !== 1 ? 's' : '' %> total</p>
+  <a href="/admin/testimonials/new" class="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-accent transition">
+    <i class="fas fa-plus mr-2"></i>Add Testimonial
+  </a>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <% if (testimonials.length > 0) { %>
+    <% testimonials.forEach(t => { %>
+      <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+            <%= t.name.charAt(0) %>
+          </div>
+          <div>
+            <p class="font-bold text-gray-800"><%= t.name %></p>
+            <p class="text-xs text-gray-400"><%= t.role || 'Church Member' %></p>
+          </div>
+        </div>
+        <p class="text-gray-600 text-sm italic flex-1">"<%= t.text.length > 150 ? t.text.slice(0, 150) + '…' : t.text %>"</p>
+        <div class="flex gap-2 pt-2 border-t">
+          <a href="/admin/testimonials/<%= t._id %>/edit" class="bg-secondary text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-600 transition">
+            <i class="fas fa-edit mr-1"></i>Edit
+          </a>
+          <form method="POST" action="/admin/testimonials/<%= t._id %>/delete" onsubmit="return confirm('Delete this testimonial?')">
+            <button type="submit" class="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-red-700 transition">
+              <i class="fas fa-trash mr-1"></i>Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="col-span-2 bg-white rounded-2xl shadow p-16 text-center text-gray-400">
+      <i class="fas fa-quote-right text-5xl mb-4"></i>
+      <p class="text-lg mb-4">No testimonials yet.</p>
+      <a href="/admin/testimonials/new" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-accent transition">Add First Testimonial</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/admin-footer') %>
