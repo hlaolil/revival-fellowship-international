@@ -1,0 +1,71 @@
+<%- include('partials/header', { activePage: 'news', title: post.title, metaDescription: post.excerpt }) %>
+
+<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/<%= post.image %>')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-end">
+    <div class="max-w-5xl mx-auto px-6 pb-10 text-white w-full">
+      <span class="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider"><%= post.category %></span>
+      <h1 class="text-3xl md:text-5xl font-bold font-heading mt-3"><%= post.title %></h1>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-5xl mx-auto px-6 py-16">
+  <!-- Breadcrumb -->
+  <nav class="text-sm text-gray-500 mb-10">
+    <a href="/" class="hover:text-primary transition">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/news" class="hover:text-primary transition">News</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-700 font-semibold"><%= post.title %></span>
+  </nav>
+
+  <div class="grid md:grid-cols-3 gap-12">
+    <!-- Article Body -->
+    <article class="md:col-span-2">
+      <div class="flex items-center gap-4 text-sm text-gray-500 mb-8">
+        <span><i class="fas fa-calendar mr-1"></i><%= new Date(post.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+        <span><i class="fas fa-user mr-1"></i><%= post.author %></span>
+      </div>
+
+      <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4">
+        <% post.content.split('\n\n').forEach(para => { %>
+          <p><%= para %></p>
+        <% }) %>
+      </div>
+
+      <div class="mt-10 pt-8 border-t flex flex-wrap gap-4">
+        <a href="/join" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
+          <i class="fas fa-envelope mr-2"></i>Get Involved
+        </a>
+        <a href="https://wa.me/26662233969" target="_blank" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition">
+          <i class="fab fa-whatsapp mr-2"></i>WhatsApp Us
+        </a>
+        <a href="/news" class="border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition">
+          &larr; All Articles
+        </a>
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="bg-gray-50 rounded-2xl p-6 shadow sticky top-6">
+        <h3 class="text-lg font-bold text-primary mb-5">More Articles</h3>
+        <ul class="space-y-4">
+          <% related.forEach(r => { %>
+            <li>
+              <a href="/news/<%= r.slug %>" class="group">
+                <p class="font-semibold text-gray-800 group-hover:text-primary transition text-sm"><%= r.title %></p>
+                <p class="text-xs text-gray-400 mt-1"><%= new Date(r.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+              </a>
+            </li>
+          <% }) %>
+        </ul>
+        <div class="mt-6 pt-4 border-t">
+          <a href="/news" class="text-primary font-semibold hover:underline text-sm">&larr; All Articles</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

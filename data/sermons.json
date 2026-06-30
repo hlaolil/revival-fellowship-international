@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "title": "Sunday Service Highlights",
+    "date": "2026-01-05",
+    "speaker": "RFI Pastorate",
+    "series": "New Year",
+    "videoId": "5VWxxSnWsR4",
+    "description": "Join us for our latest Sunday service highlights as we enter the new year with faith and expectation.",
+    "featured": true
+  },
+  {
+    "id": "2",
+    "title": "Walking in Faithful Stewardship",
+    "date": "2025-12-08",
+    "speaker": "RFI Pastorate",
+    "series": "Stewardship",
+    "videoId": "5VWxxSnWsR4",
+    "description": "A teaching on what it means to be faithful stewards of the manifold grace of God in every area of life.",
+    "featured": false
+  },
+  {
+    "id": "3",
+    "title": "The Power of Discipleship",
+    "date": "2025-11-16",
+    "speaker": "RFI Pastorate",
+    "series": "Discipleship",
+    "videoId": "5VWxxSnWsR4",
+    "description": "Exploring the call of every believer to make disciples who make disciples, and what that looks like practically.",
+    "featured": false
+  },
+  {
+    "id": "4",
+    "title": "Building the House of God",
+    "date": "2025-10-19",
+    "speaker": "RFI Pastorate",
+    "series": "Church Growth",
+    "videoId": "5VWxxSnWsR4",
+    "description": "A vision message about what God is building through Revival Fellowship International for the nation of Lesotho.",
+    "featured": false
+  },
+  {
+    "id": "5",
+    "title": "Prayer That Moves Mountains",
+    "date": "2025-09-07",
+    "speaker": "RFI Pastorate",
+    "series": "Prayer",
+    "videoId": "5VWxxSnWsR4",
+    "description": "A call to fervent, faith-filled prayer as the foundation of everything we do as a church and as individuals.",
+    "featured": false
+  },
+  {
+    "id": "6",
+    "title": "Raising Godly Families",
+    "date": "2025-08-03",
+    "speaker": "RFI Pastorate",
+    "series": "Family",
+    "videoId": "5VWxxSnWsR4",
+    "description": "Practical biblical wisdom for building homes that honour God, nurture children in faith, and strengthen marriages.",
+    "featured": false
+  }
+]

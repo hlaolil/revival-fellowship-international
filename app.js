@@ -1,72 +1,81 @@
-// app.js
 const express = require('express');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const app = express();
 
-// Import Controllers
-const homeController = require('./controllers/homeController');
-const aboutController = require('./controllers/aboutController');
-const ministriesController = require('./controllers/ministriesController');
-const joinController = require('./controllers/joinController');
+const homeController        = require('./controllers/homeController');
+const aboutController       = require('./controllers/aboutController');
+const ministriesController  = require('./controllers/ministriesController');
+const joinController        = require('./controllers/joinController');
+const newsController        = require('./controllers/newsController');
+const sermonsController     = require('./controllers/sermonsController');
+const galleryController     = require('./controllers/galleryController');
+const adminController       = require('./controllers/adminController');
 
-// View engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-// Force HTTPS on Render (must be before routes)
+// Force HTTPS in production (Vercel sets VERCEL=1, Render sets RENDER=1)
 app.use((req, res, next) => {
-  const isRender = !!process.env.RENDER;
+  const inCloud = process.env.VERCEL || process.env.RENDER;
   const isHttps = req.headers['x-forwarded-proto'] === 'https';
-  if (isRender && !isHttps) {
+  if (inCloud && !isHttps) {
     return res.redirect(301, `https://${req.headers.host}${req.url}`);
   }
   next();
 });
 
-// Routes
-app.get('/', homeController.index);
-app.get('/about', aboutController.index);
-app.get('/ministries', ministriesController.index);
-app.get('/join', joinController.index);
-app.get('/inquire', joinController.inquire);
-app.post('/inquire', joinController.submit);
+// Public routes
+app.get('/',            homeController.index);
+app.get('/about',       aboutController.index);
+app.get('/ministries',  ministriesController.index);
+app.get('/ministries/:slug', ministriesController.detail);
+app.get('/join',        joinController.index);
+app.get('/inquire',     joinController.inquire);
+app.post('/inquire',    joinController.submit);
+app.get('/news',        newsController.index);
+app.get('/news/:slug',  newsController.post);
+app.get('/sermons',     sermonsController.index);
+app.get('/gallery',     galleryController.index);
 
-// 404 Page - MUST come AFTER all routes
-app.use((req, res, next) => {
-  res.status(404);
-  res.render('404', {
+// Admin routes
+app.get('/admin',              adminController.login);
+app.post('/admin/login',       adminController.doLogin);
+app.get('/admin/dashboard',    adminController.requireAuth, adminController.dashboard);
+app.get('/admin/logout',       adminController.logout);
+
+// 404
+app.use((req, res) => {
+  res.status(404).render('404', {
     title: 'Page Not Found',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: ''
-  }, (err, html) => {
-    if (err) {
-      res.send(`
-        <h1>404 - Not Found</h1>
-        <p><a href="/">Go Home</a></p>
-      `);
-    } else {
-      res.send(html);
-    }
   });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).render('error', {
+    title: 'Server Error',
+    currentYear: new Date().getFullYear(),
+    lastModified: new Date().toLocaleString(),
+    activePage: '',
+    message: 'Something went wrong. Please try again later.',
+  });
 });
 
-// Dynamic PORT & Host
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.RENDER_EXTERNAL_HOSTNAME || `localhost:${PORT}`;
-const PROTOCOL = process.env.RENDER ? 'https' : 'http';
-
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on ${PROTOCOL}://${HOST}`);
-});
+// Only start a local server when running directly (not on Vercel serverless)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;

@@ -1,0 +1,19 @@
+<%- include('partials/header', { activePage: '', title: 'Error' }) %>
+
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white py-20">
+  <div class="text-center px-6 max-w-xl">
+    <i class="fas fa-exclamation-circle text-8xl text-red-400 mb-8"></i>
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">Something Went Wrong</h1>
+    <p class="text-xl text-gray-600 mb-8"><%= message || 'An unexpected error occurred. Please try again.' %></p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/" class="bg-primary hover:bg-accent text-white font-bold py-4 px-8 rounded-full text-lg transition">
+        <i class="fas fa-home mr-2"></i>Go Home
+      </a>
+      <a href="/join" class="bg-secondary hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg transition">
+        Contact Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

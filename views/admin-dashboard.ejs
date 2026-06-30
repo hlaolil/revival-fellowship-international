@@ -1,0 +1,110 @@
+<%- include('partials/header', { activePage: '', title: 'Admin Dashboard' }) %>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="flex justify-between items-center mb-10">
+    <div>
+      <h1 class="text-3xl font-bold text-primary">Admin Dashboard</h1>
+      <p class="text-gray-500 mt-1">Revival Fellowship International</p>
+    </div>
+    <a href="/admin/logout" class="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-5 py-2 rounded-full font-semibold text-sm transition">
+      <i class="fas fa-sign-out-alt mr-2"></i>Logout
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+      <p class="text-4xl font-bold text-primary"><%= submissions.length %></p>
+      <p class="text-gray-500 mt-1 text-sm font-semibold">Form Submissions</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+      <p class="text-4xl font-bold text-secondary"><%= newsCount %></p>
+      <p class="text-gray-500 mt-1 text-sm font-semibold">News Articles</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+      <p class="text-4xl font-bold text-primary"><%= eventsCount %></p>
+      <p class="text-gray-500 mt-1 text-sm font-semibold">Events</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+      <p class="text-4xl font-bold text-secondary"><%= testimonialsCount %></p>
+      <p class="text-gray-500 mt-1 text-sm font-semibold">Testimonials</p>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="grid md:grid-cols-3 gap-4 mb-10">
+    <a href="/news" class="bg-primary text-white rounded-xl p-5 hover:bg-accent transition flex items-center gap-3">
+      <i class="fas fa-newspaper text-2xl"></i><span class="font-semibold">View News Page</span>
+    </a>
+    <a href="/sermons" class="bg-primary text-white rounded-xl p-5 hover:bg-accent transition flex items-center gap-3">
+      <i class="fas fa-video text-2xl"></i><span class="font-semibold">View Sermons Page</span>
+    </a>
+    <a href="/gallery" class="bg-primary text-white rounded-xl p-5 hover:bg-accent transition flex items-center gap-3">
+      <i class="fas fa-images text-2xl"></i><span class="font-semibold">View Gallery</span>
+    </a>
+  </div>
+
+  <!-- Submissions Table -->
+  <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
+      <h2 class="text-xl font-bold text-primary"><i class="fas fa-inbox mr-2"></i>Form Submissions (Latest 50)</h2>
+    </div>
+
+    <% if (dbError) { %>
+      <div class="p-6 bg-yellow-50 text-yellow-700 border-b">
+        <i class="fas fa-exclamation-triangle mr-2"></i><%= dbError %>
+      </div>
+    <% } %>
+
+    <% if (submissions && submissions.length > 0) { %>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Name</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Email</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Phone</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Type</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Message</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-600">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% submissions.forEach((s, i) => { %>
+              <tr class="border-t <%= i % 2 === 0 ? 'bg-white' : 'bg-gray-50' %>">
+                <td class="px-4 py-3 font-semibold"><%= s.firstName %> <%= s.lastName %></td>
+                <td class="px-4 py-3"><a href="mailto:<%= s.email %>" class="text-primary hover:underline"><%= s.email %></a></td>
+                <td class="px-4 py-3"><%= s.phone %></td>
+                <td class="px-4 py-3">
+                  <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-bold">
+                    <%= s.enquiryType ? s.enquiryType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Unknown' %>
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-gray-600 max-w-xs truncate"><%= s.message || '—' %></td>
+                <td class="px-4 py-3 text-gray-400 text-xs"><%= s.submittedAt ? new Date(s.submittedAt).toLocaleString() : s.timestamp %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else if (!dbError) { %>
+      <div class="p-10 text-center text-gray-400">
+        <i class="fas fa-inbox text-5xl mb-4"></i>
+        <p class="text-lg">No submissions yet.</p>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Content Management Note -->
+  <div class="mt-10 bg-blue-50 border border-blue-200 rounded-xl p-6 text-blue-800">
+    <h3 class="font-bold text-lg mb-2"><i class="fas fa-info-circle mr-2"></i>Managing Content</h3>
+    <p class="text-sm leading-relaxed">
+      To update <strong>news articles</strong>, <strong>events</strong>, <strong>testimonials</strong>, <strong>sermons</strong>, or <strong>gallery photos</strong>,
+      edit the corresponding JSON files in the <code class="bg-blue-100 px-1 rounded">data/</code> folder on the server:
+      <code class="block bg-blue-100 rounded px-3 py-2 mt-2 text-xs">data/news.json &bull; data/events.json &bull; data/testimonials.json &bull; data/sermons.json &bull; data/gallery.json</code>
+    </p>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
