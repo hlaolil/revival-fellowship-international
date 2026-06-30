@@ -1,0 +1,63 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<div class="flex justify-between items-center mb-8">
+  <p class="text-gray-500"><%= news.length %> article<%= news.length !== 1 ? 's' : '' %> total</p>
+  <a href="/admin/news/new" class="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-accent transition">
+    <i class="fas fa-plus mr-2"></i>New Article
+  </a>
+</div>
+
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+  <% if (news.length > 0) { %>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Title</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Date</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Category</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Featured</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% news.forEach((n, i) => { %>
+            <tr class="border-t <%= i % 2 === 0 ? 'bg-white' : 'bg-gray-50' %>">
+              <td class="px-4 py-3 font-semibold max-w-xs">
+                <p class="truncate"><%= n.title %></p>
+                <a href="/news/<%= n.slug %>" target="_blank" class="text-xs text-primary hover:underline">/news/<%= n.slug %></a>
+              </td>
+              <td class="px-4 py-3 text-gray-500 whitespace-nowrap"><%= n.date %></td>
+              <td class="px-4 py-3"><span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full"><%= n.category %></span></td>
+              <td class="px-4 py-3">
+                <% if (n.featured) { %>
+                  <span class="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full">Featured</span>
+                <% } else { %>
+                  <span class="text-gray-300 text-xs">—</span>
+                <% } %>
+              </td>
+              <td class="px-4 py-3 flex gap-2 flex-wrap">
+                <a href="/admin/news/<%= n._id %>/edit" class="bg-secondary text-white px-3 py-1 rounded-full text-xs font-semibold hover:bg-orange-600 transition">
+                  <i class="fas fa-edit mr-1"></i>Edit
+                </a>
+                <form method="POST" action="/admin/news/<%= n._id %>/delete" onsubmit="return confirm('Delete this article?')">
+                  <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-700 transition">
+                    <i class="fas fa-trash mr-1"></i>Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="p-16 text-center text-gray-400">
+      <i class="fas fa-newspaper text-5xl mb-4"></i>
+      <p class="text-lg mb-4">No articles yet.</p>
+      <a href="/admin/news/new" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-accent transition">Write First Article</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/admin-footer') %>
