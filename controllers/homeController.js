@@ -12,15 +12,32 @@ const routineServices = [
   { name: "Sunday Service", schedule: "Every Sunday, 10:00 - 13:00", image: "service.jpg", contact: "59193208" },
 ];
 
+const defaultContent = {
+  heroTagline: 'An assembly of faithful stewards of the manifold grace of God',
+  announcementEnabled: false,
+  announcementText: '',
+  announcementLink: '',
+  announcementLinkText: 'Learn more',
+  scriptureEnabled: false,
+  scriptureVerse: '',
+  scriptureReference: '',
+  pastorMessageEnabled: false,
+  pastorMessageTitle: 'A Word from the Pastor',
+  pastorMessageText: '',
+  pastorMessageAuthor: 'RFI Leadership',
+};
+
 exports.index = async (req, res) => {
-  let events = [], testimonials = [];
+  let events = [], testimonials = [], siteContent = defaultContent;
 
   try {
     const db = await getDb();
-    [events, testimonials] = await Promise.all([
+    [events, testimonials, siteContent] = await Promise.all([
       db.collection('events').find({}).toArray(),
       db.collection('testimonials').find({}).toArray(),
+      db.collection('site_content').findOne({ key: 'home' }),
     ]);
+    siteContent = siteContent || defaultContent;
   } catch {
     events = loadJSON('events.json');
     testimonials = loadJSON('testimonials.json');
@@ -46,6 +63,7 @@ exports.index = async (req, res) => {
     upcomingEvents,
     routineServices,
     testimonials,
+    siteContent,
     activePage: 'home',
   });
 };

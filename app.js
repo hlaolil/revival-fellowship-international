@@ -84,6 +84,10 @@ app.get('/admin/sermons/:id/edit',      auth, adminController.sermonEdit);
 app.post('/admin/sermons/:id/update',   auth, adminController.sermonUpdate);
 app.post('/admin/sermons/:id/delete',   auth, adminController.sermonDelete);
 
+// Admin – home page content
+app.get('/admin/content',         auth, adminController.contentEdit);
+app.post('/admin/content/update', auth, adminController.contentUpdate);
+
 // 404
 app.use((req, res) => {
   res.status(404).render('404', {

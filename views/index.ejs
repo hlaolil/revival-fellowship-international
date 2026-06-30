@@ -1,4 +1,14 @@
-<%- include('partials/header', { activePage: 'home', title: 'Home', metaDescription: 'Revival Fellowship International – An assembly of faithful stewards of the manifold grace of God. Join us in Butha-Buthe, Lesotho for Sunday and Wednesday services.' }) %>
+<%- include('partials/header', { activePage: 'home', title: 'Home', metaDescription: 'Revival Fellowship International – ' + siteContent.heroTagline + ' Join us in Butha-Buthe, Lesotho.' }) %>
+
+<!-- ANNOUNCEMENT BANNER -->
+<% if (siteContent.announcementEnabled && siteContent.announcementText) { %>
+<div class="bg-secondary text-white py-3 px-4 text-center text-sm font-semibold">
+  <i class="fas fa-bullhorn mr-2"></i><%= siteContent.announcementText %>
+  <% if (siteContent.announcementLink) { %>
+    &nbsp;<a href="<%= siteContent.announcementLink %>" class="underline hover:no-underline ml-1"><%= siteContent.announcementLinkText || 'Learn more' %> &rarr;</a>
+  <% } %>
+</div>
+<% } %>
 
 <!-- HERO SECTION -->
 <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
@@ -10,7 +20,7 @@
         Revival Fellowship International
       </h1>
       <p class="text-lg sm:text-xl md:text-2xl mb-10 text-gray-200 hero-tagline">
-        An assembly of faithful stewards of the manifold grace of God
+        <%= siteContent.heroTagline %>
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-cta">
         <a href="/join" class="inline-block bg-white text-primary hover:bg-secondary hover:text-white font-bold py-4 px-10 rounded-full text-xl shadow-2xl transform hover:scale-105 transition duration-300">
@@ -85,10 +95,7 @@
     <iframe
       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
       class="w-full h-56 rounded-lg border-0"
-      allowfullscreen=""
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-      title="RFI Location Map">
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RFI Location Map">
     </iframe>
     <p class="text-center text-sm text-gray-500 mt-3">A1 Road, Butha-Buthe 400, Lesotho</p>
   </div>
@@ -122,7 +129,45 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS SECTION -->
+<!-- PASTOR'S MESSAGE -->
+<% if (siteContent.pastorMessageEnabled && siteContent.pastorMessageText) { %>
+<section class="bg-white py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <i class="fas fa-church text-4xl text-secondary mb-6"></i>
+    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-8"><%= siteContent.pastorMessageTitle %></h2>
+    <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl p-10 shadow-lg">
+      <i class="fas fa-quote-left text-secondary text-3xl mb-4"></i>
+      <% siteContent.pastorMessageText.split('\n\n').forEach(para => { %>
+        <p class="text-gray-700 text-xl leading-relaxed mb-4 italic"><%= para %></p>
+      <% }) %>
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xl">
+          <%= siteContent.pastorMessageAuthor.charAt(0) %>
+        </div>
+        <p class="font-bold text-primary text-lg"><%= siteContent.pastorMessageAuthor %></p>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- SCRIPTURE OF THE WEEK -->
+<% if (siteContent.scriptureEnabled && siteContent.scriptureVerse) { %>
+<section class="bg-accent text-white py-14">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-secondary font-bold text-sm uppercase tracking-widest mb-4">Scripture of the Week</p>
+    <i class="fas fa-bible text-4xl text-secondary mb-6"></i>
+    <blockquote class="text-2xl md:text-3xl font-heading italic leading-relaxed mb-6">
+      "<%= siteContent.scriptureVerse %>"
+    </blockquote>
+    <% if (siteContent.scriptureReference) { %>
+      <p class="text-teal-200 text-lg font-semibold">&mdash; <%= siteContent.scriptureReference %></p>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<!-- TESTIMONIALS -->
 <% if (testimonials && testimonials.length > 0) { %>
 <section class="bg-white py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

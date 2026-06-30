@@ -1,0 +1,125 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<div class="max-w-3xl">
+
+  <% if (success) { %>
+    <div class="bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 mb-6 text-sm">
+      <i class="fas fa-check-circle mr-2"></i><%= success %>
+    </div>
+  <% } %>
+  <% if (error) { %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
+      <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+    </div>
+  <% } %>
+
+  <form method="POST" action="/admin/content/update">
+
+    <!-- Hero Tagline -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-heading mr-2 text-secondary"></i>Hero Tagline</h2>
+      <p class="text-sm text-gray-400 mb-4">The subtitle shown under "Revival Fellowship International" on the homepage hero image.</p>
+      <input type="text" name="heroTagline" value="<%= content.heroTagline || '' %>"
+             placeholder="An assembly of faithful stewards of the manifold grace of God"
+             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+
+    <!-- Announcement Banner -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-lg font-bold text-primary"><i class="fas fa-bullhorn mr-2 text-secondary"></i>Announcement Banner</h2>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="announcementEnabled" value="on" <%= content.announcementEnabled ? 'checked' : '' %>
+                 class="w-5 h-5 rounded text-primary focus:ring-primary">
+          <span class="text-sm font-semibold text-gray-600">Enable</span>
+        </label>
+      </div>
+      <p class="text-sm text-gray-400 mb-5">A highlighted strip shown at the very top of the homepage when enabled.</p>
+
+      <div class="mb-4">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Banner Text</label>
+        <input type="text" name="announcementText" value="<%= content.announcementText || '' %>"
+               placeholder="e.g. Join us this Sunday for a special service!"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Link URL <span class="text-gray-400">(optional)</span></label>
+          <input type="text" name="announcementLink" value="<%= content.announcementLink || '' %>"
+                 placeholder="e.g. /news/crusade-2026"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Link Text</label>
+          <input type="text" name="announcementLinkText" value="<%= content.announcementLinkText || 'Learn more' %>"
+                 placeholder="Learn more"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+    </div>
+
+    <!-- Pastor's Message -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-lg font-bold text-primary"><i class="fas fa-church mr-2 text-secondary"></i>Pastor's Message</h2>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="pastorMessageEnabled" value="on" <%= content.pastorMessageEnabled ? 'checked' : '' %>
+                 class="w-5 h-5 rounded text-primary focus:ring-primary">
+          <span class="text-sm font-semibold text-gray-600">Enable</span>
+        </label>
+      </div>
+      <p class="text-sm text-gray-400 mb-5">A message from leadership shown below the Services section.</p>
+
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Section Title</label>
+          <input type="text" name="pastorMessageTitle" value="<%= content.pastorMessageTitle || 'A Word from the Pastor' %>"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Author Name</label>
+          <input type="text" name="pastorMessageAuthor" value="<%= content.pastorMessageAuthor || 'RFI Leadership' %>"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">Message</label>
+        <textarea name="pastorMessageText" rows="6"
+                  placeholder="Write the message here. Separate paragraphs with a blank line."
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"><%= content.pastorMessageText || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Scripture of the Week -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-lg font-bold text-primary"><i class="fas fa-bible mr-2 text-secondary"></i>Scripture of the Week</h2>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="scriptureEnabled" value="on" <%= content.scriptureEnabled ? 'checked' : '' %>
+                 class="w-5 h-5 rounded text-primary focus:ring-primary">
+          <span class="text-sm font-semibold text-gray-600">Enable</span>
+        </label>
+      </div>
+      <p class="text-sm text-gray-400 mb-5">A highlighted Bible verse shown between the Pastor's Message and Testimonials.</p>
+
+      <div class="mb-4">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Verse Text</label>
+        <textarea name="scriptureVerse" rows="3"
+                  placeholder="e.g. For God so loved the world that he gave his one and only Son..."
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"><%= content.scriptureVerse || '' %></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">Reference</label>
+        <input type="text" name="scriptureReference" value="<%= content.scriptureReference || '' %>"
+               placeholder="e.g. John 3:16 (NIV)"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+      </div>
+    </div>
+
+    <button type="submit" class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-accent transition shadow-lg">
+      <i class="fas fa-save mr-2"></i>Save All Changes
+    </button>
+  </form>
+</div>
+
+<%- include('partials/admin-footer') %>

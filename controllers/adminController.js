@@ -245,3 +245,48 @@ exports.sermonDelete = async (req, res) => {
   if (id) { const db = await getDb(); await db.collection('sermons').deleteOne({ _id: id }); }
   res.redirect('/admin/sermons');
 };
+
+// ── Site Content (Home Page) ──────────────────────────────────────────────────
+
+exports.contentEdit = async (req, res) => {
+  let content = {};
+  try {
+    const db = await getDb();
+    content = await db.collection('site_content').findOne({ key: 'home' }) || {};
+  } catch (err) {
+    console.error('Failed to load site content:', err.message);
+  }
+  adminRender(res, 'admin-content', { title: 'Home Page Content', currentSection: 'content', content, success: null, error: null });
+};
+
+exports.contentUpdate = async (req, res) => {
+  const {
+    heroTagline,
+    announcementEnabled, announcementText, announcementLink, announcementLinkText,
+    scriptureEnabled, scriptureVerse, scriptureReference,
+    pastorMessageEnabled, pastorMessageTitle, pastorMessageText, pastorMessageAuthor,
+  } = req.body;
+
+  const data = {
+    heroTagline: heroTagline || '',
+    announcementEnabled: announcementEnabled === 'on',
+    announcementText: announcementText || '',
+    announcementLink: announcementLink || '',
+    announcementLinkText: announcementLinkText || 'Learn more',
+    scriptureEnabled: scriptureEnabled === 'on',
+    scriptureVerse: scriptureVerse || '',
+    scriptureReference: scriptureReference || '',
+    pastorMessageEnabled: pastorMessageEnabled === 'on',
+    pastorMessageTitle: pastorMessageTitle || 'A Word from the Pastor',
+    pastorMessageText: pastorMessageText || '',
+    pastorMessageAuthor: pastorMessageAuthor || 'RFI Leadership',
+  };
+
+  try {
+    const db = await getDb();
+    await db.collection('site_content').updateOne({ key: 'home' }, { $set: data }, { upsert: true });
+    adminRender(res, 'admin-content', { title: 'Home Page Content', currentSection: 'content', content: { key: 'home', ...data }, success: 'Home page content updated successfully.', error: null });
+  } catch (err) {
+    adminRender(res, 'admin-content', { title: 'Home Page Content', currentSection: 'content', content: { key: 'home', ...data }, success: null, error: 'Failed to save: ' + err.message });
+  }
+};
