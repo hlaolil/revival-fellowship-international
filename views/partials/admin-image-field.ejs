@@ -1,0 +1,53 @@
+<%# Image picker for admin forms: upload a photo (resized in the browser) or type a filename/URL.
+    Locals: name (field name), value, label, required %>
+<% const fieldId = 'img-' + name; %>
+<div class="image-field" data-field="<%= name %>">
+  <label class="block text-sm font-bold text-gray-700 mb-2"><%= label %><% if (typeof required !== 'undefined' && required) { %> <span class="text-red-500">*</span><% } %></label>
+  <div class="flex flex-col sm:flex-row gap-4 items-start">
+    <img src="<%= value ? img(value) : '' %>" alt="" class="image-preview w-32 h-24 object-cover rounded-lg bg-gray-100 border <%= value ? '' : 'hidden' %>">
+    <div class="flex-1 w-full space-y-2">
+      <label class="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-accent transition cursor-pointer">
+        <i class="fas fa-camera"></i><span>Upload Photo</span>
+        <input type="file" accept="image/jpeg,image/png,image/webp" class="image-file sr-only">
+      </label>
+      <p class="image-status text-xs text-gray-500"></p>
+      <input type="hidden" name="<%= name %>Upload" class="image-upload">
+      <input type="text" id="<%= fieldId %>" name="<%= name %>" value="<%= value || '' %>" placeholder="…or type a filename (service.jpg) or paste an image link"
+             class="image-path w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    if (window.__imageFieldInit) return;
+    window.__imageFieldInit = true;
+    const MAX_SIDE = 1600;
+    document.addEventListener('change', async function (e) {
+      if (!e.target.classList.contains('image-file')) return;
+      const field = e.target.closest('.image-field');
+      const file = e.target.files[0];
+      if (!file) return;
+      const status = field.querySelector('.image-status');
+      status.textContent = 'Preparing photo…';
+      try {
+        const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+        const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        field.querySelector('.image-upload').value = dataUrl;
+        const preview = field.querySelector('.image-preview');
+        preview.src = dataUrl;
+        preview.classList.remove('hidden');
+        const path = field.querySelector('.image-path');
+        path.value = '';
+        path.required = false;
+        status.textContent = 'Ready – ' + file.name + ' (' + Math.round(dataUrl.length * 0.75 / 1024) + ' KB). It will be saved when you submit.';
+      } catch (err) {
+        status.textContent = 'Could not read that photo. Please try a JPEG or PNG.';
+      }
+    });
+  })();
+</script>

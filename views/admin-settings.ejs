@@ -1,0 +1,91 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<% const s = settings || {}; %>
+<% const input = (name, label, opts = {}) => `
+  <div class="${opts.wide ? 'md:col-span-2' : ''}">
+    <label class="block text-sm font-bold text-gray-700 mb-2" for="f-${name}">${label}</label>
+    <input id="f-${name}" type="${opts.type || 'text'}" name="${name}" value="${String(s[name] ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" placeholder="${opts.placeholder || ''}"
+           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    ${opts.help ? `<p class="text-xs text-gray-400 mt-1">${opts.help}</p>` : ''}
+  </div>`; %>
+<% const textarea = (name, label, help) => `
+  <div class="md:col-span-2">
+    <label class="block text-sm font-bold text-gray-700 mb-2" for="f-${name}">${label}</label>
+    <textarea id="f-${name}" name="${name}" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">${String(s[name] ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;')}</textarea>
+    ${help ? `<p class="text-xs text-gray-400 mt-1">${help}</p>` : ''}
+  </div>`; %>
+
+<div class="max-w-4xl">
+  <% if (success) { %>
+    <div class="bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 mb-6 text-sm"><i class="fas fa-check-circle mr-2"></i><%= success %></div>
+  <% } %>
+  <% if (error) { %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm"><i class="fas fa-exclamation-circle mr-2"></i><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/admin/settings/update" class="space-y-8">
+
+    <section class="bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-address-card mr-2"></i>Contact Details</h2>
+      <p class="text-sm text-gray-500 mb-6">Shown in the footer, home page, Plan Your Visit and ministry pages.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <%- input('phone', 'Phone', { placeholder: '+266 6223 3969' }) %>
+        <%- input('whatsapp', 'WhatsApp Number', { placeholder: '26662233969', help: 'International format, digits only (no + or spaces). Leave empty to hide WhatsApp buttons.' }) %>
+        <%- input('email', 'Email', { type: 'email' }) %>
+        <div></div>
+        <%- input('addressLine1', 'Address Line 1') %>
+        <%- input('addressLine2', 'Address Line 2') %>
+        <%- input('country', 'Country') %>
+        <div></div>
+        <%- input('mapEmbedUrl', 'Google Maps Embed Link', { wide: true, help: 'In Google Maps: Share → Embed a map → copy only the link inside src="…".' }) %>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-share-nodes mr-2"></i>Social Media</h2>
+      <p class="text-sm text-gray-500 mb-6">Full links to your pages. Leave a field empty to hide that icon.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <%- input('facebookUrl', 'Facebook', { type: 'url' }) %>
+        <%- input('youtubeUrl', 'YouTube', { type: 'url' }) %>
+        <%- input('instagramUrl', 'Instagram', { type: 'url', placeholder: 'https://www.instagram.com/…' }) %>
+        <%- input('twitterUrl', 'X (Twitter)', { type: 'url', placeholder: 'https://x.com/…' }) %>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-clock mr-2"></i>Regular Services</h2>
+      <p class="text-sm text-gray-500 mb-6">Shown in "Our Services" on the home page and on Plan Your Visit. Keep these consistent with the regular gatherings under Events.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <%- input('sundayServiceTime', 'Sunday Service – Time') %>
+        <%- input('sundayServiceContact', 'Sunday Service – Contact') %>
+        <%- input('midweekName', 'Midweek Meeting – Name', { help: 'Leave empty to hide the midweek card.' }) %>
+        <%- input('midweekTime', 'Midweek Meeting – Time') %>
+        <%- input('midweekContact', 'Midweek Meeting – Contact') %>
+        <div></div>
+        <%- textarea('visitWelcome', 'Plan Your Visit – Welcome Text', 'Separate paragraphs with a blank line.') %>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-hand-holding-heart mr-2"></i>Giving</h2>
+      <p class="text-sm text-gray-500 mb-6">When switched on, a "Give" link appears in the menu and footer.</p>
+      <label class="flex items-center gap-3 cursor-pointer mb-6">
+        <input type="checkbox" name="givingEnabled" value="on" <%= s.givingEnabled ? 'checked' : '' %> class="w-5 h-5 rounded text-primary focus:ring-primary">
+        <span class="font-semibold text-gray-700">Show the Give page</span>
+      </label>
+      <div class="grid md:grid-cols-2 gap-6">
+        <%- textarea('givingIntro', 'Introduction') %>
+        <%- textarea('givingBank', 'Bank Transfer Details', 'e.g. bank name, account name, account number, branch code, reference to use.') %>
+        <%- textarea('givingMobile', 'Mobile Money Details', 'e.g. M-Pesa / EcoCash number and the name it is registered to.') %>
+        <%- textarea('givingNote', 'Note (optional)', 'e.g. "Please send proof of payment to …"') %>
+      </div>
+    </section>
+
+    <div class="flex gap-4 pb-8">
+      <button type="submit" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition"><i class="fas fa-save mr-2"></i>Save Settings</button>
+      <a href="/" target="_blank" class="border-2 border-gray-300 text-gray-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">View Website</a>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/admin-footer') %>

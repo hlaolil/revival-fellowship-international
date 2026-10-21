@@ -19,13 +19,53 @@
                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
       </div>
 
+      <% const monthly = event && event.repeat === 'monthly'; %>
       <div class="mb-6">
-        <label class="block text-sm font-bold text-gray-700 mb-2">Date <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-bold text-gray-700 mb-2">Repeats</label>
+        <select name="repeat" id="repeat" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+          <option value="">Does not repeat (or describe it in words below)</option>
+          <option value="monthly" <%= monthly ? 'selected' : '' %>>Monthly on a set weekday (e.g. 1st Sunday)</option>
+        </select>
+      </div>
+
+      <div id="monthly-fields" class="grid grid-cols-2 gap-6 mb-6 bg-teal-50 rounded-xl p-4 <%= monthly ? '' : 'hidden' %>">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Which week</label>
+          <select name="nth" class="w-full p-3 border border-gray-300 rounded-lg">
+            <% Object.entries(ORDINALS).sort((a, b) => (+a[0] < 0) - (+b[0] < 0) || a[0] - b[0]).forEach(([n, label]) => { %>
+              <option value="<%= n %>" <%= event && String(event.nth) === n ? 'selected' : '' %>><%= label %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Day</label>
+          <select name="weekday" class="w-full p-3 border border-gray-300 rounded-lg">
+            <% WEEKDAYS.forEach((d, i) => { %>
+              <option value="<%= i %>" <%= event && String(event.weekday) === String(i) ? 'selected' : '' %>><%= d %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-sm font-bold text-gray-700 mb-2">Ends on <span class="text-gray-400">(optional)</span></label>
+          <input type="date" name="until" value="<%= event ? event.until || '' : '' %>" class="w-full p-3 border border-gray-300 rounded-lg">
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2"><span id="date-label"><%= monthly ? 'Starts on' : 'Date' %></span> <span class="text-red-500">*</span></label>
         <input type="text" name="date" required value="<%= event ? event.date : '' %>"
                placeholder="YYYY-MM-DD for specific dates, or 'Every Sunday', 'Ad hoc', etc."
                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-        <p class="text-xs text-gray-400 mt-1">Use YYYY-MM-DD for specific dates (e.g. 2026-12-04). For recurring events use plain text (e.g. "Every Sunday").</p>
+        <p class="text-xs text-gray-400 mt-1">Use YYYY-MM-DD (e.g. 2026-12-04). For a monthly event this is the first date it can happen. Weekly gatherings can be described in words (e.g. "Every Sunday") and appear under Regular Gatherings.</p>
       </div>
+
+      <script>
+        document.getElementById('repeat').addEventListener('change', function () {
+          const monthly = this.value === 'monthly';
+          document.getElementById('monthly-fields').classList.toggle('hidden', !monthly);
+          document.getElementById('date-label').textContent = monthly ? 'Starts on' : 'Date';
+        });
+      </script>
 
       <div class="grid grid-cols-2 gap-6 mb-6">
         <div>

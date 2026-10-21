@@ -36,10 +36,7 @@
 
       <div class="grid md:grid-cols-3 gap-6 mb-6">
         <div class="md:col-span-2">
-          <label class="block text-sm font-bold text-gray-700 mb-2">Image</label>
-          <input type="text" name="image" value="<%= m.image || '' %>" placeholder="youth.jpg or https://…"
-                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-          <p class="text-xs text-gray-400 mt-1">A filename from <code class="bg-gray-100 px-1 rounded">public/images</code> or a full image URL.</p>
+          <%- include('partials/admin-image-field', { name: 'image', value: m.image || '', label: 'Image' }) %>
         </div>
         <div>
           <label class="block text-sm font-bold text-gray-700 mb-2">Display Order</label>

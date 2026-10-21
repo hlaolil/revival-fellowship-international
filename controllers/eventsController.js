@@ -1,4 +1,5 @@
 const { getDb, loadJSON } = require('../lib/db');
+const { isMonthly, isOneOff, expandEvents, describeRepeat, todayIso, addMonthsIso } = require('../lib/events');
 
 const categoryStyles = {
   routine:  { label: 'Weekly Service', icon: 'fa-church',         color: 'bg-primary' },
@@ -9,10 +10,6 @@ const categoryStyles = {
   outreach: { label: 'Outreach',       icon: 'fa-hands-helping',  color: 'bg-green-500' },
 };
 
-function isDated(e) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(e.date || '') && !isNaN(new Date(e.date));
-}
-
 exports.index = async (req, res) => {
   let events = [];
   try {
@@ -22,13 +19,13 @@ exports.index = async (req, res) => {
     events = loadJSON('events.json');
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const dated = events.filter(isDated).sort((a, b) => new Date(a.date) - new Date(b.date));
-  const upcoming = dated.filter(e => new Date(e.date) >= today);
-  const past = dated.filter(e => new Date(e.date) < today).reverse();
-  const recurring = events.filter(e => !isDated(e));
+  const today = todayIso();
+  const upcoming = expandEvents(events, today, addMonthsIso(12));
+  const past = events.filter(e => isOneOff(e) && e.date < today).sort((a, b) => b.date.localeCompare(a.date));
+  const recurring = events
+    .filter(e => !isOneOff(e))
+    .map(e => ({ ...e, when: describeRepeat(e) }))
+    .sort((a, b) => isMonthly(a) - isMonthly(b));
 
   // Group upcoming events by "Month Year"
   const months = [];

@@ -14,6 +14,7 @@
         <h3 class="font-bold text-secondary text-lg mb-4">Quick Links</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="/" class="hover:text-secondary transition">Home</a></li>
+          <li><a href="/visit" class="hover:text-secondary transition">Plan Your Visit</a></li>
           <li><a href="/about" class="hover:text-secondary transition">About Us</a></li>
           <li><a href="/ministries" class="hover:text-secondary transition">Ministries</a></li>
           <li><a href="/events" class="hover:text-secondary transition">Church Calendar</a></li>
@@ -21,54 +22,54 @@
           <li><a href="/news" class="hover:text-secondary transition">News &amp; Announcements</a></li>
           <li><a href="/gallery" class="hover:text-secondary transition">Gallery</a></li>
           <li><a href="/join" class="hover:text-secondary transition">Get Involved</a></li>
+          <% if (site.givingEnabled) { %><li><a href="/give" class="hover:text-secondary transition">Give</a></li><% } %>
         </ul>
       </div>
 
       <!-- Contact -->
       <div class="text-center md:text-right">
         <h3 class="font-bold text-secondary text-lg mb-4">Contact Us</h3>
-        <p class="text-sm mb-1"><i class="fas fa-map-marker-alt mr-2"></i>A1 Road, Opposite Usave<br>Behind BEDCO, Butha-Buthe 400<br>Lesotho</p>
-        <p class="text-sm mt-3"><i class="fas fa-phone mr-2"></i><a href="tel:+26662233969" class="hover:text-secondary transition">+266 62233969</a></p>
-        <p class="text-sm mt-1"><i class="fas fa-envelope mr-2"></i><a href="mailto:tlokza@gmail.com" class="hover:text-secondary transition">tlokza@gmail.com</a></p>
+        <p class="text-sm mb-1"><i class="fas fa-map-marker-alt mr-2"></i><%= site.addressLine1 %><br><%= site.addressLine2 %><br><%= site.country %></p>
+        <p class="text-sm mt-3"><i class="fas fa-phone mr-2"></i><a href="tel:<%= tel(site.phone) %>" class="hover:text-secondary transition"><%= site.phone %></a></p>
+        <p class="text-sm mt-1"><i class="fas fa-envelope mr-2"></i><a href="mailto:<%= site.email %>" class="hover:text-secondary transition"><%= site.email %></a></p>
 
-        <!-- Social & WhatsApp -->
+        <!-- Social & WhatsApp (only accounts set in Admin → Site Settings are shown) -->
+        <% const socials = [
+          { url: site.facebookUrl,  icon: 'fa-facebook-f', label: 'Facebook' },
+          { url: site.youtubeUrl,   icon: 'fa-youtube',    label: 'YouTube' },
+          { url: site.instagramUrl, icon: 'fa-instagram',  label: 'Instagram' },
+          { url: site.twitterUrl,   icon: 'fa-x-twitter',  label: 'X (Twitter)' },
+        ].filter(s => s.url); %>
         <div class="flex justify-center md:justify-end space-x-4 mt-5">
-          <a href="https://www.facebook.com/RevivalFellowshipInternational" target="_blank" rel="noopener" class="hover:text-secondary transition" aria-label="Facebook">
-            <i class="fab fa-facebook-f text-2xl"></i>
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener" class="hover:text-secondary transition" aria-label="Twitter">
-            <i class="fab fa-twitter text-2xl"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-secondary transition" aria-label="Instagram">
-            <i class="fab fa-instagram text-2xl"></i>
-          </a>
-          <a href="https://www.youtube.com/@RevivalFellowshipInternational" target="_blank" rel="noopener" class="hover:text-secondary transition" aria-label="YouTube">
-            <i class="fab fa-youtube text-2xl"></i>
-          </a>
-          <a href="https://wa.me/26662233969" target="_blank" rel="noopener" class="hover:text-green-400 transition" aria-label="WhatsApp">
-            <i class="fab fa-whatsapp text-2xl text-green-400"></i>
-          </a>
+          <% socials.forEach(s => { %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" class="hover:text-secondary transition" aria-label="<%= s.label %>">
+              <i class="fab <%= s.icon %> text-2xl"></i>
+            </a>
+          <% }) %>
+          <% if (site.whatsapp) { %>
+            <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="hover:text-green-400 transition" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp text-2xl text-green-400"></i>
+            </a>
+          <% } %>
         </div>
       </div>
     </div>
 
     <div class="border-t border-teal-700 pt-6 text-center text-sm text-teal-200">
-      <p>&copy; <span id="footer-year"></span> Revival Fellowship International &bull; Butha-Buthe, Lesotho</p>
+      <p>&copy; <%= new Date().getFullYear() %> Revival Fellowship International &bull; Butha-Buthe, Lesotho</p>
       <p class="mt-1">Made with <i class="fas fa-heart text-red-400"></i> by Letlotlo Hlaoli</p>
     </div>
   </div>
 </footer>
 
-<script>
-  document.getElementById('footer-year').textContent = new Date().getFullYear();
-</script>
-
 <!-- Floating WhatsApp Button -->
-<a href="https://wa.me/26662233969" target="_blank" rel="noopener"
+<% if (site.whatsapp) { %>
+<a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener"
    class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl transition transform hover:scale-110"
    aria-label="Chat on WhatsApp">
   <i class="fab fa-whatsapp text-3xl"></i>
 </a>
+<% } %>
 
 </body>
 </html>

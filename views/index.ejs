@@ -67,21 +67,21 @@
       <i class="fas fa-address-card mr-2"></i>Contact Us
     </h2>
     <p class="text-left leading-relaxed text-gray-700">
-      <i class="fas fa-map-marker-alt text-secondary mr-2"></i>A1 Road, Opposite Usave<br>
-      <span class="ml-6">Behind BEDCO, Butha-Buthe 400</span><br>
-      <span class="ml-6">Lesotho</span>
+      <i class="fas fa-map-marker-alt text-secondary mr-2"></i><%= site.addressLine1 %><br>
+      <span class="ml-6"><%= site.addressLine2 %></span><br>
+      <span class="ml-6"><%= site.country %></span>
     </p>
     <p class="text-left leading-relaxed text-gray-700 mt-4">
       <i class="fas fa-envelope text-secondary mr-2"></i>
-      <a href="mailto:tlokza@gmail.com" class="hover:text-primary transition">tlokza@gmail.com</a>
+      <a href="mailto:<%= site.email %>" class="hover:text-primary transition"><%= site.email %></a>
     </p>
     <p class="text-left leading-relaxed text-gray-700 mt-2">
       <i class="fas fa-phone text-secondary mr-2"></i>
-      <a href="tel:+26662233969" class="hover:text-primary transition">+266 62233969</a>
+      <a href="tel:<%= tel(site.phone) %>" class="hover:text-primary transition"><%= site.phone %></a>
     </p>
     <p class="text-left leading-relaxed text-gray-700 mt-2">
       <i class="fab fa-whatsapp text-green-500 mr-2"></i>
-      <a href="https://wa.me/26662233969" target="_blank" class="hover:text-green-600 transition font-semibold">Message us on WhatsApp</a>
+      <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="hover:text-green-600 transition font-semibold">Message us on WhatsApp</a>
     </p>
     <div class="mt-6 text-center">
       <a href="/join" class="inline-block bg-primary text-white px-6 py-3 rounded-full hover:bg-accent transition font-semibold">
@@ -96,11 +96,12 @@
       <i class="fas fa-map mr-2"></i>Our Location
     </h2>
     <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1485.56110514829!2d28.2472789!3d-28.7689499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjZKWCtDNzksIEJ1dGhhLUJ1dGhl!5e0!3m2!1sen!2sls!4v1739637032866!5m2!1sen!2sls"
+      src="<%= site.mapEmbedUrl %>"
       class="w-full h-56 rounded-lg border-0"
       allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RFI Location Map">
     </iframe>
-    <p class="text-center text-sm text-gray-500 mt-3">A1 Road, Butha-Buthe 400, Lesotho</p>
+    <p class="text-center text-sm text-gray-500 mt-3"><%= site.addressLine1 %>, <%= site.addressLine2 %>, <%= site.country %></p>
+    <p class="text-center mt-2"><a href="/visit" class="text-primary font-semibold hover:underline text-sm">Plan your visit &rarr;</a></p>
   </div>
 </main>
 
@@ -109,21 +110,26 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-primary">Our Services</h2>
     <div class="grid md:grid-cols-3 gap-10">
-      <% routineServices.forEach(service => { %>
+      <% const cards = [
+        site.midweekName ? { name: site.midweekName, schedule: site.midweekTime, contact: site.midweekContact, image: 'prayer.jpg' } : null,
+        latestSermon ? { name: latestSermon.title, sermon: latestSermon } : null,
+        { name: 'Sunday Service', schedule: site.sundayServiceTime, contact: site.sundayServiceContact, image: 'service.jpg' },
+      ].filter(Boolean); %>
+      <% cards.forEach(card => { %>
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-3 transition duration-300">
-          <% if (service.videoLink) { %>
-            <iframe class="w-full h-64" src="<%= service.videoLink %>" title="<%= service.name %>" allowfullscreen></iframe>
+          <% if (card.sermon) { %>
+            <iframe class="w-full h-64" src="https://www.youtube.com/embed/<%= card.sermon.videoId %>" title="<%= card.name %>" loading="lazy" allowfullscreen></iframe>
           <% } else { %>
-            <img src="/images/<%= service.image %>" alt="<%= service.name %>" class="w-full h-64 object-cover">
+            <img src="/images/<%= card.image %>" alt="<%= card.name %>" class="w-full h-64 object-cover" loading="lazy">
           <% } %>
           <div class="p-6 text-center">
-            <h3 class="text-xl font-bold text-primary mb-3"><%= service.name %></h3>
-            <% if (!service.videoLink) { %>
-              <p class="text-gray-700"><strong>Schedule:</strong> <%= service.schedule %></p>
-              <p class="text-gray-700 mt-2"><strong>Contact:</strong> <%= service.contact %></p>
-            <% } else { %>
-              <p class="text-gray-600 mt-1"><%= service.schedule %></p>
+            <h3 class="text-xl font-bold text-primary mb-3"><%= card.name %></h3>
+            <% if (card.sermon) { %>
+              <p class="text-gray-600 mt-1">Latest sermon &bull; <%= new Date(card.sermon.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
               <a href="/sermons" class="inline-block mt-3 text-primary font-semibold hover:underline">View All Sermons &rarr;</a>
+            <% } else { %>
+              <p class="text-gray-700"><strong>Schedule:</strong> <%= card.schedule %></p>
+              <% if (card.contact) { %><p class="text-gray-700 mt-2"><strong>Contact:</strong> <%= card.contact %></p><% } %>
             <% } %>
           </div>
         </div>

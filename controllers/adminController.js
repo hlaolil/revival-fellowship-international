@@ -1,5 +1,8 @@
 const crypto = require('crypto');
 const { getDb, toObjectId, slugify, byDisplayOrder } = require('../lib/db');
+const { getSettings, saveSettings } = require('../lib/settings');
+const { describeRepeat, WEEKDAYS, ORDINALS } = require('../lib/events');
+const { saveUpload, deleteUpload } = require('./mediaController');
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'rfi-admin-2026';
 const SESSION_TTL_MS = 8 * 3600000;
@@ -37,15 +40,58 @@ function parseVideoId(input) {
 }
 
 function adminRender(res, view, data) {
-  res.render(view, { currentYear: new Date().getFullYear(), lastModified: new Date().toLocaleString(), activePage: '', ...data });
+  res.render(view, { currentYear: new Date().getFullYear(), lastModified: new Date().toLocaleString(), activePage: '', WEEKDAYS, ORDINALS, ...data });
 }
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
 exports.login = (req, res) => adminRender(res, 'admin-login', { title: 'Admin Login', error: null });
 
-exports.doLogin = (req, res) => {
+// ── Login throttling ──────────────────────────────────────────────────────────
+// Failed attempts are kept in MongoDB so the limit holds across serverless
+// instances; an in-memory map is used if the database is unreachable.
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60000;
+const memoryAttempts = new Map();
+
+function clientIp(req) {
+  return String(req.headers['x-forwarded-for'] || req.ip || '').split(',')[0].trim();
+}
+
+async function recentFailures(ip) {
+  const since = new Date(Date.now() - LOCKOUT_MS);
+  try {
+    const db = await getDb();
+    return await db.collection('login_attempts').countDocuments({ ip, at: { $gte: since } });
+  } catch {
+    return (memoryAttempts.get(ip) || []).filter(t => t >= since).length;
+  }
+}
+
+async function recordFailure(ip) {
+  try {
+    const db = await getDb();
+    await db.collection('login_attempts').insertOne({ ip, at: new Date() });
+  } catch {
+    memoryAttempts.set(ip, [...(memoryAttempts.get(ip) || []), new Date()].slice(-MAX_ATTEMPTS));
+  }
+}
+
+async function clearFailures(ip) {
+  memoryAttempts.delete(ip);
+  try {
+    const db = await getDb();
+    await db.collection('login_attempts').deleteMany({ ip });
+  } catch { /* nothing to clear */ }
+}
+
+exports.doLogin = async (req, res) => {
+  const ip = clientIp(req);
+  if (await recentFailures(ip) >= MAX_ATTEMPTS) {
+    return res.status(429).render('admin-login', { title: 'Admin Login', currentYear: new Date().getFullYear(), activePage: '', error: 'Too many failed attempts. Please wait 15 minutes and try again.' });
+  }
   if (safeEqual(req.body.password || '', ADMIN_PASSWORD)) {
+    await clearFailures(ip);
     res.cookie('rfi_admin', makeToken(), {
       httpOnly: true,
       sameSite: 'lax',
@@ -54,6 +100,7 @@ exports.doLogin = (req, res) => {
     });
     return res.redirect('/admin/dashboard');
   }
+  await recordFailure(ip);
   adminRender(res, 'admin-login', { title: 'Admin Login', error: 'Incorrect password. Please try again.' });
 };
 
@@ -66,6 +113,13 @@ exports.logout = (req, res) => {
   res.clearCookie('rfi_admin');
   res.redirect('/admin');
 };
+
+// Deletes a previously uploaded photo once a record points at a different image
+async function removeReplacedUpload(collection, id, field, newSrc) {
+  const db = await getDb();
+  const old = await db.collection(collection).findOne({ _id: id });
+  if (old && old[field] !== newSrc) await deleteUpload(old[field]);
+}
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
@@ -95,17 +149,34 @@ exports.dashboard = async (req, res) => {
 exports.eventsList = async (req, res) => {
   const db = await getDb();
   const events = await db.collection('events').find({}).sort({ date: 1 }).toArray();
-  adminRender(res, 'admin-events', { title: 'Manage Events', currentSection: 'events', events });
+  adminRender(res, 'admin-events', { title: 'Manage Events', currentSection: 'events', events, describeRepeat });
 };
 
 exports.eventNew = (req, res) =>
   adminRender(res, 'admin-event-form', { title: 'New Event', currentSection: 'events', event: null, error: null });
 
+function eventFromBody(body) {
+  const data = { name: (body.name || '').trim(), date: (body.date || '').trim(), category: body.category || 'special', time: body.time || '' };
+  if (body.repeat === 'monthly') {
+    Object.assign(data, { repeat: 'monthly', nth: parseInt(body.nth, 10) || 1, weekday: parseInt(body.weekday, 10) || 0, until: body.until || '' });
+  } else {
+    Object.assign(data, { repeat: '', nth: null, weekday: null, until: '' });
+  }
+  return data;
+}
+
+function eventError(data) {
+  if (!data.name || !data.date) return 'Name and date are required.';
+  if (data.repeat === 'monthly' && !/^\d{4}-\d{2}-\d{2}$/.test(data.date)) return 'Monthly events need a start date in YYYY-MM-DD format.';
+  return null;
+}
+
 exports.eventCreate = async (req, res) => {
-  const { name, date, category, time } = req.body;
-  if (!name || !date) return adminRender(res, 'admin-event-form', { title: 'New Event', currentSection: 'events', event: req.body, error: 'Name and date are required.' });
+  const data = eventFromBody(req.body);
+  const error = eventError(data);
+  if (error) return adminRender(res, 'admin-event-form', { title: 'New Event', currentSection: 'events', event: data, error });
   const db = await getDb();
-  await db.collection('events').insertOne({ name, date, category: category || 'special', time: time || '' });
+  await db.collection('events').insertOne(data);
   res.redirect('/admin/events');
 };
 
@@ -121,14 +192,11 @@ exports.eventEdit = async (req, res) => {
 exports.eventUpdate = async (req, res) => {
   const id = toObjectId(req.params.id);
   if (!id) return res.redirect('/admin/events');
-  const { name, date, category, time } = req.body;
-  if (!name || !date) {
-    const db = await getDb();
-    const event = await db.collection('events').findOne({ _id: id });
-    return adminRender(res, 'admin-event-form', { title: 'Edit Event', currentSection: 'events', event: { ...event, ...req.body }, error: 'Name and date are required.' });
-  }
+  const data = eventFromBody(req.body);
+  const error = eventError(data);
+  if (error) return adminRender(res, 'admin-event-form', { title: 'Edit Event', currentSection: 'events', event: { _id: id, ...data }, error });
   const db = await getDb();
-  await db.collection('events').updateOne({ _id: id }, { $set: { name, date, category: category || 'special', time: time || '' } });
+  await db.collection('events').updateOne({ _id: id }, { $set: data });
   res.redirect('/admin/events');
 };
 
@@ -198,8 +266,9 @@ exports.newsNew = (req, res) =>
   adminRender(res, 'admin-news-form', { title: 'New Article', currentSection: 'news', article: null, error: null });
 
 exports.newsCreate = async (req, res) => {
-  const { title, date, author, category, excerpt, content, image, featured } = req.body;
-  if (!title || !content) return adminRender(res, 'admin-news-form', { title: 'New Article', currentSection: 'news', article: req.body, error: 'Title and content are required.' });
+  const { title, date, author, category, excerpt, content, featured } = req.body;
+  const image = (await saveUpload(req.body.imageUpload)) || req.body.image;
+  if (!title || !content) return adminRender(res, 'admin-news-form', { title: 'New Article', currentSection: 'news', article: { ...req.body, image }, error: 'Title and content are required.' });
   const db = await getDb();
   const slug = slugify(title);
   await db.collection('news').insertOne({ title, slug, date: date || new Date().toISOString().split('T')[0], author: author || 'RFI Leadership', category: category || 'Announcement', excerpt: excerpt || '', content, image: image || 'service.jpg', featured: featured === 'on' });
@@ -218,20 +287,27 @@ exports.newsEdit = async (req, res) => {
 exports.newsUpdate = async (req, res) => {
   const id = toObjectId(req.params.id);
   if (!id) return res.redirect('/admin/news');
-  const { title, date, author, category, excerpt, content, image, featured } = req.body;
+  const { title, date, author, category, excerpt, content, featured } = req.body;
+  const image = (await saveUpload(req.body.imageUpload)) || req.body.image;
   if (!title || !content) {
     const db = await getDb();
     const article = await db.collection('news').findOne({ _id: id });
-    return adminRender(res, 'admin-news-form', { title: 'Edit Article', currentSection: 'news', article: { ...article, ...req.body }, error: 'Title and content are required.' });
+    return adminRender(res, 'admin-news-form', { title: 'Edit Article', currentSection: 'news', article: { ...article, ...req.body, image }, error: 'Title and content are required.' });
   }
   const db = await getDb();
+  await removeReplacedUpload('news', id, 'image', image || 'service.jpg');
   await db.collection('news').updateOne({ _id: id }, { $set: { title, slug: slugify(title), date, author, category, excerpt, content, image: image || 'service.jpg', featured: featured === 'on' } });
   res.redirect('/admin/news');
 };
 
 exports.newsDelete = async (req, res) => {
   const id = toObjectId(req.params.id);
-  if (id) { const db = await getDb(); await db.collection('news').deleteOne({ _id: id }); }
+  if (id) {
+    const db = await getDb();
+    const article = await db.collection('news').findOne({ _id: id });
+    await db.collection('news').deleteOne({ _id: id });
+    if (article) await deleteUpload(article.image);
+  }
   res.redirect('/admin/news');
 };
 
@@ -355,7 +431,8 @@ exports.ministryNew = (req, res) =>
 
 exports.ministryCreate = async (req, res) => {
   const data = ministryFromBody(req.body);
-  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'New Ministry', currentSection: 'ministries', ministry: req.body, error: 'Ministry name is required.' });
+  data.image = (await saveUpload(req.body.imageUpload)) || data.image;
+  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'New Ministry', currentSection: 'ministries', ministry: data, error: 'Ministry name is required.' });
   const db = await getDb();
   await db.collection('ministries').insertOne(data);
   res.redirect('/admin/ministries');
@@ -374,15 +451,22 @@ exports.ministryUpdate = async (req, res) => {
   const id = toObjectId(req.params.id);
   if (!id) return res.redirect('/admin/ministries');
   const data = ministryFromBody(req.body);
-  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'Edit Ministry', currentSection: 'ministries', ministry: { _id: id, ...req.body }, error: 'Ministry name is required.' });
+  data.image = (await saveUpload(req.body.imageUpload)) || data.image;
+  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'Edit Ministry', currentSection: 'ministries', ministry: { _id: id, ...data }, error: 'Ministry name is required.' });
   const db = await getDb();
+  await removeReplacedUpload('ministries', id, 'image', data.image);
   await db.collection('ministries').updateOne({ _id: id }, { $set: data });
   res.redirect('/admin/ministries');
 };
 
 exports.ministryDelete = async (req, res) => {
   const id = toObjectId(req.params.id);
-  if (id) { const db = await getDb(); await db.collection('ministries').deleteOne({ _id: id }); }
+  if (id) {
+    const db = await getDb();
+    const ministry = await db.collection('ministries').findOne({ _id: id });
+    await db.collection('ministries').deleteOne({ _id: id });
+    if (ministry) await deleteUpload(ministry.image);
+  }
   res.redirect('/admin/ministries');
 };
 
@@ -395,7 +479,7 @@ exports.galleryList = async (req, res) => {
 };
 
 exports.galleryCreate = async (req, res) => {
-  const src = (req.body.src || '').trim();
+  const src = (await saveUpload(req.body.srcUpload)) || (req.body.src || '').trim();
   const caption = (req.body.caption || '').trim();
   const category = (req.body.category || '').trim() || 'Community';
   const db = await getDb();
@@ -418,7 +502,12 @@ exports.galleryUpdate = async (req, res) => {
 
 exports.galleryDelete = async (req, res) => {
   const id = toObjectId(req.params.id);
-  if (id) { const db = await getDb(); await db.collection('gallery').deleteOne({ _id: id }); }
+  if (id) {
+    const db = await getDb();
+    const photo = await db.collection('gallery').findOne({ _id: id });
+    await db.collection('gallery').deleteOne({ _id: id });
+    if (photo) await deleteUpload(photo.src);
+  }
   res.redirect('/admin/gallery');
 };
 
@@ -462,4 +551,21 @@ exports.submissionsExport = async (req, res) => {
   };
   const csv = [cols.join(','), ...rows.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');
   res.attachment(`rfi-enquiries-${new Date().toISOString().split('T')[0]}.csv`).type('text/csv').send(csv);
+};
+
+// ── Site Settings ─────────────────────────────────────────────────────────────
+
+exports.settingsEdit = async (req, res) => {
+  const settings = await getSettings();
+  adminRender(res, 'admin-settings', { title: 'Site Settings', currentSection: 'settings', settings, success: null, error: null });
+};
+
+exports.settingsUpdate = async (req, res) => {
+  try {
+    const settings = await saveSettings(req.body);
+    res.locals.site = settings;
+    adminRender(res, 'admin-settings', { title: 'Site Settings', currentSection: 'settings', settings, success: 'Settings saved.', error: null });
+  } catch (err) {
+    adminRender(res, 'admin-settings', { title: 'Site Settings', currentSection: 'settings', settings: req.body, success: null, error: 'Failed to save: ' + err.message });
+  }
 };

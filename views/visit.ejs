@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+
+<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/service.jpg')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <div class="text-center text-white px-4">
+      <h1 class="text-5xl md:text-6xl font-bold font-heading">Plan Your Visit</h1>
+      <p class="mt-4 text-xl text-gray-200">We would love to worship with you</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6 py-16 space-y-16">
+
+  <!-- Welcome -->
+  <section class="max-w-3xl mx-auto text-center">
+    <i class="fas fa-door-open text-4xl text-secondary mb-4"></i>
+    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6">You Are Welcome Here</h2>
+    <% site.visitWelcome.split(/\n\s*\n/).forEach(para => { %>
+      <p class="text-xl text-gray-700 leading-relaxed mb-4"><%= para %></p>
+    <% }) %>
+  </section>
+
+  <!-- Service times -->
+  <section class="grid md:grid-cols-2 gap-8">
+    <div class="bg-white rounded-2xl shadow-lg p-8 flex gap-6 items-start">
+      <span class="bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-church text-2xl"></i></span>
+      <div>
+        <h3 class="text-2xl font-bold text-primary mb-2">Sunday Service</h3>
+        <p class="text-lg text-gray-700"><i class="fas fa-clock text-secondary mr-2"></i><%= site.sundayServiceTime %></p>
+        <% if (site.sundayServiceContact) { %><p class="text-gray-500 mt-2"><i class="fas fa-phone text-secondary mr-2"></i><%= site.sundayServiceContact %></p><% } %>
+      </div>
+    </div>
+    <% if (site.midweekName) { %>
+    <div class="bg-white rounded-2xl shadow-lg p-8 flex gap-6 items-start">
+      <span class="bg-secondary text-white w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-praying-hands text-2xl"></i></span>
+      <div>
+        <h3 class="text-2xl font-bold text-primary mb-2"><%= site.midweekName %></h3>
+        <p class="text-lg text-gray-700"><i class="fas fa-clock text-secondary mr-2"></i><%= site.midweekTime %></p>
+        <% if (site.midweekContact) { %><p class="text-gray-500 mt-2"><i class="fas fa-phone text-secondary mr-2"></i><%= site.midweekContact %></p><% } %>
+      </div>
+    </div>
+    <% } %>
+  </section>
+
+  <!-- Location -->
+  <section class="grid md:grid-cols-2 gap-8 items-stretch">
+    <div class="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-8 flex flex-col justify-center">
+      <h2 class="text-3xl font-bold text-primary mb-6"><i class="fas fa-map-marker-alt text-secondary mr-2"></i>Finding Us</h2>
+      <p class="text-xl text-gray-800 font-semibold"><%= site.addressLine1 %></p>
+      <p class="text-lg text-gray-600"><%= site.addressLine2 %></p>
+      <p class="text-lg text-gray-600 mb-6"><%= site.country %></p>
+      <div class="flex flex-wrap gap-3">
+        <a href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent('Revival Fellowship International, ' + site.addressLine1 + ', ' + site.addressLine2 + ', ' + site.country) %>" target="_blank" rel="noopener"
+           class="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-accent transition"><i class="fas fa-diamond-turn-right mr-2"></i>Get Directions</a>
+        <% if (site.whatsapp) { %>
+          <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition"><i class="fab fa-whatsapp mr-2"></i>Ask Us on WhatsApp</a>
+        <% } %>
+      </div>
+    </div>
+    <% if (site.mapEmbedUrl) { %>
+      <iframe src="<%= site.mapEmbedUrl %>" class="w-full h-80 md:h-full min-h-[20rem] rounded-2xl shadow-lg border-0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map to Revival Fellowship International"></iframe>
+    <% } %>
+  </section>
+
+  <!-- Families + next steps -->
+  <section class="grid md:grid-cols-3 gap-8">
+    <a href="/ministries" class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition block">
+      <i class="fas fa-children text-4xl text-secondary mb-4"></i>
+      <h3 class="text-xl font-bold text-primary mb-2">Bringing Children?</h3>
+      <p class="text-gray-600">See our Children's Ministry and other ministries for every age.</p>
+    </a>
+    <a href="/events" class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition block">
+      <i class="fas fa-calendar-alt text-4xl text-secondary mb-4"></i>
+      <h3 class="text-xl font-bold text-primary mb-2">What's Coming Up</h3>
+      <p class="text-gray-600">Check the church calendar for special services and events.</p>
+    </a>
+    <a href="/inquire?type=information-request" class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition block">
+      <i class="fas fa-envelope-open-text text-4xl text-secondary mb-4"></i>
+      <h3 class="text-xl font-bold text-primary mb-2">Let Us Know You're Coming</h3>
+      <p class="text-gray-600">Send us a message and we'll look out for you.</p>
+    </a>
+  </section>
+</div>
+
+<%- include('partials/footer') %>

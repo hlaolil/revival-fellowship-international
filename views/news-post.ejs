@@ -1,4 +1,4 @@
-<%- include('partials/header', { activePage: 'news', title: post.title, metaDescription: post.excerpt }) %>
+<%- include('partials/header', { activePage: 'news', title: post.title, metaDescription: post.excerpt, ogImage: post.image }) %>
 
 <section class="hero relative h-72 bg-cover bg-center" style="background-image: url('<%= img(post.image) %>')">
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-end">
@@ -37,7 +37,7 @@
         <a href="/join" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
           <i class="fas fa-envelope mr-2"></i>Get Involved
         </a>
-        <a href="https://wa.me/26662233969" target="_blank" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition">
+        <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition">
           <i class="fab fa-whatsapp mr-2"></i>WhatsApp Us
         </a>
         <a href="/news" class="border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition">
