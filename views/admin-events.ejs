@@ -24,7 +24,7 @@
           <% events.forEach((e, i) => { %>
             <tr class="border-t <%= i % 2 === 0 ? 'bg-white' : 'bg-gray-50' %>">
               <td class="px-4 py-3 font-semibold"><%= e.name %></td>
-              <td class="px-4 py-3 text-gray-600"><%= e.date %></td>
+              <td class="px-4 py-3 text-gray-600"><%= describeRepeat(e) %><% if (e.repeat === 'monthly') { %><span class="block text-xs text-gray-400">from <%= e.date %></span><% } %></td>
               <td class="px-4 py-3"><span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full capitalize"><%= e.category || '—' %></span></td>
               <td class="px-4 py-3 text-gray-500"><%= e.time || '—' %></td>
               <td class="px-4 py-3 flex gap-2">

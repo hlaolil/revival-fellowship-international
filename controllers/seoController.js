@@ -1,4 +1,5 @@
 const { getDb, loadJSON, slugify } = require('../lib/db');
+const { getSettings } = require('../lib/settings');
 
 function baseUrl(req) {
   const proto = req.headers['x-forwarded-proto'] || req.protocol;
@@ -23,8 +24,10 @@ exports.sitemap = async (req, res) => {
   }
 
   const base = baseUrl(req);
+  const site = await getSettings();
   const paths = [
-    '/', '/about', '/ministries', '/events', '/sermons', '/news', '/gallery', '/join',
+    '/', '/visit', '/about', '/ministries', '/events', '/sermons', '/news', '/gallery', '/join',
+    ...(site.givingEnabled ? ['/give'] : []),
     ...ministries.map(m => `/ministries/${slugify(m.name)}`),
     ...news.filter(n => n.slug).map(n => `/news/${n.slug}`),
   ];

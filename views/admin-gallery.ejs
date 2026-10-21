@@ -12,23 +12,21 @@
 <div class="bg-white rounded-2xl shadow-lg p-6 mb-10">
   <h2 class="text-lg font-bold text-primary mb-4"><i class="fas fa-plus mr-2"></i>Add Photo</h2>
   <form method="POST" action="/admin/gallery/create" class="grid md:grid-cols-4 gap-4 items-end">
-    <div class="md:col-span-2">
-      <label class="block text-sm font-bold text-gray-700 mb-2">Image <span class="text-red-500">*</span></label>
-      <input type="text" name="src" required placeholder="service.jpg or https://…"
-             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    <div class="md:col-span-4">
+      <%- include('partials/admin-image-field', { name: 'src', value: '', label: 'Photo', required: true }) %>
     </div>
-    <div>
+    <div class="md:col-span-2">
       <label class="block text-sm font-bold text-gray-700 mb-2">Caption <span class="text-red-500">*</span></label>
       <input type="text" name="caption" required placeholder="e.g. Easter Service"
              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
     </div>
-    <div>
+    <div class="md:col-span-2">
       <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
       <input type="text" name="category" list="gallery-categories" placeholder="e.g. Worship"
              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
     </div>
     <div class="md:col-span-4 flex flex-wrap items-center justify-between gap-4">
-      <p class="text-xs text-gray-400">Use a filename from <code class="bg-gray-100 px-1 rounded">public/images</code>, or paste a link to an image hosted online (e.g. Facebook, Google Photos, Imgur).</p>
+      <p class="text-xs text-gray-400">Photos are resized automatically before upload.</p>
       <button type="submit" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
         <i class="fas fa-upload mr-2"></i>Add Photo
       </button>

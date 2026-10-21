@@ -62,7 +62,12 @@
                   </div>
                   <div class="flex-1 min-w-0">
                     <p class="font-bold text-gray-800 text-lg"><%= e.name %></p>
-                    <% if (e.time) { %><p class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i><%= e.time %></p><% } %>
+                    <% if (e.time || e.recurring) { %>
+                      <p class="text-sm text-gray-500">
+                        <% if (e.time) { %><i class="fas fa-clock mr-1"></i><%= e.time %><% } %>
+                        <% if (e.recurring) { %><span class="ml-2"><i class="fas fa-redo mr-1"></i>Monthly</span><% } %>
+                      </p>
+                    <% } %>
                   </div>
                   <span class="<%= st.color %> text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap hidden sm:inline-block">
                     <i class="fas <%= st.icon %> mr-1"></i><%= st.label %>
@@ -104,7 +109,7 @@
               </span>
               <div>
                 <p class="font-semibold text-gray-800"><%= e.name %></p>
-                <p class="text-sm text-gray-500"><%= e.date %><% if (e.time) { %> &bull; <%= e.time %><% } %></p>
+                <p class="text-sm text-gray-500"><%= e.when %><% if (e.time) { %> &bull; <%= e.time %><% } %></p>
               </div>
             </li>
           <% }) %>
@@ -124,8 +129,8 @@
 
       <div class="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-6 text-center">
         <i class="fas fa-map-marker-alt text-3xl text-secondary mb-3"></i>
-        <p class="font-bold text-gray-800">A1 Road, Opposite Usave</p>
-        <p class="text-gray-600 text-sm mb-4">Behind BEDCO, Butha-Buthe 400, Lesotho</p>
+        <p class="font-bold text-gray-800"><%= site.addressLine1 %></p>
+        <p class="text-gray-600 text-sm mb-4"><%= site.addressLine2 %>, <%= site.country %></p>
         <a href="/join" class="inline-block bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-accent transition">Get Involved</a>
       </div>
     </aside>

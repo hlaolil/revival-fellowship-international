@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/wide.jpg')">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+    <div class="text-center text-white px-4">
+      <h1 class="text-5xl md:text-6xl font-bold font-heading">Give</h1>
+      <p class="mt-4 text-xl text-gray-200">"God loves a cheerful giver." &mdash; 2 Corinthians 9:7</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-4xl mx-auto px-6 py-16">
+  <% site.givingIntro.split(/\n\s*\n/).filter(Boolean).forEach(para => { %>
+    <p class="text-xl text-gray-700 leading-relaxed text-center mb-4"><%= para %></p>
+  <% }) %>
+
+  <% const hasDetails = site.givingEnabled && (site.givingBank || site.givingMobile); %>
+  <% if (hasDetails) { %>
+    <div class="grid md:grid-cols-2 gap-8 mt-12">
+      <% if (site.givingBank) { %>
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-primary mb-4"><i class="fas fa-building-columns text-secondary mr-2"></i>Bank Transfer</h2>
+          <p class="text-gray-700 whitespace-pre-line leading-relaxed"><%= site.givingBank %></p>
+        </div>
+      <% } %>
+      <% if (site.givingMobile) { %>
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-primary mb-4"><i class="fas fa-mobile-screen-button text-secondary mr-2"></i>Mobile Money</h2>
+          <p class="text-gray-700 whitespace-pre-line leading-relaxed"><%= site.givingMobile %></p>
+        </div>
+      <% } %>
+    </div>
+    <% if (site.givingNote) { %>
+      <p class="mt-8 text-center text-gray-500 whitespace-pre-line"><%= site.givingNote %></p>
+    <% } %>
+  <% } else { %>
+    <div class="bg-white rounded-2xl shadow-lg p-10 mt-12 text-center">
+      <i class="fas fa-hand-holding-heart text-5xl text-secondary mb-4"></i>
+      <p class="text-xl text-gray-700 mb-6">To give, please get in touch and we will share how.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="tel:<%= tel(site.phone) %>" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition"><i class="fas fa-phone mr-2"></i><%= site.phone %></a>
+        <% if (site.whatsapp) { %>
+          <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition"><i class="fab fa-whatsapp mr-2"></i>WhatsApp</a>
+        <% } %>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

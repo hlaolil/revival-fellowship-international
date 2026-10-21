@@ -13,6 +13,9 @@ const galleryController     = require('./controllers/galleryController');
 const adminController       = require('./controllers/adminController');
 const eventsController      = require('./controllers/eventsController');
 const seoController         = require('./controllers/seoController');
+const visitController       = require('./controllers/visitController');
+const mediaController       = require('./controllers/mediaController');
+const { getSettings, defaults: siteDefaults } = require('./lib/settings');
 
 // Express 4 does not catch rejected promises – forward them to the error handler
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -20,7 +23,8 @@ const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
-app.use(express.urlencoded({ extended: true }));
+// Larger limit so admin forms can carry a resized photo
+app.use(express.urlencoded({ extended: true, limit: '6mb' }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -33,6 +37,9 @@ try {
 }
 
 // Resolve an image reference: full URLs are used as-is, anything else lives in /public/images
+app.locals.site = siteDefaults; // fallback for pages rendered before settings load
+app.locals.baseUrl = '';
+app.locals.tel = phone => String(phone || '').replace(/[^\d+]/g, '');
 app.locals.img = src => (/^(https?:)?\/\//.test(src || '') || (src || '').startsWith('/')) ? src : `/images/${src}`;
 
 // Force HTTPS in production (Vercel sets VERCEL=1, Render sets RENDER=1)
@@ -44,6 +51,15 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// Make site settings and the absolute site URL available to every view
+app.use(wrap(async (req, res, next) => {
+  res.locals.site = await getSettings();
+  const proto = req.headers['x-forwarded-proto'] || req.protocol;
+  res.locals.baseUrl = `${proto}://${req.get('host')}`;
+  res.locals.currentPath = req.path;
+  next();
+}));
 
 // Public routes
 app.get('/',            wrap(homeController.index));
@@ -58,12 +74,15 @@ app.get('/news',        wrap(newsController.index));
 app.get('/news/:slug',  wrap(newsController.post));
 app.get('/sermons',     wrap(sermonsController.index));
 app.get('/gallery',     wrap(galleryController.index));
+app.get('/visit',       visitController.visit);
+app.get('/give',        visitController.give);
+app.get('/media/:id',   wrap(mediaController.show));
 app.get('/robots.txt',  seoController.robots);
 app.get('/sitemap.xml', wrap(seoController.sitemap));
 
 // Admin – auth
 app.get('/admin',           adminController.login);
-app.post('/admin/login',    adminController.doLogin);
+app.post('/admin/login',    wrap(adminController.doLogin));
 app.get('/admin/logout',    adminController.logout);
 
 const auth = adminController.requireAuth;
@@ -122,6 +141,10 @@ app.get('/admin/submissions',             auth, wrap(adminController.submissions
 app.get('/admin/submissions/export',      auth, wrap(adminController.submissionsExport));
 app.post('/admin/submissions/:id/toggle', auth, wrap(adminController.submissionToggle));
 app.post('/admin/submissions/:id/delete', auth, wrap(adminController.submissionDelete));
+
+// Admin – site settings
+app.get('/admin/settings',         auth, wrap(adminController.settingsEdit));
+app.post('/admin/settings/update', auth, wrap(adminController.settingsUpdate));
 
 // Admin – home page content
 app.get('/admin/content',         auth, wrap(adminController.contentEdit));

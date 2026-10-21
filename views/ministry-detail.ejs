@@ -52,7 +52,7 @@
           <i class="fas fa-map-marker-alt text-secondary text-xl w-6"></i>
           <div>
             <p class="font-semibold">Location</p>
-            <p>A1 Road, Butha-Buthe 400, Lesotho</p>
+            <p><%= site.addressLine1 %>, <%= site.addressLine2 %>, <%= site.country %></p>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <a href="/inquire?type=information-request" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
           <i class="fas fa-envelope mr-2"></i>Get In Touch
         </a>
-        <a href="https://wa.me/26662233969" target="_blank" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition">
+        <a href="https://wa.me/<%= site.whatsapp %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition">
           <i class="fab fa-whatsapp mr-2"></i>WhatsApp Us
         </a>
       </div>
