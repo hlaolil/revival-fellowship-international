@@ -2,7 +2,7 @@
 
 <!-- ANNOUNCEMENT BANNER -->
 <% if (siteContent.announcementEnabled && siteContent.announcementText) { %>
-<div class="bg-secondary text-white py-3 px-4 text-center text-sm font-semibold">
+<div class="announcement-banner text-white py-3 px-4 text-center text-sm font-semibold">
   <i class="fas fa-bullhorn mr-2"></i><%= siteContent.announcementText %>
   <% if (siteContent.announcementLink) { %>
     &nbsp;<a href="<%= siteContent.announcementLink %>" class="underline hover:no-underline ml-1"><%= siteContent.announcementLinkText || 'Learn more' %> &rarr;</a>
@@ -13,7 +13,7 @@
 <!-- HERO SECTION -->
 <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
   <%- include('partials/hero-image', { desktop: 'hero.webp', mobile: 'hero1.webp', alt: 'Worship service at RFI' }) %>
-  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="absolute inset-0 hero-overlay flex items-center justify-center">
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading mb-4 hero-title">
         Revival Fellowship International
@@ -31,13 +31,16 @@
       </div>
     </div>
   </div>
+  <div class="scroll-indicator hidden md:block">
+    <i class="fas fa-chevron-down text-2xl"></i>
+  </div>
 </section>
 
 <!-- THREE INFO CARDS -->
 <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-3 gap-10">
 
   <!-- Upcoming Events -->
-  <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+  <div class="info-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">
       <i class="fas fa-calendar-alt mr-2"></i>Upcoming Events
     </h2>
@@ -61,7 +64,7 @@
   </div>
 
   <!-- Contact Info -->
-  <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+  <div class="info-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">
       <i class="fas fa-address-card mr-2"></i>Contact Us
     </h2>
@@ -90,7 +93,7 @@
   </div>
 
   <!-- Location Map -->
-  <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+  <div class="info-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
     <h2 class="text-2xl font-bold text-primary mb-4 text-center">
       <i class="fas fa-map mr-2"></i>Our Location
     </h2>
@@ -107,7 +110,7 @@
 <!-- OUR SERVICES SECTION -->
 <section class="bg-gray-100 py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-primary">Our Services</h2>
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-primary"><span class="section-heading">Our Services</span></h2>
     <div class="grid md:grid-cols-3 gap-10">
       <% const cards = [
         site.midweekName ? { name: site.midweekName, schedule: site.midweekTime, contact: site.midweekContact, image: 'prayer.jpg' } : null,
@@ -115,12 +118,14 @@
         { name: 'Sunday Service', schedule: site.sundayServiceTime, contact: site.sundayServiceContact, image: 'service.jpg' },
       ].filter(Boolean); %>
       <% cards.forEach(card => { %>
-        <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-3 transition duration-300">
+        <div class="service-card bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-3 transition duration-300">
+          <div class="card-img-wrap">
           <% if (card.sermon) { %>
             <iframe class="w-full h-64" src="https://www.youtube.com/embed/<%= card.sermon.videoId %>" title="<%= card.name %>" loading="lazy" allowfullscreen></iframe>
           <% } else { %>
             <img src="/images/<%= card.image %>" alt="<%= card.name %>" class="w-full h-64 object-cover" loading="lazy">
           <% } %>
+          </div>
           <div class="p-6 text-center">
             <h3 class="text-xl font-bold text-primary mb-3"><%= card.name %></h3>
             <% if (card.sermon) { %>
@@ -180,12 +185,12 @@
 <section class="bg-white py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-primary">
-      <i class="fas fa-quote-left mr-2 text-secondary"></i>What Our Members Say
+      <span class="section-heading"><i class="fas fa-quote-left mr-2 text-secondary"></i>What Our Members Say</span>
     </h2>
     <p class="text-center text-gray-500 mb-12 text-lg">Stories of faith, growth, and community from the RFI family</p>
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
       <% testimonials.forEach(t => { %>
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col hover:shadow-lg transition">
+        <div class="testimonial-card rounded-2xl p-6 flex flex-col hover:shadow-lg transition">
           <i class="fas fa-quote-left text-secondary text-2xl mb-4"></i>
           <p class="text-gray-700 text-sm leading-relaxed flex-1 italic">"<%= t.text %>"</p>
           <div class="mt-6 flex items-center gap-3">
@@ -205,7 +210,7 @@
 <% } %>
 
 <!-- LATEST NEWS STRIP -->
-<section class="bg-primary text-white py-12">
+<section class="news-strip bg-primary text-white py-12">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <h2 class="text-3xl font-bold mb-4"><i class="fas fa-newspaper mr-2"></i>Stay Up To Date</h2>
     <p class="text-teal-100 mb-6 text-lg">Read the latest announcements, events, and news from RFI.</p>

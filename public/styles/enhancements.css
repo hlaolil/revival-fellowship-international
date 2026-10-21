@@ -1,0 +1,169 @@
+/* ── Typography ───────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+.font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* ── Navigation header gradient ──────────────────────────────── */
+header.bg-primary {
+  background: linear-gradient(160deg, #005c66 0%, #008080 100%);
+}
+
+/* ── Hero: Ken Burns slow zoom ────────────────────────────────── */
+@keyframes kenBurns {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+.hero-bg {
+  animation: kenBurns 18s ease-in-out infinite alternate;
+}
+
+/* ── Hero: rich gradient overlay (replaces flat bg-black/50) ──── */
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.48) 50%,
+    rgba(0, 0, 0, 0.74) 100%
+  );
+}
+
+/* ── Hero: scroll indicator ────────────────────────────────────── */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.65; }
+  50%       { transform: translateX(-50%) translateY(9px); opacity: 1; }
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollBounce 2.2s ease-in-out infinite;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+/* ── Announcement banner shimmer ─────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.announcement-banner {
+  background: linear-gradient(90deg, #c47e00 0%, #FFA500 35%, #ffc44d 55%, #FFA500 75%, #c47e00 100%);
+  background-size: 200% 100%;
+  animation: shimmer 4.5s linear infinite;
+}
+
+/* ── Info cards: top accent border ──────────────────────────────*/
+.info-card {
+  border-top: 4px solid #008080;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.info-card:nth-child(2) {
+  border-top-color: #FFA500;
+}
+.info-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ── Service cards: image zoom on hover ──────────────────────── */
+.service-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-img-wrap {
+  overflow: hidden;
+}
+.card-img-wrap img,
+.card-img-wrap iframe {
+  transition: transform 0.55s ease;
+  display: block;
+  width: 100%;
+}
+.service-card:hover .card-img-wrap img {
+  transform: scale(1.06);
+}
+
+/* ── Sermon cards: image zoom on hover ───────────────────────── */
+.sermon-card .relative {
+  overflow: hidden;
+}
+.sermon-card .relative > img {
+  transition: transform 0.55s ease;
+}
+.sermon-card:hover .relative > img {
+  transform: scale(1.06);
+}
+
+/* ── News article cards: image zoom on hover ─────────────────── */
+article.news-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+article.news-card .card-img-wrap img {
+  transition: transform 0.55s ease;
+}
+article.news-card:hover .card-img-wrap img {
+  transform: scale(1.06);
+}
+article.news-card:hover {
+  transform: translateY(-6px);
+}
+
+/* ── Testimonial cards: left accent + gradient bg ────────────── */
+.testimonial-card {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 70%);
+  border-left: 3px solid #FFA500 !important;
+  border-top-color: #e5e7eb !important;
+}
+
+/* ── Scripture section: richer gradient ─────────────────────── */
+section.bg-accent {
+  background: linear-gradient(135deg, #004a54 0%, #006d77 55%, #007d88 100%);
+}
+
+/* ── "Stay Up To Date" news strip ──────────────────────────────*/
+section.news-strip {
+  background: linear-gradient(135deg, #006d77 0%, #008080 55%, #007070 100%);
+}
+
+/* ── Footer: deep gradient ────────────────────────────────────── */
+footer.bg-primary {
+  background: linear-gradient(160deg, #003d46 0%, #006474 45%, #007070 100%);
+}
+
+/* ── Section heading: orange underline decoration ─────────────── */
+.section-heading {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 14px;
+}
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 3px;
+  background: linear-gradient(90deg, #FFA500, #ffcc66);
+  border-radius: 2px;
+}
+
+/* ── WhatsApp floating button: pulse ring ─────────────────────── */
+@keyframes waPulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(34,197,94,0.45), 0 0 0 0 rgba(34,197,94,0.45); }
+  60%       { box-shadow: 0 4px 16px rgba(34,197,94,0.45), 0 0 0 14px rgba(34,197,94,0); }
+}
+.wa-float {
+  animation: waPulse 3s ease-in-out infinite;
+}
+
+/* ── Page-inner hero banners (Sermons, News, etc.) ───────────── */
+.inner-hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
