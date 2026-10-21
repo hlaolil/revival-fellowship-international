@@ -1,0 +1,74 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<% const m = ministry || {}; %>
+
+<div class="max-w-3xl">
+  <a href="/admin/ministries" class="text-sm text-gray-500 hover:text-primary transition mb-6 inline-block">&larr; Back to Ministries</a>
+
+  <% if (error) { %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
+      <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+    </div>
+  <% } %>
+
+  <div class="bg-white rounded-2xl shadow-lg p-8">
+    <form method="POST" action="<%= m._id ? '/admin/ministries/' + m._id + '/update' : '/admin/ministries/create' %>">
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Ministry Name <span class="text-red-500">*</span></label>
+        <input type="text" name="name" required value="<%= m.name || '' %>" placeholder="e.g. Youth Meeting"
+               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        <p class="text-xs text-gray-400 mt-1">The page address is generated from the name, so renaming changes the link.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Meeting Schedule</label>
+          <input type="text" name="schedule" value="<%= m.schedule || '' %>" placeholder="e.g. Every Saturday, 15:00"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Contact</label>
+          <input type="text" name="contact" value="<%= m.contact || '' %>" placeholder="e.g. Youth Leader - +266 5912 6226"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-6">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-bold text-gray-700 mb-2">Image</label>
+          <input type="text" name="image" value="<%= m.image || '' %>" placeholder="youth.jpg or https://…"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+          <p class="text-xs text-gray-400 mt-1">A filename from <code class="bg-gray-100 px-1 rounded">public/images</code> or a full image URL.</p>
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2">Display Order</label>
+          <input type="number" name="order" value="<%= m.order || 0 %>"
+                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+          <p class="text-xs text-gray-400 mt-1">Lower numbers show first.</p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Short Description</label>
+        <textarea name="description" rows="3" placeholder="One or two sentences shown on the ministries page..."
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"><%= m.description || '' %></textarea>
+      </div>
+
+      <div class="mb-8">
+        <label class="block text-sm font-bold text-gray-700 mb-2">Full Details <span class="text-gray-400">(optional)</span></label>
+        <textarea name="details" rows="8" placeholder="More about this ministry: who it is for, what happens at meetings, how to join. Separate paragraphs with a blank line."
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"><%= m.details || '' %></textarea>
+      </div>
+
+      <div class="flex gap-4">
+        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
+          <i class="fas fa-save mr-2"></i><%= m._id ? 'Save Changes' : 'Create Ministry' %>
+        </button>
+        <a href="/admin/ministries" class="border-2 border-gray-300 text-gray-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/admin-footer') %>

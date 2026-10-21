@@ -16,7 +16,7 @@
     <div class="flex flex-wrap gap-3 mb-12 justify-center">
       <button onclick="filterSeries('all')" class="series-btn active-series bg-primary text-white px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-accent" data-series="all">All Series</button>
       <% series.forEach(s => { %>
-        <button onclick="filterSeries('<%= s %>')" class="series-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-primary hover:text-white" data-series="<%= s %>"><%= s %></button>
+        <button onclick="filterSeries(this.dataset.series)" class="series-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-primary hover:text-white" data-series="<%= s %>"><%= s %></button>
       <% }) %>
     </div>
   <% } %>
@@ -34,7 +34,7 @@
         <p class="text-sm text-gray-500 mb-4">
           <i class="fas fa-calendar mr-1"></i><%= new Date(featured.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %>
           &bull; <i class="fas fa-user mr-1"></i><%= featured.speaker %>
-          &bull; <i class="fas fa-book-open mr-1"></i><%= featured.series %>
+          <% if (featured.series) { %>&bull; <i class="fas fa-book-open mr-1"></i><%= featured.series %><% } %>
         </p>
         <p class="text-gray-600 leading-relaxed"><%= featured.description %></p>
       </div>
@@ -49,19 +49,22 @@
           <img src="https://img.youtube.com/vi/<%= sermon.videoId %>/hqdefault.jpg"
                alt="<%= sermon.title %>"
                class="w-full h-48 object-cover cursor-pointer"
-               onclick="playVideo('<%= sermon.videoId %>', this)">
+               data-video="<%= sermon.videoId %>"
+               onclick="playVideo(this.dataset.video, this)">
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div class="bg-primary bg-opacity-80 rounded-full w-14 h-14 flex items-center justify-center">
               <i class="fas fa-play text-white text-xl ml-1"></i>
             </div>
           </div>
-          <iframe class="w-full h-48 hidden" id="iframe-<%= sermon.id %>"
+          <iframe class="w-full h-48 hidden"
                   src="" title="<%= sermon.title %>" allowfullscreen></iframe>
         </div>
         <div class="p-5">
+          <% if (sermon.series) { %>
           <div class="flex items-center gap-2 mb-2">
             <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full"><%= sermon.series %></span>
           </div>
+          <% } %>
           <h3 class="text-lg font-bold text-gray-800 mb-1"><%= sermon.title %></h3>
           <p class="text-xs text-gray-500 mb-2">
             <i class="fas fa-calendar mr-1"></i><%= new Date(sermon.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
@@ -87,7 +90,7 @@
       btn.classList.remove('bg-primary', 'text-white', 'active-series');
       btn.classList.add('bg-gray-200', 'text-gray-700');
     });
-    const active = document.querySelector(`[data-series="${series}"]`);
+    const active = document.querySelector(`.series-btn[data-series="${CSS.escape(series)}"]`);
     if (active) {
       active.classList.add('bg-primary', 'text-white', 'active-series');
       active.classList.remove('bg-gray-200', 'text-gray-700');

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> | RFI Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,8 +14,9 @@
 
 <div class="flex min-h-screen">
 
-  <!-- Sidebar -->
-  <aside class="w-64 bg-accent text-white flex-shrink-0 flex flex-col">
+  <!-- Sidebar (slides in on small screens) -->
+  <div id="admin-overlay" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden" onclick="toggleAdminNav()"></div>
+  <aside id="admin-nav" class="w-64 bg-accent text-white flex-shrink-0 flex flex-col fixed md:static inset-y-0 left-0 z-40 -translate-x-full md:translate-x-0 transition-transform">
     <div class="p-5 border-b border-teal-700">
       <a href="/" class="flex items-center gap-3 hover:opacity-80 transition">
         <img src="/images/logo.webp" alt="RFI" class="h-10 w-auto rounded">
@@ -28,10 +30,13 @@
     <nav class="p-3 flex-1 space-y-1">
       <% const nav = [
         { section: 'dashboard',    href: '/admin/dashboard',    icon: 'fa-tachometer-alt', label: 'Dashboard' },
+        { section: 'submissions',  href: '/admin/submissions',  icon: 'fa-inbox',          label: 'Enquiries' },
         { section: 'events',       href: '/admin/events',       icon: 'fa-calendar-alt',   label: 'Events' },
+        { section: 'ministries',   href: '/admin/ministries',   icon: 'fa-hands-praying',  label: 'Ministries' },
         { section: 'testimonials', href: '/admin/testimonials', icon: 'fa-quote-right',    label: 'Testimonials' },
         { section: 'news',         href: '/admin/news',         icon: 'fa-newspaper',      label: 'News' },
         { section: 'sermons',      href: '/admin/sermons',      icon: 'fa-video',          label: 'Sermons' },
+        { section: 'gallery',      href: '/admin/gallery',      icon: 'fa-images',         label: 'Gallery' },
         { section: 'content',      href: '/admin/content',      icon: 'fa-home',           label: 'Home Content' },
       ]; %>
       <% nav.forEach(item => { %>
@@ -57,8 +62,17 @@
 
   <!-- Main area -->
   <div class="flex-1 flex flex-col min-w-0">
-    <header class="bg-white shadow-sm px-8 py-4 flex items-center justify-between">
-      <h1 class="text-xl font-bold text-gray-800"><%= title %></h1>
-      <span class="text-sm text-gray-400">Revival Fellowship International</span>
+    <header class="bg-white shadow-sm px-4 md:px-8 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button class="md:hidden text-gray-600" onclick="toggleAdminNav()" aria-label="Toggle admin menu"><i class="fas fa-bars text-xl"></i></button>
+        <h1 class="text-xl font-bold text-gray-800"><%= title %></h1>
+      </div>
+      <span class="text-sm text-gray-400 hidden sm:inline">Revival Fellowship International</span>
     </header>
-    <main class="flex-1 p-8">
+    <script>
+      function toggleAdminNav() {
+        document.getElementById('admin-nav').classList.toggle('-translate-x-full');
+        document.getElementById('admin-overlay').classList.toggle('hidden');
+      }
+    </script>
+    <main class="flex-1 p-4 md:p-8">

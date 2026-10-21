@@ -11,6 +11,11 @@ const newsController        = require('./controllers/newsController');
 const sermonsController     = require('./controllers/sermonsController');
 const galleryController     = require('./controllers/galleryController');
 const adminController       = require('./controllers/adminController');
+const eventsController      = require('./controllers/eventsController');
+const seoController         = require('./controllers/seoController');
+
+// Express 4 does not catch rejected promises – forward them to the error handler
+const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -18,6 +23,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Resolve an image reference: full URLs are used as-is, anything else lives in /public/images
+app.locals.img = src => (/^(https?:)?\/\//.test(src || '') || (src || '').startsWith('/')) ? src : `/images/${src}`;
 
 // Force HTTPS in production (Vercel sets VERCEL=1, Render sets RENDER=1)
 app.use((req, res, next) => {
@@ -30,17 +38,20 @@ app.use((req, res, next) => {
 });
 
 // Public routes
-app.get('/',            homeController.index);
+app.get('/',            wrap(homeController.index));
 app.get('/about',       aboutController.index);
-app.get('/ministries',  ministriesController.index);
-app.get('/ministries/:slug', ministriesController.detail);
+app.get('/ministries',  wrap(ministriesController.index));
+app.get('/ministries/:slug', wrap(ministriesController.detail));
+app.get('/events',      wrap(eventsController.index));
 app.get('/join',        joinController.index);
 app.get('/inquire',     joinController.inquire);
-app.post('/inquire',    joinController.submit);
-app.get('/news',        newsController.index);
-app.get('/news/:slug',  newsController.post);
-app.get('/sermons',     sermonsController.index);
-app.get('/gallery',     galleryController.index);
+app.post('/inquire',    wrap(joinController.submit));
+app.get('/news',        wrap(newsController.index));
+app.get('/news/:slug',  wrap(newsController.post));
+app.get('/sermons',     wrap(sermonsController.index));
+app.get('/gallery',     wrap(galleryController.index));
+app.get('/robots.txt',  seoController.robots);
+app.get('/sitemap.xml', wrap(seoController.sitemap));
 
 // Admin – auth
 app.get('/admin',           adminController.login);
@@ -50,43 +61,63 @@ app.get('/admin/logout',    adminController.logout);
 const auth = adminController.requireAuth;
 
 // Admin – dashboard
-app.get('/admin/dashboard', auth, adminController.dashboard);
+app.get('/admin/dashboard', auth, wrap(adminController.dashboard));
 
 // Admin – events
-app.get('/admin/events',                auth, adminController.eventsList);
-app.get('/admin/events/new',            auth, adminController.eventNew);
-app.post('/admin/events/create',        auth, adminController.eventCreate);
-app.get('/admin/events/:id/edit',       auth, adminController.eventEdit);
-app.post('/admin/events/:id/update',    auth, adminController.eventUpdate);
-app.post('/admin/events/:id/delete',    auth, adminController.eventDelete);
+app.get('/admin/events',                auth, wrap(adminController.eventsList));
+app.get('/admin/events/new',            auth, wrap(adminController.eventNew));
+app.post('/admin/events/create',        auth, wrap(adminController.eventCreate));
+app.get('/admin/events/:id/edit',       auth, wrap(adminController.eventEdit));
+app.post('/admin/events/:id/update',    auth, wrap(adminController.eventUpdate));
+app.post('/admin/events/:id/delete',    auth, wrap(adminController.eventDelete));
 
 // Admin – testimonials
-app.get('/admin/testimonials',              auth, adminController.testimonialsList);
-app.get('/admin/testimonials/new',          auth, adminController.testimonialNew);
-app.post('/admin/testimonials/create',      auth, adminController.testimonialCreate);
-app.get('/admin/testimonials/:id/edit',     auth, adminController.testimonialEdit);
-app.post('/admin/testimonials/:id/update',  auth, adminController.testimonialUpdate);
-app.post('/admin/testimonials/:id/delete',  auth, adminController.testimonialDelete);
+app.get('/admin/testimonials',              auth, wrap(adminController.testimonialsList));
+app.get('/admin/testimonials/new',          auth, wrap(adminController.testimonialNew));
+app.post('/admin/testimonials/create',      auth, wrap(adminController.testimonialCreate));
+app.get('/admin/testimonials/:id/edit',     auth, wrap(adminController.testimonialEdit));
+app.post('/admin/testimonials/:id/update',  auth, wrap(adminController.testimonialUpdate));
+app.post('/admin/testimonials/:id/delete',  auth, wrap(adminController.testimonialDelete));
 
 // Admin – news
-app.get('/admin/news',              auth, adminController.newsList);
-app.get('/admin/news/new',          auth, adminController.newsNew);
-app.post('/admin/news/create',      auth, adminController.newsCreate);
-app.get('/admin/news/:id/edit',     auth, adminController.newsEdit);
-app.post('/admin/news/:id/update',  auth, adminController.newsUpdate);
-app.post('/admin/news/:id/delete',  auth, adminController.newsDelete);
+app.get('/admin/news',              auth, wrap(adminController.newsList));
+app.get('/admin/news/new',          auth, wrap(adminController.newsNew));
+app.post('/admin/news/create',      auth, wrap(adminController.newsCreate));
+app.get('/admin/news/:id/edit',     auth, wrap(adminController.newsEdit));
+app.post('/admin/news/:id/update',  auth, wrap(adminController.newsUpdate));
+app.post('/admin/news/:id/delete',  auth, wrap(adminController.newsDelete));
 
 // Admin – sermons
-app.get('/admin/sermons',               auth, adminController.sermonsList);
-app.get('/admin/sermons/new',           auth, adminController.sermonNew);
-app.post('/admin/sermons/create',       auth, adminController.sermonCreate);
-app.get('/admin/sermons/:id/edit',      auth, adminController.sermonEdit);
-app.post('/admin/sermons/:id/update',   auth, adminController.sermonUpdate);
-app.post('/admin/sermons/:id/delete',   auth, adminController.sermonDelete);
+app.get('/admin/sermons',               auth, wrap(adminController.sermonsList));
+app.get('/admin/sermons/new',           auth, wrap(adminController.sermonNew));
+app.post('/admin/sermons/create',       auth, wrap(adminController.sermonCreate));
+app.get('/admin/sermons/:id/edit',      auth, wrap(adminController.sermonEdit));
+app.post('/admin/sermons/:id/update',   auth, wrap(adminController.sermonUpdate));
+app.post('/admin/sermons/:id/delete',   auth, wrap(adminController.sermonDelete));
+
+// Admin – ministries
+app.get('/admin/ministries',              auth, wrap(adminController.ministriesList));
+app.get('/admin/ministries/new',          auth, wrap(adminController.ministryNew));
+app.post('/admin/ministries/create',      auth, wrap(adminController.ministryCreate));
+app.get('/admin/ministries/:id/edit',     auth, wrap(adminController.ministryEdit));
+app.post('/admin/ministries/:id/update',  auth, wrap(adminController.ministryUpdate));
+app.post('/admin/ministries/:id/delete',  auth, wrap(adminController.ministryDelete));
+
+// Admin – gallery
+app.get('/admin/gallery',                 auth, wrap(adminController.galleryList));
+app.post('/admin/gallery/create',         auth, wrap(adminController.galleryCreate));
+app.post('/admin/gallery/:id/update',     auth, wrap(adminController.galleryUpdate));
+app.post('/admin/gallery/:id/delete',     auth, wrap(adminController.galleryDelete));
+
+// Admin – enquiry submissions
+app.get('/admin/submissions',             auth, wrap(adminController.submissionsList));
+app.get('/admin/submissions/export',      auth, wrap(adminController.submissionsExport));
+app.post('/admin/submissions/:id/toggle', auth, wrap(adminController.submissionToggle));
+app.post('/admin/submissions/:id/delete', auth, wrap(adminController.submissionDelete));
 
 // Admin – home page content
-app.get('/admin/content',         auth, adminController.contentEdit);
-app.post('/admin/content/update', auth, adminController.contentUpdate);
+app.get('/admin/content',         auth, wrap(adminController.contentEdit));
+app.post('/admin/content/update', auth, wrap(adminController.contentUpdate));
 
 // 404
 app.use((req, res) => {
@@ -106,7 +137,9 @@ app.use((err, req, res, next) => {
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: '',
-    message: 'Something went wrong. Please try again later.',
+    message: req.path.startsWith('/admin')
+      ? `Admin action failed: ${err.message}`
+      : 'Something went wrong. Please try again later.',
   });
 });
 
