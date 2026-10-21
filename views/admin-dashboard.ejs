@@ -1,57 +1,64 @@
 <%- include('partials/admin-header', { title, currentSection }) %>
 
+<% const typeLabel = t => t ? t.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()) : 'Unknown'; %>
+
+<% if (dbError) { %>
+  <div class="mb-8 p-4 rounded-xl bg-yellow-50 text-yellow-800 border border-yellow-200 text-sm">
+    <i class="fas fa-exclamation-triangle mr-2"></i>Database unavailable: <%= dbError %>
+  </div>
+<% } %>
+
 <!-- Stats -->
-<div class="grid grid-cols-2 md:grid-cols-5 gap-5 mb-10">
+<div class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-4 mb-10">
   <% const stats = [
-    { label: 'Submissions', value: submissions.length, icon: 'fa-inbox', color: 'text-primary' },
-    { label: 'Events',      value: eventsCount,        icon: 'fa-calendar-alt', color: 'text-secondary' },
-    { label: 'News',        value: newsCount,          icon: 'fa-newspaper', color: 'text-primary' },
-    { label: 'Testimonials',value: testimonialsCount,  icon: 'fa-quote-right', color: 'text-secondary' },
-    { label: 'Sermons',     value: sermonsCount,       icon: 'fa-video', color: 'text-primary' },
+    { label: 'New Enquiries', value: counts.newSubmissions, icon: 'fa-inbox',          href: '/admin/submissions?status=new', color: 'text-red-500' },
+    { label: 'Events',        value: counts.events,         icon: 'fa-calendar-alt',   href: '/admin/events',       color: 'text-secondary' },
+    { label: 'Ministries',    value: counts.ministries,     icon: 'fa-hands-praying',  href: '/admin/ministries',   color: 'text-primary' },
+    { label: 'News',          value: counts.news,           icon: 'fa-newspaper',      href: '/admin/news',         color: 'text-secondary' },
+    { label: 'Sermons',       value: counts.sermons,        icon: 'fa-video',          href: '/admin/sermons',      color: 'text-primary' },
+    { label: 'Testimonials',  value: counts.testimonials,   icon: 'fa-quote-right',    href: '/admin/testimonials', color: 'text-secondary' },
+    { label: 'Photos',        value: counts.gallery,        icon: 'fa-images',         href: '/admin/gallery',      color: 'text-primary' },
   ]; %>
   <% stats.forEach(s => { %>
-    <div class="bg-white rounded-xl shadow p-5 text-center">
+    <a href="<%= s.href %>" class="bg-white rounded-xl shadow p-5 text-center hover:shadow-lg transition">
       <i class="fas <%= s.icon %> text-2xl <%= s.color %> mb-2"></i>
-      <p class="text-3xl font-bold <%= s.color %>"><%= s.value %></p>
+      <p class="text-3xl font-bold <%= s.color %>"><%= s.value ?? '–' %></p>
       <p class="text-gray-500 text-xs mt-1 font-semibold"><%= s.label %></p>
-    </div>
+    </a>
   <% }) %>
 </div>
 
-<!-- Manage Content shortcuts -->
-<div class="grid md:grid-cols-4 gap-4 mb-10">
-  <a href="/admin/events" class="bg-white border-2 border-primary text-primary rounded-xl p-5 hover:bg-primary hover:text-white transition flex items-center gap-3 font-semibold">
-    <i class="fas fa-calendar-alt text-xl"></i>Manage Events
+<!-- Quick actions -->
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+  <a href="/admin/events/new" class="bg-white border-2 border-primary text-primary rounded-xl p-5 hover:bg-primary hover:text-white transition flex items-center gap-3 font-semibold">
+    <i class="fas fa-plus text-xl"></i>Add Event
   </a>
-  <a href="/admin/testimonials" class="bg-white border-2 border-secondary text-secondary rounded-xl p-5 hover:bg-secondary hover:text-white transition flex items-center gap-3 font-semibold">
-    <i class="fas fa-quote-right text-xl"></i>Manage Testimonials
+  <a href="/admin/news/new" class="bg-white border-2 border-secondary text-secondary rounded-xl p-5 hover:bg-secondary hover:text-white transition flex items-center gap-3 font-semibold">
+    <i class="fas fa-pen text-xl"></i>Write Article
   </a>
-  <a href="/admin/news" class="bg-white border-2 border-primary text-primary rounded-xl p-5 hover:bg-primary hover:text-white transition flex items-center gap-3 font-semibold">
-    <i class="fas fa-newspaper text-xl"></i>Manage News
+  <a href="/admin/sermons/new" class="bg-white border-2 border-primary text-primary rounded-xl p-5 hover:bg-primary hover:text-white transition flex items-center gap-3 font-semibold">
+    <i class="fas fa-video text-xl"></i>Add Sermon
   </a>
-  <a href="/admin/sermons" class="bg-white border-2 border-secondary text-secondary rounded-xl p-5 hover:bg-secondary hover:text-white transition flex items-center gap-3 font-semibold">
-    <i class="fas fa-video text-xl"></i>Manage Sermons
+  <a href="/admin/content" class="bg-white border-2 border-secondary text-secondary rounded-xl p-5 hover:bg-secondary hover:text-white transition flex items-center gap-3 font-semibold">
+    <i class="fas fa-bullhorn text-xl"></i>Edit Announcement
   </a>
 </div>
 
-<!-- Submissions table -->
+<!-- Latest submissions -->
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-  <div class="px-6 py-4 border-b bg-gray-50">
-    <h2 class="text-lg font-bold text-primary"><i class="fas fa-inbox mr-2"></i>Form Submissions (Latest 50)</h2>
+  <div class="px-6 py-4 border-b bg-gray-50 flex items-center justify-between">
+    <h2 class="text-lg font-bold text-primary"><i class="fas fa-inbox mr-2"></i>Latest Enquiries</h2>
+    <a href="/admin/submissions" class="text-sm text-primary font-semibold hover:underline">View all &rarr;</a>
   </div>
-  <% if (dbError) { %>
-    <div class="p-6 bg-yellow-50 text-yellow-700 border-b text-sm"><i class="fas fa-exclamation-triangle mr-2"></i><%= dbError %></div>
-  <% } %>
   <% if (submissions && submissions.length > 0) { %>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead class="bg-gray-100">
           <tr>
             <th class="px-4 py-3 text-left font-bold text-gray-600">Name</th>
-            <th class="px-4 py-3 text-left font-bold text-gray-600">Email</th>
-            <th class="px-4 py-3 text-left font-bold text-gray-600">Phone</th>
             <th class="px-4 py-3 text-left font-bold text-gray-600">Type</th>
             <th class="px-4 py-3 text-left font-bold text-gray-600">Message</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-600">Status</th>
             <th class="px-4 py-3 text-left font-bold text-gray-600">Date</th>
           </tr>
         </thead>
@@ -59,18 +66,23 @@
           <% submissions.forEach((s, i) => { %>
             <tr class="border-t <%= i % 2 === 0 ? 'bg-white' : 'bg-gray-50' %>">
               <td class="px-4 py-3 font-semibold"><%= s.firstName %> <%= s.lastName %></td>
-              <td class="px-4 py-3"><a href="mailto:<%= s.email %>" class="text-primary hover:underline"><%= s.email %></a></td>
-              <td class="px-4 py-3"><%= s.phone %></td>
-              <td class="px-4 py-3"><span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-bold"><%= s.enquiryType ? s.enquiryType.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()) : 'Unknown' %></span></td>
+              <td class="px-4 py-3"><span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-bold"><%= typeLabel(s.enquiryType) %></span></td>
               <td class="px-4 py-3 text-gray-600 max-w-xs truncate"><%= s.message || '—' %></td>
-              <td class="px-4 py-3 text-gray-400 text-xs"><%= s.submittedAt ? new Date(s.submittedAt).toLocaleString() : s.timestamp %></td>
+              <td class="px-4 py-3">
+                <% if (s.status === 'handled') { %>
+                  <span class="text-green-600 text-xs font-bold"><i class="fas fa-check mr-1"></i>Handled</span>
+                <% } else { %>
+                  <span class="text-red-500 text-xs font-bold"><i class="fas fa-circle mr-1 text-[8px]"></i>New</span>
+                <% } %>
+              </td>
+              <td class="px-4 py-3 text-gray-400 text-xs whitespace-nowrap"><%= s.submittedAt ? new Date(s.submittedAt).toLocaleString('en-GB') : s.timestamp %></td>
             </tr>
           <% }) %>
         </tbody>
       </table>
     </div>
   <% } else if (!dbError) { %>
-    <div class="p-10 text-center text-gray-400"><i class="fas fa-inbox text-5xl mb-4"></i><p class="text-lg">No submissions yet.</p></div>
+    <div class="p-10 text-center text-gray-400"><i class="fas fa-inbox text-5xl mb-4"></i><p class="text-lg">No enquiries yet.</p></div>
   <% } %>
 </div>
 

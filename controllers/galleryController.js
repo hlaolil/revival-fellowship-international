@@ -1,25 +1,20 @@
-const fs = require('fs');
-const path = require('path');
+const { getDb, loadJSON } = require('../lib/db');
 
-const galleryFile = path.join(__dirname, '../data/gallery.json');
-
-function loadGallery() {
+exports.index = async (req, res) => {
+  let photos;
   try {
-    return JSON.parse(fs.readFileSync(galleryFile, 'utf8'));
+    const db = await getDb();
+    photos = await db.collection('gallery').find({}).sort({ _id: -1 }).toArray();
   } catch {
-    return [];
+    photos = loadJSON('gallery.json');
   }
-}
-
-exports.index = (req, res) => {
-  const photos = loadGallery();
-  const categories = ['All', ...new Set(photos.map(p => p.category))];
+  const categories = ['All', ...new Set(photos.map(p => p.category).filter(Boolean))];
   res.render('gallery', {
     title: 'Photo Gallery',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: 'gallery',
-    photos,
+    photos: photos.map(({ src, caption, category }) => ({ src, caption, category })),
     categories,
   });
 };

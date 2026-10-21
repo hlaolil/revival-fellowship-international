@@ -1,6 +1,6 @@
 <%- include('partials/header', { activePage: 'ministries', title: ministry.name, metaDescription: ministry.description || 'Learn about ' + ministry.name + ' at Revival Fellowship International.' }) %>
 
-<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/<%= ministry.resolvedImage || "heroo.webp" %>')">
+<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('<%= img(ministry.resolvedImage || "heroo.webp") %>')">
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
     <div class="text-center text-white px-4">
       <p class="text-secondary font-semibold text-lg mb-2 uppercase tracking-wider">Ministry</p>
@@ -23,7 +23,14 @@
     <!-- Main Content -->
     <div class="md:col-span-2">
       <h2 class="text-3xl font-bold text-primary mb-6">About <%= ministry.name %></h2>
-      <p class="text-gray-700 text-xl leading-relaxed mb-8"><%= ministry.description %></p>
+      <p class="text-gray-700 text-xl leading-relaxed mb-6"><%= ministry.description %></p>
+      <% if (ministry.details) { %>
+        <div class="text-gray-700 leading-relaxed space-y-4 mb-8">
+          <% ministry.details.split(/\n\s*\n/).forEach(para => { %>
+            <p><%= para %></p>
+          <% }) %>
+        </div>
+      <% } %>
 
       <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl p-8 space-y-4">
         <h3 class="text-xl font-bold text-primary mb-4">Ministry Details</h3>
@@ -63,7 +70,7 @@
     <!-- Sidebar -->
     <div>
       <% if (ministry.resolvedImage) { %>
-        <img src="/images/<%= ministry.resolvedImage %>" alt="<%= ministry.name %>" class="w-full rounded-2xl shadow-lg mb-6 object-cover h-64">
+        <img src="<%= img(ministry.resolvedImage) %>" alt="<%= ministry.name %>" class="w-full rounded-2xl shadow-lg mb-6 object-cover h-64">
       <% } %>
 
       <div class="bg-white rounded-2xl shadow-lg p-6">
@@ -73,7 +80,7 @@
             <li>
               <a href="/ministries/<%= other.slug %>" class="flex items-center gap-3 text-gray-700 hover:text-primary transition group">
                 <% if (other.resolvedImage) { %>
-                  <img src="/images/<%= other.resolvedImage %>" alt="<%= other.name %>" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
+                  <img src="<%= img(other.resolvedImage) %>" alt="<%= other.name %>" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
                 <% } else { %>
                   <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-church text-gray-400"></i>

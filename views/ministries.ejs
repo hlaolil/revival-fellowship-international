@@ -16,7 +16,7 @@
         <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:-translate-y-4 flex flex-col">
           <% if (ministry.resolvedImage) { %>
             <img
-              src="/images/<%= ministry.resolvedImage %>"
+              src="<%= img(ministry.resolvedImage) %>"
               alt="<%= ministry.name %>"
               class="w-full h-48 object-cover"
               onerror="this.style.display='none'">

@@ -1,0 +1,65 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<% if (error) { %>
+  <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
+    <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+  </div>
+<% } %>
+
+<% const categories = [...new Set(photos.map(p => p.category).filter(Boolean))]; %>
+
+<!-- Add photo -->
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-10">
+  <h2 class="text-lg font-bold text-primary mb-4"><i class="fas fa-plus mr-2"></i>Add Photo</h2>
+  <form method="POST" action="/admin/gallery/create" class="grid md:grid-cols-4 gap-4 items-end">
+    <div class="md:col-span-2">
+      <label class="block text-sm font-bold text-gray-700 mb-2">Image <span class="text-red-500">*</span></label>
+      <input type="text" name="src" required placeholder="service.jpg or https://…"
+             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+    <div>
+      <label class="block text-sm font-bold text-gray-700 mb-2">Caption <span class="text-red-500">*</span></label>
+      <input type="text" name="caption" required placeholder="e.g. Easter Service"
+             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+    <div>
+      <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+      <input type="text" name="category" list="gallery-categories" placeholder="e.g. Worship"
+             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+    <div class="md:col-span-4 flex flex-wrap items-center justify-between gap-4">
+      <p class="text-xs text-gray-400">Use a filename from <code class="bg-gray-100 px-1 rounded">public/images</code>, or paste a link to an image hosted online (e.g. Facebook, Google Photos, Imgur).</p>
+      <button type="submit" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-accent transition">
+        <i class="fas fa-upload mr-2"></i>Add Photo
+      </button>
+    </div>
+  </form>
+  <datalist id="gallery-categories">
+    <% categories.forEach(c => { %><option value="<%= c %>"><% }) %>
+  </datalist>
+</div>
+
+<p class="text-gray-500 mb-4"><%= photos.length %> photo<%= photos.length !== 1 ? 's' : '' %></p>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  <% photos.forEach(p => { %>
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <img src="<%= img(p.src) %>" alt="<%= p.caption %>" class="w-full h-40 object-cover bg-gray-100">
+      <form method="POST" action="/admin/gallery/<%= p._id %>/update" class="p-4 space-y-2">
+        <input type="text" name="caption" value="<%= p.caption %>" required class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+        <input type="text" name="category" value="<%= p.category %>" list="gallery-categories" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+        <div class="flex gap-2 pt-1">
+          <button type="submit" class="bg-secondary text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-600 transition">
+            <i class="fas fa-save mr-1"></i>Save
+          </button>
+          <button type="submit" formaction="/admin/gallery/<%= p._id %>/delete" onclick="return confirm('Remove this photo from the gallery?')"
+                  class="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-red-700 transition">
+            <i class="fas fa-trash mr-1"></i>Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('partials/admin-footer') %>

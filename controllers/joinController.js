@@ -1,20 +1,11 @@
-const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
+const { getDb } = require('../lib/db');
 
-const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = 'rfi';
 const COLLECTION = 'submissions';
+const ENQUIRY_TYPES = ['prayer-request', 'appointment-request', 'membership-request', 'information-request'];
 
-let client;
-let db;
-
-async function getDb() {
-  if (db) return db;
-  if (!MONGODB_URI) throw new Error('MONGODB_URI not set');
-  client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  db = client.db(DB_NAME);
-  return db;
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 async function sendNotificationEmail(submission) {
@@ -29,6 +20,7 @@ async function sendNotificationEmail(submission) {
     },
   });
   const typeLabel = submission.enquiryType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const h = Object.fromEntries(Object.entries(submission).map(([k, v]) => [k, escapeHtml(v)]));
   await transporter.sendMail({
     from: `"RFI Website" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFY_EMAIL || 'tlokza@gmail.com',
@@ -46,12 +38,12 @@ Submitted: ${submission.timestamp}
     html: `
 <h2>New ${typeLabel}</h2>
 <table style="border-collapse:collapse;font-family:sans-serif;">
-  <tr><td style="padding:6px 12px;font-weight:bold">Name</td><td style="padding:6px 12px">${submission.firstName} ${submission.lastName}</td></tr>
-  <tr><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px"><a href="mailto:${submission.email}">${submission.email}</a></td></tr>
-  <tr><td style="padding:6px 12px;font-weight:bold">Phone</td><td style="padding:6px 12px">${submission.phone}</td></tr>
+  <tr><td style="padding:6px 12px;font-weight:bold">Name</td><td style="padding:6px 12px">${h.firstName} ${h.lastName}</td></tr>
+  <tr><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px"><a href="mailto:${h.email}">${h.email}</a></td></tr>
+  <tr><td style="padding:6px 12px;font-weight:bold">Phone</td><td style="padding:6px 12px">${h.phone}</td></tr>
   <tr><td style="padding:6px 12px;font-weight:bold">Type</td><td style="padding:6px 12px">${typeLabel}</td></tr>
-  <tr><td style="padding:6px 12px;font-weight:bold">Message</td><td style="padding:6px 12px">${submission.message || 'None'}</td></tr>
-  <tr><td style="padding:6px 12px;font-weight:bold">Submitted</td><td style="padding:6px 12px">${submission.timestamp}</td></tr>
+  <tr><td style="padding:6px 12px;font-weight:bold">Message</td><td style="padding:6px 12px">${h.message || 'None'}</td></tr>
+  <tr><td style="padding:6px 12px;font-weight:bold">Submitted</td><td style="padding:6px 12px">${h.timestamp}</td></tr>
 </table>
     `,
   });
@@ -72,21 +64,40 @@ exports.inquire = (req, res) => {
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: 'join',
-    enquiryType: req.query.type || ''
+    enquiryType: req.query.type || '',
+    values: {},
+    error: null,
   });
 };
 
 exports.submit = async (req, res) => {
+  const field = (name, max = 200) => String(req.body[name] || '').trim().slice(0, max);
   const submission = {
-    firstName: req.body['first-name'] || '',
-    lastName:  req.body['last-name'] || '',
-    email:     req.body.email || '',
-    phone:     req.body.phone || '',
-    enquiryType: req.body['enquiry-type'] || '',
-    message:   req.body.message || '',
-    timestamp: req.body.timestamp || new Date().toLocaleString(),
+    firstName: field('first-name'),
+    lastName:  field('last-name'),
+    email:     field('email'),
+    phone:     field('phone', 40),
+    enquiryType: field('enquiry-type', 40),
+    message:   field('message', 5000),
+    timestamp: field('timestamp', 60) || new Date().toLocaleString(),
     submittedAt: new Date(),
+    status: 'new',
   };
+
+  // Honeypot field – real visitors never fill this in
+  if (req.body.website) return res.redirect('/join');
+
+  if (!submission.firstName || !submission.lastName || !submission.email || !submission.phone || !ENQUIRY_TYPES.includes(submission.enquiryType)) {
+    return res.status(400).render('inquire', {
+      title: 'Enquiry Form',
+      currentYear: new Date().getFullYear(),
+      lastModified: new Date().toLocaleString(),
+      activePage: 'join',
+      enquiryType: submission.enquiryType,
+      values: submission,
+      error: 'Please fill in all required fields and choose an enquiry type.',
+    });
+  }
 
   try {
     const database = await getDb();

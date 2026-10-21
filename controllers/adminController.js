@@ -1,9 +1,39 @@
-const { getDb, toObjectId } = require('../lib/db');
+const crypto = require('crypto');
+const { getDb, toObjectId, slugify, byDisplayOrder } = require('../lib/db');
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'rfi-admin-2026';
+const SESSION_TTL_MS = 8 * 3600000;
 
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// The session cookie holds an expiry plus an HMAC keyed by the admin password,
+// so the password itself never leaves the server and changing it logs everyone out.
+function sign(expires) {
+  return crypto.createHmac('sha256', ADMIN_PASSWORD).update(`rfi-admin:${expires}`).digest('hex');
+}
+
+function makeToken() {
+  const expires = Date.now() + SESSION_TTL_MS;
+  return `${expires}.${sign(expires)}`;
+}
+
+function validToken(token) {
+  const [expires, sig] = String(token || '').split('.');
+  if (!expires || !sig || Number(expires) < Date.now()) return false;
+  const expected = Buffer.from(sign(expires));
+  const given = Buffer.from(sig);
+  return expected.length === given.length && crypto.timingSafeEqual(expected, given);
+}
+
+function safeEqual(a, b) {
+  const ha = crypto.createHash('sha256').update(String(a)).digest();
+  const hb = crypto.createHash('sha256').update(String(b)).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
+
+// Accepts a bare ID or any common YouTube URL form and returns the 11-char video ID
+function parseVideoId(input) {
+  const str = String(input || '').trim();
+  const match = str.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : str;
 }
 
 function adminRender(res, view, data) {
@@ -15,15 +45,20 @@ function adminRender(res, view, data) {
 exports.login = (req, res) => adminRender(res, 'admin-login', { title: 'Admin Login', error: null });
 
 exports.doLogin = (req, res) => {
-  if (req.body.password === ADMIN_PASSWORD) {
-    res.cookie('rfi_admin', ADMIN_PASSWORD, { httpOnly: true, maxAge: 3600000 });
+  if (safeEqual(req.body.password || '', ADMIN_PASSWORD)) {
+    res.cookie('rfi_admin', makeToken(), {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: Boolean(process.env.VERCEL || process.env.RENDER),
+      maxAge: SESSION_TTL_MS,
+    });
     return res.redirect('/admin/dashboard');
   }
   adminRender(res, 'admin-login', { title: 'Admin Login', error: 'Incorrect password. Please try again.' });
 };
 
 exports.requireAuth = (req, res, next) => {
-  if (req.cookies?.rfi_admin === ADMIN_PASSWORD) return next();
+  if (validToken(req.cookies?.rfi_admin)) return next();
   res.redirect('/admin');
 };
 
@@ -35,21 +70,23 @@ exports.logout = (req, res) => {
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 exports.dashboard = async (req, res) => {
-  let submissions = [], dbError = null, eventsCount = 0, newsCount = 0, testimonialsCount = 0, sermonsCount = 0;
+  let submissions = [], dbError = null, counts = {};
   try {
     const db = await getDb();
-    [submissions, eventsCount, newsCount, testimonialsCount, sermonsCount] = await Promise.all([
-      db.collection('submissions').find({}).sort({ submittedAt: -1 }).limit(50).toArray(),
-      db.collection('events').countDocuments(),
-      db.collection('news').countDocuments(),
-      db.collection('testimonials').countDocuments(),
-      db.collection('sermons').countDocuments(),
+    const names = ['submissions', 'events', 'news', 'testimonials', 'sermons', 'ministries', 'gallery'];
+    const [latest, newCount, ...totals] = await Promise.all([
+      db.collection('submissions').find({}).sort({ submittedAt: -1 }).limit(10).toArray(),
+      db.collection('submissions').countDocuments({ status: { $ne: 'handled' } }),
+      ...names.map(n => db.collection(n).countDocuments()),
     ]);
+    submissions = latest;
+    names.forEach((n, i) => { counts[n] = totals[i]; });
+    counts.newSubmissions = newCount;
   } catch (err) { dbError = err.message; }
 
   adminRender(res, 'admin-dashboard', {
     title: 'Dashboard', currentSection: 'dashboard',
-    submissions, dbError, eventsCount, newsCount, testimonialsCount, sermonsCount,
+    submissions, dbError, counts,
   });
 };
 
@@ -210,8 +247,9 @@ exports.sermonNew = (req, res) =>
   adminRender(res, 'admin-sermon-form', { title: 'New Sermon', currentSection: 'sermons', sermon: null, error: null });
 
 exports.sermonCreate = async (req, res) => {
-  const { title, date, speaker, series, videoId, description, featured } = req.body;
-  if (!title || !videoId) return adminRender(res, 'admin-sermon-form', { title: 'New Sermon', currentSection: 'sermons', sermon: req.body, error: 'Title and YouTube Video ID are required.' });
+  const { title, date, speaker, series, description, featured } = req.body;
+  const videoId = parseVideoId(req.body.videoId);
+  if (!title || !/^[A-Za-z0-9_-]{11}$/.test(videoId)) return adminRender(res, 'admin-sermon-form', { title: 'New Sermon', currentSection: 'sermons', sermon: req.body, error: 'Title and a valid YouTube link are required.' });
   const db = await getDb();
   await db.collection('sermons').insertOne({ title, date: date || new Date().toISOString().split('T')[0], speaker: speaker || 'RFI Pastorate', series: series || '', videoId, description: description || '', featured: featured === 'on' });
   res.redirect('/admin/sermons');
@@ -229,11 +267,12 @@ exports.sermonEdit = async (req, res) => {
 exports.sermonUpdate = async (req, res) => {
   const id = toObjectId(req.params.id);
   if (!id) return res.redirect('/admin/sermons');
-  const { title, date, speaker, series, videoId, description, featured } = req.body;
-  if (!title || !videoId) {
+  const { title, date, speaker, series, description, featured } = req.body;
+  const videoId = parseVideoId(req.body.videoId);
+  if (!title || !/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
     const db = await getDb();
     const sermon = await db.collection('sermons').findOne({ _id: id });
-    return adminRender(res, 'admin-sermon-form', { title: 'Edit Sermon', currentSection: 'sermons', sermon: { ...sermon, ...req.body }, error: 'Title and YouTube Video ID are required.' });
+    return adminRender(res, 'admin-sermon-form', { title: 'Edit Sermon', currentSection: 'sermons', sermon: { ...sermon, ...req.body }, error: 'Title and a valid YouTube link are required.' });
   }
   const db = await getDb();
   await db.collection('sermons').updateOne({ _id: id }, { $set: { title, date, speaker, series, videoId, description, featured: featured === 'on' } });
@@ -289,4 +328,138 @@ exports.contentUpdate = async (req, res) => {
   } catch (err) {
     adminRender(res, 'admin-content', { title: 'Home Page Content', currentSection: 'content', content: { key: 'home', ...data }, success: null, error: 'Failed to save: ' + err.message });
   }
+};
+
+// ── Ministries ────────────────────────────────────────────────────────────────
+
+function ministryFromBody(body) {
+  return {
+    name: (body.name || '').trim(),
+    schedule: body.schedule || '',
+    contact: body.contact || '',
+    description: body.description || '',
+    details: body.details || '',
+    image: body.image || '',
+    order: parseInt(body.order, 10) || 0,
+  };
+}
+
+exports.ministriesList = async (req, res) => {
+  const db = await getDb();
+  const ministries = (await db.collection('ministries').find({}).sort({ _id: 1 }).toArray()).sort(byDisplayOrder);
+  adminRender(res, 'admin-ministries', { title: 'Manage Ministries', currentSection: 'ministries', ministries });
+};
+
+exports.ministryNew = (req, res) =>
+  adminRender(res, 'admin-ministry-form', { title: 'New Ministry', currentSection: 'ministries', ministry: null, error: null });
+
+exports.ministryCreate = async (req, res) => {
+  const data = ministryFromBody(req.body);
+  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'New Ministry', currentSection: 'ministries', ministry: req.body, error: 'Ministry name is required.' });
+  const db = await getDb();
+  await db.collection('ministries').insertOne(data);
+  res.redirect('/admin/ministries');
+};
+
+exports.ministryEdit = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (!id) return res.redirect('/admin/ministries');
+  const db = await getDb();
+  const ministry = await db.collection('ministries').findOne({ _id: id });
+  if (!ministry) return res.redirect('/admin/ministries');
+  adminRender(res, 'admin-ministry-form', { title: 'Edit Ministry', currentSection: 'ministries', ministry, error: null });
+};
+
+exports.ministryUpdate = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (!id) return res.redirect('/admin/ministries');
+  const data = ministryFromBody(req.body);
+  if (!data.name) return adminRender(res, 'admin-ministry-form', { title: 'Edit Ministry', currentSection: 'ministries', ministry: { _id: id, ...req.body }, error: 'Ministry name is required.' });
+  const db = await getDb();
+  await db.collection('ministries').updateOne({ _id: id }, { $set: data });
+  res.redirect('/admin/ministries');
+};
+
+exports.ministryDelete = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) { const db = await getDb(); await db.collection('ministries').deleteOne({ _id: id }); }
+  res.redirect('/admin/ministries');
+};
+
+// ── Gallery ───────────────────────────────────────────────────────────────────
+
+exports.galleryList = async (req, res) => {
+  const db = await getDb();
+  const photos = await db.collection('gallery').find({}).sort({ _id: -1 }).toArray();
+  adminRender(res, 'admin-gallery', { title: 'Manage Gallery', currentSection: 'gallery', photos, error: null });
+};
+
+exports.galleryCreate = async (req, res) => {
+  const src = (req.body.src || '').trim();
+  const caption = (req.body.caption || '').trim();
+  const category = (req.body.category || '').trim() || 'Community';
+  const db = await getDb();
+  if (!src || !caption) {
+    const photos = await db.collection('gallery').find({}).sort({ _id: -1 }).toArray();
+    return adminRender(res, 'admin-gallery', { title: 'Manage Gallery', currentSection: 'gallery', photos, error: 'Image and caption are required.' });
+  }
+  await db.collection('gallery').insertOne({ src, caption, category });
+  res.redirect('/admin/gallery');
+};
+
+exports.galleryUpdate = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id && req.body.caption) {
+    const db = await getDb();
+    await db.collection('gallery').updateOne({ _id: id }, { $set: { caption: req.body.caption.trim(), category: (req.body.category || '').trim() || 'Community' } });
+  }
+  res.redirect('/admin/gallery');
+};
+
+exports.galleryDelete = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) { const db = await getDb(); await db.collection('gallery').deleteOne({ _id: id }); }
+  res.redirect('/admin/gallery');
+};
+
+// ── Submissions ───────────────────────────────────────────────────────────────
+
+exports.submissionsList = async (req, res) => {
+  const filter = {};
+  const { type, status } = req.query;
+  if (type) filter.enquiryType = type;
+  if (status === 'new') filter.status = { $ne: 'handled' };
+  if (status === 'handled') filter.status = 'handled';
+  const db = await getDb();
+  const submissions = await db.collection('submissions').find(filter).sort({ submittedAt: -1 }).limit(500).toArray();
+  adminRender(res, 'admin-submissions', { title: 'Enquiries', currentSection: 'submissions', submissions, type: type || '', status: status || '' });
+};
+
+exports.submissionToggle = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) {
+    const db = await getDb();
+    const sub = await db.collection('submissions').findOne({ _id: id });
+    if (sub) await db.collection('submissions').updateOne({ _id: id }, { $set: { status: sub.status === 'handled' ? 'new' : 'handled' } });
+  }
+  res.redirect(req.get('Referer') || '/admin/submissions');
+};
+
+exports.submissionDelete = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) { const db = await getDb(); await db.collection('submissions').deleteOne({ _id: id }); }
+  res.redirect(req.get('Referer') || '/admin/submissions');
+};
+
+exports.submissionsExport = async (req, res) => {
+  const db = await getDb();
+  const rows = await db.collection('submissions').find({}).sort({ submittedAt: -1 }).toArray();
+  const cols = ['firstName', 'lastName', 'email', 'phone', 'enquiryType', 'message', 'status', 'submittedAt'];
+  const esc = v => {
+    let str = v instanceof Date ? v.toISOString() : String(v ?? '');
+    if (/^[=+\-@]/.test(str)) str = "'" + str; // neutralise spreadsheet formulas
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+  const csv = [cols.join(','), ...rows.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');
+  res.attachment(`rfi-enquiries-${new Date().toISOString().split('T')[0]}.csv`).type('text/csv').send(csv);
 };

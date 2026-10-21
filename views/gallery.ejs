@@ -14,7 +14,7 @@
   <!-- Category Filter -->
   <div class="flex flex-wrap gap-3 mb-12 justify-center">
     <% categories.forEach(cat => { %>
-      <button onclick="filterGallery('<%= cat %>')"
+      <button onclick="filterGallery(this.dataset.cat)"
               class="gallery-btn <%= cat === 'All' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700' %> px-5 py-2 rounded-full font-semibold text-sm transition hover:bg-primary hover:text-white"
               data-cat="<%= cat %>">
         <%= cat %>
@@ -24,12 +24,15 @@
 
   <!-- Photo Grid -->
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery-grid">
+    <% if (photos.length === 0) { %>
+      <p class="col-span-full text-center text-2xl text-gray-500 py-20">No photos yet. Check back soon!</p>
+    <% } %>
     <% photos.forEach((photo, i) => { %>
       <div class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition cursor-pointer group"
            data-cat="<%= photo.category %>"
            onclick="openLightbox(<%= i %>)">
         <div class="relative overflow-hidden">
-          <img src="/images/<%= photo.src %>"
+          <img src="<%= img(photo.src) %>"
                alt="<%= photo.caption %>"
                class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
           <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition duration-300 flex items-center justify-center">
@@ -57,7 +60,7 @@
 </div>
 
 <script>
-  const photos = <%- JSON.stringify(photos) %>;
+  const photos = <%- JSON.stringify(photos).replace(/</g, '\\u003c') %>;
   let current = 0;
 
   function filterGallery(cat) {
@@ -65,7 +68,7 @@
       btn.classList.remove('bg-primary', 'text-white');
       btn.classList.add('bg-gray-200', 'text-gray-700');
     });
-    const active = document.querySelector(`[data-cat="${cat}"]`);
+    const active = document.querySelector(`.gallery-btn[data-cat="${CSS.escape(cat)}"]`);
     if (active) {
       active.classList.add('bg-primary', 'text-white');
       active.classList.remove('bg-gray-200', 'text-gray-700');
@@ -91,7 +94,7 @@
 
   function showPhoto() {
     const p = photos[current];
-    document.getElementById('lightbox-img').src = '/images/' + p.src;
+    document.getElementById('lightbox-img').src = /^(https?:)?\/\//.test(p.src) || p.src.startsWith('/') ? p.src : '/images/' + p.src;
     document.getElementById('lightbox-img').alt = p.caption;
     document.getElementById('lightbox-caption').textContent = p.caption + ' – ' + p.category;
   }

@@ -64,29 +64,31 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
+<% if (typeof activePage === 'undefined') { activePage = ''; } %>
 <header class="bg-primary text-white shadow-lg">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
     <div class="flex items-center space-x-4">
       <a href="/"><img src="/images/logo.webp" alt="RFI Logo" class="h-20 w-auto rounded-lg sm:h-24 lg:h-28"></a>
       <a href="/" class="hover:text-secondary transition">
-        <h1 class="text-2xl font-bold hidden sm:block">Revival Fellowship International</h1>
+        <p class="text-2xl font-bold hidden sm:block lg:hidden xl:block">Revival Fellowship International</p>
       </a>
     </div>
 
     <!-- Hamburger -->
-    <button id="menu-btn" class="lg:hidden text-white focus:outline-none" aria-label="Toggle menu">
+    <button id="menu-btn" class="lg:hidden text-white focus:outline-none" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
       <i class="fas fa-bars text-3xl"></i>
     </button>
 
     <!-- Desktop Navigation -->
     <nav id="nav-menu" class="hidden lg:flex items-center space-x-1">
-      <a href="/" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
-      <a href="/about" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About</a>
-      <a href="/ministries" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
-      <a href="/sermons" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'sermons' ? 'bg-secondary font-bold' : '' %>">Sermons</a>
-      <a href="/news" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'news' ? 'bg-secondary font-bold' : '' %>">News</a>
-      <a href="/gallery" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'gallery' ? 'bg-secondary font-bold' : '' %>">Gallery</a>
-      <a href="/join" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'join' ? 'bg-secondary font-bold' : '' %>">Get Involved</a>
+      <a href="/" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
+      <a href="/about" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About</a>
+      <a href="/ministries" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
+      <a href="/events" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'events' ? 'bg-secondary font-bold' : '' %>">Events</a>
+      <a href="/sermons" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'sermons' ? 'bg-secondary font-bold' : '' %>">Sermons</a>
+      <a href="/news" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'news' ? 'bg-secondary font-bold' : '' %>">News</a>
+      <a href="/gallery" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'gallery' ? 'bg-secondary font-bold' : '' %>">Gallery</a>
+      <a href="/join" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'join' ? 'bg-secondary font-bold' : '' %>">Get Involved</a>
     </nav>
   </div>
 
@@ -95,6 +97,7 @@
     <a href="/" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
     <a href="/about" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About Us</a>
     <a href="/ministries" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
+    <a href="/events" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'events' ? 'bg-secondary font-bold' : '' %>">Events</a>
     <a href="/sermons" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'sermons' ? 'bg-secondary font-bold' : '' %>">Sermons</a>
     <a href="/news" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'news' ? 'bg-secondary font-bold' : '' %>">News</a>
     <a href="/gallery" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'gallery' ? 'bg-secondary font-bold' : '' %>">Gallery</a>
@@ -103,7 +106,8 @@
 </header>
 
 <script>
-  document.getElementById('menu-btn').addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
+  document.getElementById('menu-btn').addEventListener('click', function () {
+    const hidden = document.getElementById('mobile-menu').classList.toggle('hidden');
+    this.setAttribute('aria-expanded', String(!hidden));
   });
 </script>
