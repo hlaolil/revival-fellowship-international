@@ -12,8 +12,7 @@
 
 <!-- HERO SECTION -->
 <section class="relative h-96 md:h-screen max-h-screen overflow-hidden">
-  <img src="/images/hero.webp" alt="Worship service at RFI" class="w-full h-full object-cover hidden md:block">
-  <img src="/images/hero1.webp" alt="Worship service at RFI" class="w-full h-full object-cover md:hidden">
+  <%- include('partials/hero-image', { desktop: 'hero.webp', mobile: 'hero1.webp', alt: 'Worship service at RFI' }) %>
   <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading mb-4 hero-title">

@@ -1,6 +1,7 @@
 ﻿<%- include('partials/header', { activePage: 'join' }) %>
 
-<section class="hero relative h-96 bg-cover bg-center" style="background-image: url('/images/heroo.webp')">
+<section class="hero relative h-96 overflow-hidden">
+  <%- include('partials/hero-image', { desktop: 'heroo.webp', mobile: 'hero1.webp' }) %>
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
     <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">Get Involved</h1>
   </div>
