@@ -23,44 +23,12 @@
 
   <title><%= title %> - Revival Fellowship International</title>
 
-  <!-- Tailwind CDN + Custom Colors -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#008080',
-            secondary: '#FFA500',
-            accent: '#006d77',
-          },
-          fontFamily: {
-            heading: ['Georgia', 'serif'],
-            body: ['system-ui', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="/styles/site.css?v=<%= assetVersion %>">
 
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css"/>
   <link rel="icon" href="/images/fav.jpg" type="image/x-icon">
 
-  <style>
-    @keyframes heroFadeIn {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .hero-title   { animation: heroFadeIn 0.9s ease forwards; }
-    .hero-tagline { opacity: 0; animation: heroFadeIn 0.9s ease 0.35s forwards; }
-    .hero-cta     { opacity: 0; animation: heroFadeIn 0.9s ease 0.65s forwards; }
-
-    /* Dropdown */
-    .nav-dropdown:hover .dropdown-menu,
-    .nav-dropdown:focus-within .dropdown-menu { display: block; }
-    .dropdown-menu { display: none; }
-  </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 

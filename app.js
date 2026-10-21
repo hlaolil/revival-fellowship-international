@@ -19,10 +19,18 @@ const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Cache-busting token for the built stylesheet (changes whenever site.css is rebuilt)
+try {
+  const css = require('fs').readFileSync(path.join(__dirname, 'public/styles/site.css'));
+  app.locals.assetVersion = require('crypto').createHash('md5').update(css).digest('hex').slice(0, 8);
+} catch {
+  app.locals.assetVersion = '0';
+}
 
 // Resolve an image reference: full URLs are used as-is, anything else lives in /public/images
 app.locals.img = src => (/^(https?:)?\/\//.test(src || '') || (src || '').startsWith('/')) ? src : `/images/${src}`;
