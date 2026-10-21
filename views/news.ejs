@@ -1,6 +1,7 @@
 <%- include('partials/header', { activePage: 'news', title: 'News & Announcements', metaDescription: 'Stay up to date with the latest news, announcements, and events from Revival Fellowship International.' }) %>
 
-<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/heroo.webp')">
+<section class="hero relative h-72 overflow-hidden">
+  <%- include('partials/hero-image', { desktop: 'heroo.webp', mobile: 'hero1.webp' }) %>
   <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
     <div class="text-center text-white">
       <h1 class="text-5xl md:text-6xl font-bold font-heading">News &amp; Announcements</h1>

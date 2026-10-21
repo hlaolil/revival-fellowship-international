@@ -1,0 +1,9 @@
+<%# Full-bleed banner image that swaps to a different picture on phones.
+    Phones download only the mobile image; larger screens only the desktop one.
+    Locals: desktop, mobile (optional), alt (optional) %>
+<picture>
+  <% if (typeof mobile !== 'undefined' && mobile) { %>
+    <source media="(max-width: 767px)" srcset="<%= img(mobile) %>">
+  <% } %>
+  <img src="<%= img(desktop) %>" alt="<%= typeof alt !== 'undefined' ? alt : '' %>" class="absolute inset-0 w-full h-full object-cover">
+</picture>
