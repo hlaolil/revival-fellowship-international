@@ -5,5 +5,5 @@
   <% if (typeof mobile !== 'undefined' && mobile) { %>
     <source media="(max-width: 767px)" srcset="<%= img(mobile) %>">
   <% } %>
-  <img src="<%= img(desktop) %>" alt="<%= typeof alt !== 'undefined' ? alt : '' %>" class="absolute inset-0 w-full h-full object-cover">
+  <img src="<%= img(desktop) %>" alt="<%= typeof alt !== 'undefined' ? alt : '' %>" class="absolute inset-0 w-full h-full object-cover hero-bg">
 </picture>

@@ -1,10 +1,11 @@
 <%- include('partials/header', { activePage: 'sermons', title: 'Sermon Archive', metaDescription: 'Watch and listen to sermons from Revival Fellowship International. Browse our archive of teachings and messages.' }) %>
 
-<section class="hero relative h-72 bg-cover bg-center" style="background-image: url('/images/service.jpg')">
-  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+<section class="hero relative h-72 overflow-hidden">
+  <%- include('partials/hero-image', { desktop: 'service.jpg', alt: 'Sermon Archive' }) %>
+  <div class="absolute inset-0 inner-hero-overlay flex items-center justify-center">
     <div class="text-center text-white">
-      <h1 class="text-5xl md:text-6xl font-bold font-heading">Sermon Archive</h1>
-      <p class="mt-4 text-xl text-gray-200">Watch and be blessed by the Word</p>
+      <h1 class="text-5xl md:text-6xl font-bold font-heading hero-title">Sermon Archive</h1>
+      <p class="mt-4 text-xl text-gray-200 hero-tagline">Watch and be blessed by the Word</p>
     </div>
   </div>
 </section>
