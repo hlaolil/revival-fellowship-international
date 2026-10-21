@@ -65,14 +65,27 @@
 <body class="bg-gray-50 text-gray-800">
 
 <% if (typeof activePage === 'undefined') { activePage = ''; } %>
-<header class="bg-primary text-white shadow-lg">
+<%
+  const navGroups = [
+    { label: 'About', items: [
+      { href: '/about',      page: 'about',      label: 'Who We Are',  icon: 'fa-church' },
+      { href: '/ministries', page: 'ministries', label: 'Ministries',  icon: 'fa-hands-praying' },
+      { href: '/gallery',    page: 'gallery',    label: 'Gallery',     icon: 'fa-images' },
+    ] },
+    { label: "What's On", items: [
+      { href: '/events', page: 'events', label: 'Church Calendar',        icon: 'fa-calendar-alt' },
+      { href: '/news',   page: 'news',   label: 'News & Announcements',   icon: 'fa-newspaper' },
+    ] },
+    { label: 'Sermons', href: '/sermons', page: 'sermons' },
+  ];
+  const groupActive = g => g.items ? g.items.some(i => i.page === activePage) : g.page === activePage;
+%>
+<header class="bg-primary text-white shadow-lg relative z-40">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-    <div class="flex items-center space-x-4">
-      <a href="/"><img src="/images/logo.webp" alt="RFI Logo" class="h-20 w-auto rounded-lg sm:h-24 lg:h-28"></a>
-      <a href="/" class="hover:text-secondary transition">
-        <p class="text-2xl font-bold hidden sm:block lg:hidden xl:block">Revival Fellowship International</p>
-      </a>
-    </div>
+    <a href="/" class="flex items-center space-x-4 hover:text-secondary transition" aria-label="Revival Fellowship International – Home">
+      <img src="/images/logo.webp" alt="RFI Logo" class="h-20 w-auto rounded-lg sm:h-24 lg:h-28">
+      <span class="text-2xl font-bold hidden sm:block">Revival Fellowship International</span>
+    </a>
 
     <!-- Hamburger -->
     <button id="menu-btn" class="lg:hidden text-white focus:outline-none" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
@@ -80,29 +93,49 @@
     </button>
 
     <!-- Desktop Navigation -->
-    <nav id="nav-menu" class="hidden lg:flex items-center space-x-1">
-      <a href="/" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
-      <a href="/about" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About</a>
-      <a href="/ministries" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
-      <a href="/events" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'events' ? 'bg-secondary font-bold' : '' %>">Events</a>
-      <a href="/sermons" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'sermons' ? 'bg-secondary font-bold' : '' %>">Sermons</a>
-      <a href="/news" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'news' ? 'bg-secondary font-bold' : '' %>">News</a>
-      <a href="/gallery" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'gallery' ? 'bg-secondary font-bold' : '' %>">Gallery</a>
-      <a href="/join" class="px-3 py-3 rounded-md hover:bg-secondary transition <%= activePage === 'join' ? 'bg-secondary font-bold' : '' %>">Get Involved</a>
+    <nav id="nav-menu" class="hidden lg:flex items-center space-x-2" aria-label="Main">
+      <% navGroups.forEach(g => { %>
+        <% if (g.items) { %>
+          <div class="nav-dropdown relative">
+            <button type="button" class="px-4 py-3 rounded-md hover:bg-secondary transition flex items-center gap-2 <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>" aria-haspopup="true">
+              <%= g.label %> <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+            <div class="dropdown-menu absolute right-0 top-full pt-2 w-60">
+              <div class="bg-white text-gray-800 rounded-xl shadow-2xl overflow-hidden py-2">
+                <% g.items.forEach(i => { %>
+                  <a href="<%= i.href %>" class="flex items-center gap-3 px-5 py-3 hover:bg-teal-50 hover:text-primary transition <%= i.page === activePage ? 'text-primary font-bold bg-teal-50' : '' %>">
+                    <i class="fas <%= i.icon %> text-secondary w-5 text-center"></i><%= i.label %>
+                  </a>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+          <a href="<%= g.href %>" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>"><%= g.label %></a>
+        <% } %>
+      <% }) %>
+      <a href="/join" class="ml-2 bg-secondary hover:bg-white hover:text-primary text-white font-bold px-6 py-3 rounded-full shadow transition <%= activePage === 'join' ? 'ring-2 ring-white' : '' %>">Get Involved</a>
     </nav>
   </div>
 
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="lg:hidden hidden bg-primary border-t border-teal-700">
-    <a href="/" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'home' ? 'bg-secondary font-bold' : '' %>">Home</a>
-    <a href="/about" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'about' ? 'bg-secondary font-bold' : '' %>">About Us</a>
-    <a href="/ministries" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'ministries' ? 'bg-secondary font-bold' : '' %>">Ministries</a>
-    <a href="/events" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'events' ? 'bg-secondary font-bold' : '' %>">Events</a>
-    <a href="/sermons" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'sermons' ? 'bg-secondary font-bold' : '' %>">Sermons</a>
-    <a href="/news" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'news' ? 'bg-secondary font-bold' : '' %>">News</a>
-    <a href="/gallery" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'gallery' ? 'bg-secondary font-bold' : '' %>">Gallery</a>
-    <a href="/join" class="block px-6 py-4 hover:bg-secondary <%= activePage === 'join' ? 'bg-secondary font-bold' : '' %>">Get Involved</a>
-  </div>
+  <nav id="mobile-menu" class="lg:hidden hidden bg-primary border-t border-teal-700 pb-4" aria-label="Main">
+    <% navGroups.forEach(g => { %>
+      <% if (g.items) { %>
+        <p class="px-6 pt-4 pb-1 text-xs font-bold uppercase tracking-widest text-teal-200"><%= g.label %></p>
+        <% g.items.forEach(i => { %>
+          <a href="<%= i.href %>" class="flex items-center gap-3 px-6 py-3 hover:bg-secondary <%= i.page === activePage ? 'bg-secondary font-bold' : '' %>">
+            <i class="fas <%= i.icon %> w-5 text-center text-teal-200"></i><%= i.label %>
+          </a>
+        <% }) %>
+      <% } else { %>
+        <a href="<%= g.href %>" class="block px-6 py-4 mt-2 border-t border-teal-700 hover:bg-secondary <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>"><%= g.label %></a>
+      <% } %>
+    <% }) %>
+    <div class="px-6 pt-4">
+      <a href="/join" class="block text-center bg-secondary hover:bg-orange-600 text-white font-bold py-3 rounded-full transition">Get Involved</a>
+    </div>
+  </nav>
 </header>
 
 <script>
