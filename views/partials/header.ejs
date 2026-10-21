@@ -42,7 +42,6 @@
 <%
   const navGroups = [
     { label: 'About', items: [
-      { href: '/visit',      page: 'visit',      label: 'Plan Your Visit', icon: 'fa-map-location-dot' },
       { href: '/about',      page: 'about',      label: 'Who We Are',  icon: 'fa-church' },
       { href: '/ministries', page: 'ministries', label: 'Ministries',  icon: 'fa-hands-praying' },
       { href: '/gallery',    page: 'gallery',    label: 'Gallery',     icon: 'fa-images' },
@@ -52,8 +51,12 @@
       { href: '/news',   page: 'news',   label: 'News & Announcements',   icon: 'fa-newspaper' },
     ] },
     { label: 'Sermons', href: '/sermons', page: 'sermons' },
+    { label: 'Get Involved', cta: true, items: [
+      { href: '/visit', page: 'visit', label: 'Plan Your Visit',  icon: 'fa-map-location-dot' },
+      { href: '/join',  page: 'join',  label: 'Connect With Us',  icon: 'fa-hand-holding-heart' },
+      ...(site.givingEnabled ? [{ href: '/give', page: 'give', label: 'Give', icon: 'fa-gift' }] : []),
+    ] },
   ];
-  if (site.givingEnabled) navGroups.push({ label: 'Give', href: '/give', page: 'give' });
   const groupActive = g => g.items ? g.items.some(i => i.page === activePage) : g.page === activePage;
 %>
 <header class="bg-primary text-white shadow-lg relative z-40">
@@ -73,7 +76,9 @@
       <% navGroups.forEach(g => { %>
         <% if (g.items) { %>
           <div class="nav-dropdown relative">
-            <button type="button" class="px-4 py-3 rounded-md hover:bg-secondary transition flex items-center gap-2 <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>" aria-haspopup="true">
+            <button type="button" aria-haspopup="true" class="<%= g.cta
+              ? 'ml-2 bg-secondary hover:bg-white hover:text-primary text-white font-bold px-6 py-3 rounded-full shadow' + (groupActive(g) ? ' ring-2 ring-white' : '')
+              : 'px-4 py-3 rounded-md hover:bg-secondary' + (groupActive(g) ? ' bg-secondary font-bold' : '') %> transition flex items-center gap-2">
               <%= g.label %> <i class="fas fa-chevron-down text-xs"></i>
             </button>
             <div class="dropdown-menu absolute right-0 top-full pt-2 w-60">
@@ -90,7 +95,6 @@
           <a href="<%= g.href %>" class="px-4 py-3 rounded-md hover:bg-secondary transition <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>"><%= g.label %></a>
         <% } %>
       <% }) %>
-      <a href="/join" class="ml-2 bg-secondary hover:bg-white hover:text-primary text-white font-bold px-6 py-3 rounded-full shadow transition <%= activePage === 'join' ? 'ring-2 ring-white' : '' %>">Get Involved</a>
     </nav>
   </div>
 
@@ -98,7 +102,7 @@
   <nav id="mobile-menu" class="lg:hidden hidden bg-primary border-t border-teal-700 pb-4" aria-label="Main">
     <% navGroups.forEach(g => { %>
       <% if (g.items) { %>
-        <p class="px-6 pt-4 pb-1 text-xs font-bold uppercase tracking-widest text-teal-200"><%= g.label %></p>
+        <p class="px-6 pt-4 pb-1 text-xs font-bold uppercase tracking-widest <%= g.cta ? 'text-secondary mt-2 border-t border-teal-700 pt-5' : 'text-teal-200' %>"><%= g.label %></p>
         <% g.items.forEach(i => { %>
           <a href="<%= i.href %>" class="flex items-center gap-3 px-6 py-3 hover:bg-secondary <%= i.page === activePage ? 'bg-secondary font-bold' : '' %>">
             <i class="fas <%= i.icon %> w-5 text-center text-teal-200"></i><%= i.label %>
@@ -108,9 +112,6 @@
         <a href="<%= g.href %>" class="block px-6 py-4 mt-2 border-t border-teal-700 hover:bg-secondary <%= groupActive(g) ? 'bg-secondary font-bold' : '' %>"><%= g.label %></a>
       <% } %>
     <% }) %>
-    <div class="px-6 pt-4">
-      <a href="/join" class="block text-center bg-secondary hover:bg-orange-600 text-white font-bold py-3 rounded-full transition">Get Involved</a>
-    </div>
   </nav>
 </header>
 
