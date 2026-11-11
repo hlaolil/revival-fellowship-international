@@ -8,6 +8,7 @@ const aboutController       = require('./controllers/aboutController');
 const ministriesController  = require('./controllers/ministriesController');
 const joinController        = require('./controllers/joinController');
 const membershipController  = require('./controllers/membershipController');
+const testimoniesController = require('./controllers/testimoniesController');
 const newsController        = require('./controllers/newsController');
 const sermonsController     = require('./controllers/sermonsController');
 const galleryController     = require('./controllers/galleryController');
@@ -73,6 +74,8 @@ app.get('/inquire',     joinController.inquire);
 app.post('/inquire',    wrap(joinController.submit));
 app.get('/membership',  wrap(membershipController.form));
 app.post('/membership', wrap(membershipController.submit));
+app.get('/testimonies',  wrap(testimoniesController.index));
+app.post('/testimonies', wrap(testimoniesController.submit));
 app.get('/news',        wrap(newsController.index));
 app.get('/news/:slug',  wrap(newsController.post));
 app.get('/sermons',     wrap(sermonsController.index));
@@ -108,6 +111,7 @@ app.post('/admin/testimonials/create',      auth, wrap(adminController.testimoni
 app.get('/admin/testimonials/:id/edit',     auth, wrap(adminController.testimonialEdit));
 app.post('/admin/testimonials/:id/update',  auth, wrap(adminController.testimonialUpdate));
 app.post('/admin/testimonials/:id/delete',  auth, wrap(adminController.testimonialDelete));
+app.post('/admin/testimonials/:id/toggle',  auth, wrap(adminController.testimonialToggle));
 
 // Admin – news
 app.get('/admin/news',              auth, wrap(adminController.newsList));

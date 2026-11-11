@@ -1,31 +1,48 @@
 <%- include('partials/admin-header', { title, currentSection }) %>
 
-<div class="flex justify-between items-center mb-8">
-  <p class="text-gray-500"><%= testimonials.length %> testimonial<%= testimonials.length !== 1 ? 's' : '' %> total</p>
+<% const pending = testimonials.filter(t => t.status === 'pending').length; %>
+<div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+  <p class="text-gray-500"><%= testimonials.length %> testimon<%= testimonials.length !== 1 ? 'ies' : 'y' %><%= pending ? ' · ' + pending + ' waiting for approval' : '' %></p>
   <a href="/admin/testimonials/new" class="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-accent transition">
-    <i class="fas fa-plus mr-2"></i>Add Testimonial
+    <i class="fas fa-plus mr-2"></i>Add Testimony
   </a>
 </div>
+<p class="text-sm text-gray-500 mb-8">Testimonies shared on the website's <a href="/testimonies" target="_blank" class="text-primary hover:underline">Testimonies page</a> arrive here and only appear publicly once you publish them. The newest four published ones show on the home page.</p>
 
 <div class="grid md:grid-cols-2 gap-6">
   <% if (testimonials.length > 0) { %>
-    <% testimonials.forEach(t => { %>
-      <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-            <%= t.name.charAt(0) %>
+    <% testimonials.forEach(t => {
+         const st = t.status === 'approved' ? ['Published', 'bg-green-100 text-green-700']
+                  : t.status === 'pending' ? ['Waiting for approval', 'bg-secondary/20 text-orange-700']
+                  : ['Not published', 'bg-gray-200 text-gray-600']; %>
+      <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-4 <%= t.status === 'pending' ? 'border-l-4 border-secondary' : '' %>">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"><%= (t.name || '?').charAt(0) %></div>
+            <div>
+              <p class="font-bold text-gray-800"><%= t.name %></p>
+              <p class="text-xs text-gray-400"><%= t.role || '—' %></p>
+            </div>
           </div>
-          <div>
-            <p class="font-bold text-gray-800"><%= t.name %></p>
-            <p class="text-xs text-gray-400"><%= t.role || 'Church Member' %></p>
-          </div>
+          <span class="<%= st[1] %> px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><%= st[0] %></span>
         </div>
-        <p class="text-gray-600 text-sm italic flex-1">"<%= t.text.length > 150 ? t.text.slice(0, 150) + '…' : t.text %>"</p>
-        <div class="flex gap-2 pt-2 border-t">
+        <p class="text-gray-600 text-sm italic flex-1 whitespace-pre-line">"<%= t.text %>"</p>
+        <% if (t.phone || t.submittedAt) { %>
+          <p class="text-xs text-gray-400">
+            <% if (t.phone) { %><a href="tel:<%= t.phone %>" class="text-primary hover:underline"><i class="fas fa-phone mr-1"></i><%= t.phone %></a> (private)&nbsp;&bull;&nbsp;<% } %>
+            <% if (t.submittedAt) { %><%= t.source === 'website' ? 'Shared' : 'Added' %> <%= new Date(t.submittedAt).toLocaleString('en-GB') %><% } %>
+          </p>
+        <% } %>
+        <div class="flex flex-wrap gap-2 pt-2 border-t">
+          <form method="POST" action="/admin/testimonials/<%= t._id %>/toggle">
+            <button type="submit" class="<%= t.status === 'approved' ? 'bg-gray-400 hover:bg-gray-500' : 'bg-green-500 hover:bg-green-600' %> text-white px-4 py-1.5 rounded-full text-xs font-semibold transition">
+              <i class="fas <%= t.status === 'approved' ? 'fa-eye-slash' : 'fa-check' %> mr-1"></i><%= t.status === 'approved' ? 'Unpublish' : 'Publish' %>
+            </button>
+          </form>
           <a href="/admin/testimonials/<%= t._id %>/edit" class="bg-secondary text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-600 transition">
             <i class="fas fa-edit mr-1"></i>Edit
           </a>
-          <form method="POST" action="/admin/testimonials/<%= t._id %>/delete" onsubmit="return confirm('Delete this testimonial?')">
+          <form method="POST" action="/admin/testimonials/<%= t._id %>/delete" onsubmit="return confirm('Delete this testimony?')">
             <button type="submit" class="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-red-700 transition">
               <i class="fas fa-trash mr-1"></i>Delete
             </button>
@@ -36,8 +53,7 @@
   <% } else { %>
     <div class="col-span-2 bg-white rounded-2xl shadow p-16 text-center text-gray-400">
       <i class="fas fa-quote-right text-5xl mb-4"></i>
-      <p class="text-lg mb-4">No testimonials yet.</p>
-      <a href="/admin/testimonials/new" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-accent transition">Add First Testimonial</a>
+      <p class="text-lg">No testimonies yet. They will appear here when people share them on the website.</p>
     </div>
   <% } %>
 </div>

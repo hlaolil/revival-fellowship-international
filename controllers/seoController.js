@@ -26,7 +26,7 @@ exports.sitemap = async (req, res) => {
   const base = baseUrl(req);
   const site = await getSettings();
   const paths = [
-    '/', '/visit', '/about', '/ministries', '/events', '/sermons', '/news', '/gallery', '/join',
+    '/', '/visit', '/about', '/ministries', '/events', '/sermons', '/news', '/gallery', '/join', '/testimonies',
     ...(site.givingEnabled ? ['/give'] : []),
     ...ministries.map(m => `/ministries/${slugify(m.name)}`),
     ...news.filter(n => n.slug).map(n => `/news/${n.slug}`),

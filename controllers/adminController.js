@@ -128,16 +128,18 @@ exports.dashboard = async (req, res) => {
   try {
     const db = await getDb();
     const names = ['submissions', 'events', 'news', 'testimonials', 'sermons', 'ministries', 'gallery'];
-    const [latest, newCount, pendingMembers, ...totals] = await Promise.all([
+    const [latest, newCount, pendingMembers, pendingTestimonies, ...totals] = await Promise.all([
       db.collection('submissions').find({}).sort({ submittedAt: -1 }).limit(10).toArray(),
       db.collection('submissions').countDocuments({ status: { $ne: 'handled' } }),
       db.collection('members').countDocuments({ status: { $ne: 'approved' } }),
+      db.collection('testimonials').countDocuments({ status: 'pending' }),
       ...names.map(n => db.collection(n).countDocuments()),
     ]);
     submissions = latest;
     names.forEach((n, i) => { counts[n] = totals[i]; });
     counts.newSubmissions = newCount;
     counts.pendingMembers = pendingMembers;
+    counts.pendingTestimonies = pendingTestimonies;
   } catch (err) { dbError = err.message; }
 
   adminRender(res, 'admin-dashboard', {
@@ -212,18 +214,21 @@ exports.eventDelete = async (req, res) => {
 
 exports.testimonialsList = async (req, res) => {
   const db = await getDb();
-  const testimonials = await db.collection('testimonials').find({}).toArray();
-  adminRender(res, 'admin-testimonials', { title: 'Manage Testimonials', currentSection: 'testimonials', testimonials });
+  const all = await db.collection('testimonials').find({}).sort({ _id: -1 }).toArray();
+  // Waiting-for-approval first, then published, then hidden
+  const rank = t => (t.status === 'pending' ? 0 : t.status === 'approved' ? 1 : 2);
+  const testimonials = all.sort((a, b) => rank(a) - rank(b));
+  adminRender(res, 'admin-testimonials', { title: 'Testimonies', currentSection: 'testimonials', testimonials });
 };
 
 exports.testimonialNew = (req, res) =>
-  adminRender(res, 'admin-testimonial-form', { title: 'New Testimonial', currentSection: 'testimonials', testimonial: null, error: null });
+  adminRender(res, 'admin-testimonial-form', { title: 'New Testimony', currentSection: 'testimonials', testimonial: null, error: null });
 
 exports.testimonialCreate = async (req, res) => {
   const { name, role, text } = req.body;
-  if (!name || !text) return adminRender(res, 'admin-testimonial-form', { title: 'New Testimonial', currentSection: 'testimonials', testimonial: req.body, error: 'Name and testimonial text are required.' });
+  if (!name || !text) return adminRender(res, 'admin-testimonial-form', { title: 'New Testimony', currentSection: 'testimonials', testimonial: req.body, error: 'Name and testimony text are required.' });
   const db = await getDb();
-  await db.collection('testimonials').insertOne({ name, role: role || '', text, image: null });
+  await db.collection('testimonials').insertOne({ name, role: role || '', text, image: null, source: 'admin', status: 'approved', approvedAt: new Date(), submittedAt: new Date() });
   res.redirect('/admin/testimonials');
 };
 
@@ -233,7 +238,7 @@ exports.testimonialEdit = async (req, res) => {
   const db = await getDb();
   const testimonial = await db.collection('testimonials').findOne({ _id: id });
   if (!testimonial) return res.redirect('/admin/testimonials');
-  adminRender(res, 'admin-testimonial-form', { title: 'Edit Testimonial', currentSection: 'testimonials', testimonial, error: null });
+  adminRender(res, 'admin-testimonial-form', { title: 'Edit Testimony', currentSection: 'testimonials', testimonial, error: null });
 };
 
 exports.testimonialUpdate = async (req, res) => {
@@ -243,10 +248,24 @@ exports.testimonialUpdate = async (req, res) => {
   if (!name || !text) {
     const db = await getDb();
     const testimonial = await db.collection('testimonials').findOne({ _id: id });
-    return adminRender(res, 'admin-testimonial-form', { title: 'Edit Testimonial', currentSection: 'testimonials', testimonial: { ...testimonial, ...req.body }, error: 'Name and testimonial text are required.' });
+    return adminRender(res, 'admin-testimonial-form', { title: 'Edit Testimony', currentSection: 'testimonials', testimonial: { ...testimonial, ...req.body }, error: 'Name and testimony text are required.' });
   }
   const db = await getDb();
   await db.collection('testimonials').updateOne({ _id: id }, { $set: { name, role: role || '', text } });
+  res.redirect('/admin/testimonials');
+};
+
+// Publish a testimony on the website, or take it down again
+exports.testimonialToggle = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) {
+    const db = await getDb();
+    const t = await db.collection('testimonials').findOne({ _id: id });
+    if (t) {
+      const publish = t.status !== 'approved';
+      await db.collection('testimonials').updateOne({ _id: id }, { $set: publish ? { status: 'approved', approvedAt: new Date() } : { status: 'hidden' } });
+    }
+  }
   res.redirect('/admin/testimonials');
 };
 
