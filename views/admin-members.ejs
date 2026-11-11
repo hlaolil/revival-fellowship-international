@@ -1,0 +1,79 @@
+<%- include('partials/admin-header', { title, currentSection }) %>
+
+<% const cap = s => s ? String(s).replace(/\b\w/g, l => l.toUpperCase()) : '—';
+   const age = dob => { if (!dob) return ''; const d = new Date(dob), n = new Date(); let a = n.getFullYear() - d.getFullYear(); if (n < new Date(n.getFullYear(), d.getMonth(), d.getDate())) a--; return a >= 0 ? a : ''; }; %>
+
+<div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+  <form method="GET" action="/admin/members" class="flex flex-wrap gap-3">
+    <input type="search" name="q" value="<%= q %>" placeholder="Search name, phone, village…" class="p-2 border border-gray-300 rounded-lg text-sm w-56">
+    <select name="status" class="p-2 border border-gray-300 rounded-lg text-sm" onchange="this.form.submit()">
+      <option value="">Any status</option>
+      <option value="pending" <%= status === 'pending' ? 'selected' : '' %>>Pending</option>
+      <option value="approved" <%= status === 'approved' ? 'selected' : '' %>>Approved</option>
+    </select>
+    <button class="bg-primary text-white px-4 rounded-lg text-sm">Search</button>
+  </form>
+  <div class="flex items-center gap-4">
+    <p class="text-gray-500 text-sm"><%= members.length %> shown</p>
+    <a href="/admin/members/export" class="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-accent transition text-sm">
+      <i class="fas fa-file-csv mr-2"></i>Export CSV
+    </a>
+  </div>
+</div>
+
+<% if (members.length === 0) { %>
+  <div class="bg-white rounded-2xl shadow p-16 text-center text-gray-400">
+    <i class="fas fa-id-card text-5xl mb-4"></i>
+    <p class="text-lg">No membership forms match this filter.</p>
+  </div>
+<% } %>
+
+<div class="space-y-4">
+  <% members.forEach(m => { const approved = m.status === 'approved'; %>
+    <details class="bg-white rounded-2xl shadow <%= approved ? '' : 'border-l-4 border-secondary' %>">
+      <summary class="p-6 cursor-pointer flex flex-wrap justify-between gap-4 list-none">
+        <div>
+          <p class="font-bold text-gray-800 text-lg"><%= m.firstName %> <%= m.lastName %>
+            <span class="text-sm font-normal text-gray-500">&middot; <%= cap(m.gender) %><%= age(m.dateOfBirth) !== '' ? ', ' + age(m.dateOfBirth) + ' yrs' : '' %></span></p>
+          <p class="text-sm text-gray-500">
+            <i class="fas fa-map-marker-alt mr-1"></i><%= m.village %>, <%= m.city %>
+            &nbsp;&bull;&nbsp;<a href="tel:<%= m.phone %>" class="text-primary hover:underline"><i class="fas fa-phone mr-1"></i><%= m.phone %></a>
+            <% if (m.email) { %>&nbsp;&bull;&nbsp;<a href="mailto:<%= m.email %>" class="text-primary hover:underline"><i class="fas fa-envelope mr-1"></i><%= m.email %></a><% } %>
+          </p>
+        </div>
+        <div class="text-right">
+          <span class="<%= approved ? 'bg-green-100 text-green-700' : 'bg-secondary/20 text-orange-700' %> px-3 py-1 rounded-full text-xs font-bold"><%= approved ? 'Approved' : 'Pending' %></span>
+          <p class="text-xs text-gray-400 mt-2"><%= m.submittedAt ? new Date(m.submittedAt).toLocaleString('en-GB') : '' %></p>
+        </div>
+      </summary>
+      <div class="px-6 pb-6">
+        <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-sm bg-gray-50 rounded-lg p-4">
+          <% [
+            ['Date of birth', m.dateOfBirth], ['Marital status', cap(m.maritalStatus)], ['Occupation', m.occupation],
+            ['Country', m.country], ['Year saved', m.yearSaved],
+            ['Water baptism', cap(m.waterBaptism) + (m.baptismYear ? ' (' + m.baptismYear + ')' : '')],
+            ['Holy Spirit baptism', cap(m.holySpiritBaptism)], ['Previous church', m.previousChurch],
+            ['Ministry interests', (m.ministries || []).join(', ')],
+            ['Emergency contact', m.emergencyName ? m.emergencyName + (m.emergencyPhone ? ' – ' + m.emergencyPhone : '') : ''],
+          ].forEach(([k, val]) => { %>
+            <div><dt class="font-bold text-gray-600"><%= k %></dt><dd class="text-gray-800"><%= val || '—' %></dd></div>
+          <% }) %>
+        </dl>
+        <div class="flex gap-2 mt-4">
+          <form method="POST" action="/admin/members/<%= m._id %>/toggle">
+            <button type="submit" class="<%= approved ? 'bg-gray-400 hover:bg-gray-500' : 'bg-green-500 hover:bg-green-600' %> text-white px-4 py-1.5 rounded-full text-xs font-semibold transition">
+              <i class="fas <%= approved ? 'fa-undo' : 'fa-check' %> mr-1"></i><%= approved ? 'Mark as Pending' : 'Approve' %>
+            </button>
+          </form>
+          <form method="POST" action="/admin/members/<%= m._id %>/delete" onsubmit="return confirm('Delete this member record permanently?')">
+            <button type="submit" class="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-red-700 transition">
+              <i class="fas fa-trash mr-1"></i>Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </details>
+  <% }) %>
+</div>
+
+<%- include('partials/admin-footer') %>

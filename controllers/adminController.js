@@ -128,14 +128,16 @@ exports.dashboard = async (req, res) => {
   try {
     const db = await getDb();
     const names = ['submissions', 'events', 'news', 'testimonials', 'sermons', 'ministries', 'gallery'];
-    const [latest, newCount, ...totals] = await Promise.all([
+    const [latest, newCount, pendingMembers, ...totals] = await Promise.all([
       db.collection('submissions').find({}).sort({ submittedAt: -1 }).limit(10).toArray(),
       db.collection('submissions').countDocuments({ status: { $ne: 'handled' } }),
+      db.collection('members').countDocuments({ status: { $ne: 'approved' } }),
       ...names.map(n => db.collection(n).countDocuments()),
     ]);
     submissions = latest;
     names.forEach((n, i) => { counts[n] = totals[i]; });
     counts.newSubmissions = newCount;
+    counts.pendingMembers = pendingMembers;
   } catch (err) { dbError = err.message; }
 
   adminRender(res, 'admin-dashboard', {
@@ -568,4 +570,58 @@ exports.settingsUpdate = async (req, res) => {
   } catch (err) {
     adminRender(res, 'admin-settings', { title: 'Site Settings', currentSection: 'settings', settings: req.body, success: null, error: 'Failed to save: ' + err.message });
   }
+};
+
+// ── Members (membership register) ─────────────────────────────────────────────
+
+const MEMBER_COLS = [
+  ['firstName', 'Name'], ['lastName', 'Surname'], ['gender', 'Gender'], ['dateOfBirth', 'Date of Birth'],
+  ['maritalStatus', 'Marital Status'], ['phone', 'Contact Number'], ['email', 'Email'],
+  ['village', 'Village'], ['city', 'City/Town'], ['country', 'Country'], ['yearSaved', 'Year Saved'],
+  ['waterBaptism', 'Water Baptism'], ['baptismYear', 'Year Baptised'], ['holySpiritBaptism', 'Holy Spirit Baptism'],
+  ['previousChurch', 'Previous Church'], ['occupation', 'Occupation'], ['ministries', 'Ministry Interests'],
+  ['emergencyName', 'Emergency Contact'], ['emergencyPhone', 'Emergency Number'],
+  ['status', 'Status'], ['submittedAt', 'Submitted'],
+];
+
+exports.membersList = async (req, res) => {
+  const { status, q } = req.query;
+  const filter = {};
+  if (status === 'pending') filter.status = { $ne: 'approved' };
+  if (status === 'approved') filter.status = 'approved';
+  if (q) {
+    const rx = new RegExp(String(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    filter.$or = ['firstName', 'lastName', 'phone', 'email', 'village', 'city'].map(f => ({ [f]: rx }));
+  }
+  const db = await getDb();
+  const members = await db.collection('members').find(filter).sort({ submittedAt: -1 }).limit(1000).toArray();
+  adminRender(res, 'admin-members', { title: 'Members', currentSection: 'members', members, status: status || '', q: q || '' });
+};
+
+exports.memberToggle = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) {
+    const db = await getDb();
+    const m = await db.collection('members').findOne({ _id: id });
+    if (m) await db.collection('members').updateOne({ _id: id }, { $set: { status: m.status === 'approved' ? 'pending' : 'approved' } });
+  }
+  res.redirect(req.get('Referer') || '/admin/members');
+};
+
+exports.memberDelete = async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (id) { const db = await getDb(); await db.collection('members').deleteOne({ _id: id }); }
+  res.redirect(req.get('Referer') || '/admin/members');
+};
+
+exports.membersExport = async (req, res) => {
+  const db = await getDb();
+  const rows = await db.collection('members').find({}).sort({ lastName: 1, firstName: 1 }).toArray();
+  const esc = v => {
+    let str = v instanceof Date ? v.toISOString() : Array.isArray(v) ? v.join('; ') : String(v ?? '');
+    if (/^[=+\-@]/.test(str)) str = "'" + str; // neutralise spreadsheet formulas
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+  const csv = [MEMBER_COLS.map(([, h]) => h).join(','), ...rows.map(r => MEMBER_COLS.map(([c]) => esc(r[c])).join(','))].join('\n');
+  res.attachment(`rfi-members-${new Date().toISOString().split('T')[0]}.csv`).type('text/csv').send(csv);
 };
