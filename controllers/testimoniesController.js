@@ -1,17 +1,11 @@
 const nodemailer = require('nodemailer');
 const { getDb } = require('../lib/db');
-const { getSettings } = require('../lib/settings');
 
 const COLLECTION = 'testimonials';
 const MAX_TEXT = 4000;
 
 function escapeHtml(str) {
   return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-
-async function lifeGroupNames() {
-  const { lifeGroups } = await getSettings();
-  return String(lifeGroups || '').split(',').map(s => s.trim()).filter(Boolean);
 }
 
 // Only testimonies an admin has approved are ever shown publicly
@@ -38,10 +32,10 @@ async function sendNotificationEmail(t) {
     from: `"RFI Website" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFY_EMAIL || 'tlokza@gmail.com',
     subject: `New testimony from ${t.name} – waiting for approval`,
-    text: `A new testimony was shared on the RFI website. It will not appear on the site until it is approved in Admin > Testimonies.\n\nName: ${t.name}\nLife group: ${t.role || '—'}\nPhone: ${t.phone || '—'}\n\n${t.text}`,
+    text: `A new testimony was shared on the RFI website. It will not appear on the site until it is approved in Admin > Testimonies.\n\nName: ${t.name}\nPhone: ${t.phone || '—'}\n\n${t.text}`,
     html: `<h2>New Testimony</h2>
 <p>It will not appear on the website until it is approved in <strong>Admin &gt; Testimonies</strong>.</p>
-<p><strong>Name:</strong> ${escapeHtml(t.name)}<br><strong>Life group:</strong> ${escapeHtml(t.role || '—')}<br><strong>Phone:</strong> ${escapeHtml(t.phone || '—')}</p>
+<p><strong>Name:</strong> ${escapeHtml(t.name)}<br><strong>Phone:</strong> ${escapeHtml(t.phone || '—')}</p>
 <blockquote style="border-left:3px solid #FFA500;padding-left:12px;white-space:pre-line">${escapeHtml(t.text)}</blockquote>`,
   });
 }
@@ -54,7 +48,6 @@ async function renderPage(res, status, extra) {
     lastModified: new Date().toLocaleString(),
     activePage: 'testimonies',
     testimonies: await approvedTestimonies(),
-    lifeGroupOptions: await lifeGroupNames(),
     values: {},
     error: null,
     submitted: false,
@@ -72,10 +65,9 @@ exports.submit = async (req, res) => {
   if (req.body.website) return res.redirect('/testimonies');
 
   const field = (name, max = 120) => String(req.body[name] || '').trim().slice(0, max);
-  const groups = await lifeGroupNames();
   const testimony = {
     name:  field('name'),
-    role:  groups.includes(field('life-group')) ? `${field('life-group')} Life Group` : '',
+    role:  '',
     text:  field('testimony', MAX_TEXT),
     phone: field('phone', 40),
     image: null,
@@ -91,7 +83,7 @@ exports.submit = async (req, res) => {
   if (!consent) missing.push('permission to share it on the website');
   if (missing.length) {
     return renderPage(res, 400, {
-      values: { ...testimony, lifeGroup: field('life-group'), consent },
+      values: { ...testimony, consent },
       error: `Please provide ${missing.join(', ')}.`,
     });
   }
@@ -102,7 +94,7 @@ exports.submit = async (req, res) => {
   } catch (err) {
     console.error('MongoDB save failed:', err);
     return renderPage(res, 500, {
-      values: { ...testimony, lifeGroup: field('life-group'), consent },
+      values: { ...testimony, consent },
       error: 'Sorry, we could not save your testimony. Please try again later.',
     });
   }
