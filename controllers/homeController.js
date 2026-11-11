@@ -30,14 +30,13 @@ exports.index = async (req, res) => {
     const db = await getDb();
     [events, testimonials, siteContent, sermons] = await Promise.all([
       db.collection('events').find({}).toArray(),
-      db.collection('testimonials').find({}).toArray(),
+      db.collection('testimonials').find({ status: 'approved' }).sort({ approvedAt: -1, _id: -1 }).limit(4).toArray(),
       db.collection('site_content').findOne({ key: 'home' }),
       db.collection('sermons').find({}).sort({ date: -1 }).limit(10).toArray(),
     ]);
     siteContent = siteContent || defaultContent;
   } catch {
     events = loadJSON('events.json');
-    testimonials = loadJSON('testimonials.json');
     sermons = loadJSON('sermons.json').sort((a, b) => new Date(b.date) - new Date(a.date));
   }
 

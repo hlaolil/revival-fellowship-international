@@ -180,34 +180,43 @@
 </section>
 <% } %>
 
-<!-- TESTIMONIALS -->
-<% if (testimonials && testimonials.length > 0) { %>
+<!-- TESTIMONIES (shared by members, shown once approved) -->
 <section class="bg-white py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-primary">
-      <span class="section-heading"><i class="fas fa-quote-left mr-2 text-secondary"></i>What Our Members Say</span>
+      <span class="section-heading"><i class="fas fa-quote-left mr-2 text-secondary"></i>Testimonies</span>
     </h2>
-    <p class="text-center text-gray-500 mb-12 text-lg">Stories of faith, growth, and community from the RFI family</p>
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <% testimonials.forEach(t => { %>
-        <div class="testimonial-card rounded-2xl p-6 flex flex-col hover:shadow-lg transition">
-          <i class="fas fa-quote-left text-secondary text-2xl mb-4"></i>
-          <p class="text-gray-700 text-sm leading-relaxed flex-1 italic">"<%= t.text %>"</p>
-          <div class="mt-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-              <%= t.name.charAt(0) %>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 text-sm"><%= t.name %></p>
-              <p class="text-xs text-gray-500"><%= t.role %></p>
+    <p class="text-center text-gray-500 mb-12 text-lg">What God is doing in the lives of the RFI family</p>
+    <% if (testimonials && testimonials.length > 0) { %>
+      <div class="grid md:grid-cols-2 <%= testimonials.length > 2 ? 'lg:grid-cols-' + Math.min(testimonials.length, 4) : '' %> gap-8">
+        <% testimonials.forEach(t => { const long = t.text.length > 260; %>
+          <div class="testimonial-card rounded-2xl p-6 flex flex-col hover:shadow-lg transition">
+            <i class="fas fa-quote-left text-secondary text-2xl mb-4"></i>
+            <p class="text-gray-700 text-sm leading-relaxed flex-1 italic">"<%= long ? t.text.slice(0, 260).replace(/\s+\S*$/, '') + '…' : t.text %>"</p>
+            <% if (long) { %><a href="/testimonies#t-<%= t._id %>" class="text-primary text-sm font-semibold hover:underline mt-2">Read full testimony &rarr;</a><% } %>
+            <div class="mt-6 flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                <%= t.name.charAt(0) %>
+              </div>
+              <div>
+                <p class="font-bold text-gray-800 text-sm"><%= t.name %></p>
+                <% if (t.role) { %><p class="text-xs text-gray-500"><%= t.role %></p><% } %>
+              </div>
             </div>
           </div>
-        </div>
-      <% }) %>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="text-center text-gray-600 text-lg max-w-2xl mx-auto">Has God done something in your life? Your story could encourage someone else. Be the first to share your testimony.</p>
+    <% } %>
+    <div class="flex flex-wrap justify-center gap-4 mt-12">
+      <a href="/testimonies#share" class="bg-primary hover:bg-accent text-white font-bold py-3 px-8 rounded-full transition"><i class="fas fa-pen mr-2"></i>Share Your Testimony</a>
+      <% if (testimonials && testimonials.length > 0) { %>
+        <a href="/testimonies" class="border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition">Read More Testimonies</a>
+      <% } %>
     </div>
   </div>
 </section>
-<% } %>
 
 <!-- LATEST NEWS STRIP -->
 <section class="news-strip bg-primary text-white py-12">

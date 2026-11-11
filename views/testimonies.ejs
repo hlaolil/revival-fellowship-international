@@ -1,0 +1,99 @@
+<%- include('partials/header', { activePage: 'testimonies' }) %>
+
+<section class="hero relative h-96 overflow-hidden">
+  <%- include('partials/hero-image', { desktop: 'heroo.webp', mobile: 'hero1.webp' }) %>
+  <div class="absolute inset-0 inner-hero-overlay flex items-center justify-center">
+    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading">Testimonies</h1>
+  </div>
+</section>
+
+<% const v = values || {};
+   const input = 'w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent';
+   const label = 'block text-lg font-bold mb-2'; %>
+
+<section class="max-w-5xl mx-auto px-6 py-16">
+  <p class="text-center text-xl text-gray-600 mb-12">&ldquo;And they overcame him by the blood of the Lamb, and by the word of their testimony.&rdquo; <span class="whitespace-nowrap font-semibold text-primary">&mdash; Revelation 12:11</span></p>
+
+  <% if (testimonies.length) { %>
+    <div class="grid md:grid-cols-2 gap-8">
+      <% testimonies.forEach(t => { %>
+        <article id="t-<%= t._id %>" class="testimonial-card rounded-2xl p-6 md:p-8 flex flex-col shadow">
+          <i class="fas fa-quote-left text-secondary text-2xl mb-4"></i>
+          <p class="text-gray-700 leading-relaxed flex-1 whitespace-pre-line"><%= t.text %></p>
+          <div class="mt-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0"><%= t.name.charAt(0) %></div>
+            <div>
+              <p class="font-bold text-gray-800"><%= t.name %></p>
+              <% if (t.role) { %><p class="text-sm text-gray-500"><%= t.role %></p><% } %>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="text-center text-gray-500 bg-teal-50 rounded-2xl p-10">
+      <i class="fas fa-hands-praying text-5xl text-primary mb-4"></i>
+      <p class="text-lg">No testimonies have been shared yet. Be the first to tell what God has done for you!</p>
+    </div>
+  <% } %>
+</section>
+
+<section id="share" class="bg-teal-50 py-16">
+  <div class="max-w-2xl mx-auto px-6">
+    <h2 class="text-3xl md:text-4xl font-bold text-center text-primary mb-4"><span class="section-heading">Share Your Testimony</span></h2>
+    <p class="text-center text-gray-600 mb-10 text-lg">Has God healed, delivered, provided for or saved you? Tell us, so that others may be encouraged. A church leader reads every testimony before it appears on the website.</p>
+
+    <% if (submitted) { %>
+      <div class="bg-white rounded-2xl shadow-2xl p-10 text-center">
+        <i class="fas fa-check-circle text-7xl text-primary mb-6"></i>
+        <h3 class="text-3xl font-bold text-primary mb-4">Thank you for sharing!</h3>
+        <p class="text-lg text-gray-600">Your testimony has been received. Once a church leader has read it, it will appear on this page.</p>
+      </div>
+    <% } else { %>
+      <% if (error) { %>
+        <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6">
+          <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+        </div>
+      <% } %>
+      <form method="POST" action="/testimonies#share" class="bg-white p-6 md:p-10 rounded-2xl shadow-2xl space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="<%= label %>" for="name">Your Name <span class="text-red-500">*</span></label>
+            <input id="name" type="text" name="name" required maxlength="120" autocomplete="name" value="<%= v.name || '' %>" class="<%= input %>">
+          </div>
+          <div>
+            <label class="<%= label %>" for="life-group">Life Group</label>
+            <select id="life-group" name="life-group" class="<%= input %>">
+              <option value="">Select…</option>
+              <% lifeGroupOptions.forEach(g => { %>
+                <option value="<%= g %>" <%= v.lifeGroup === g ? 'selected' : '' %>><%= g %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="<%= label %>" for="testimony">Your Testimony <span class="text-red-500">*</span></label>
+          <textarea id="testimony" name="testimony" required rows="8" minlength="20" maxlength="<%= maxText %>" placeholder="Tell us what God has done…" class="<%= input %>"><%= v.text || '' %></textarea>
+        </div>
+        <div>
+          <label class="<%= label %>" for="phone">Contact Number</label>
+          <input id="phone" type="tel" name="phone" maxlength="40" autocomplete="tel" value="<%= v.phone || '' %>" placeholder="+266 5000 0000" class="<%= input %>">
+          <p class="text-sm text-gray-500 mt-1">Optional, in case we would like to talk to you. It is never shown on the website.</p>
+        </div>
+        <label class="flex items-start gap-3 bg-teal-50 rounded-lg p-4">
+          <input type="checkbox" name="consent" value="yes" required <%= v.consent ? 'checked' : '' %> class="w-5 h-5 mt-1 accent-primary flex-shrink-0">
+          <span class="text-gray-700">I give Revival Fellowship International permission to publish my testimony and name on its website. <span class="text-red-500">*</span></span>
+        </label>
+        <!-- Honeypot: hidden from people, catches spam bots -->
+        <div class="hidden" aria-hidden="true">
+          <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="bg-primary hover:bg-accent text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg hover:shadow-xl transition">Share My Testimony</button>
+        </div>
+      </form>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
