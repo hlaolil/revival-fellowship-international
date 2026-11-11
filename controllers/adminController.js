@@ -579,23 +579,26 @@ const MEMBER_COLS = [
   ['maritalStatus', 'Marital Status'], ['phone', 'Contact Number'], ['email', 'Email'],
   ['village', 'Village'], ['city', 'City/Town'], ['country', 'Country'], ['yearSaved', 'Year Saved'],
   ['waterBaptism', 'Water Baptism'], ['baptismYear', 'Year Baptised'], ['holySpiritBaptism', 'Holy Spirit Baptism'],
-  ['previousChurch', 'Previous Church'], ['occupation', 'Occupation'], ['ministries', 'Ministry Interests'],
+  ['previousChurch', 'Previous Church'], ['occupation', 'Occupation'], ['skills', 'Job Title / Skills'],
+  ['lifeGroup', 'Life Group'], ['ministries', 'Ministry Interests'],
   ['emergencyName', 'Emergency Contact'], ['emergencyPhone', 'Emergency Number'],
   ['status', 'Status'], ['submittedAt', 'Submitted'],
 ];
 
 exports.membersList = async (req, res) => {
-  const { status, q } = req.query;
+  const { status, q, group } = req.query;
   const filter = {};
+  if (group) filter.lifeGroup = String(group);
   if (status === 'pending') filter.status = { $ne: 'approved' };
   if (status === 'approved') filter.status = 'approved';
   if (q) {
     const rx = new RegExp(String(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-    filter.$or = ['firstName', 'lastName', 'phone', 'email', 'village', 'city'].map(f => ({ [f]: rx }));
+    filter.$or = ['firstName', 'lastName', 'phone', 'email', 'village', 'city', 'occupation', 'skills'].map(f => ({ [f]: rx }));
   }
   const db = await getDb();
   const members = await db.collection('members').find(filter).sort({ submittedAt: -1 }).limit(1000).toArray();
-  adminRender(res, 'admin-members', { title: 'Members', currentSection: 'members', members, status: status || '', q: q || '' });
+  const groups = (await db.collection('members').distinct('lifeGroup')).filter(Boolean).sort();
+  adminRender(res, 'admin-members', { title: 'Members', currentSection: 'members', members, groups, group: group || '', status: status || '', q: q || '' });
 };
 
 exports.memberToggle = async (req, res) => {

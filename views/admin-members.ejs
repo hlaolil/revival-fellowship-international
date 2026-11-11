@@ -5,7 +5,11 @@
 
 <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
   <form method="GET" action="/admin/members" class="flex flex-wrap gap-3">
-    <input type="search" name="q" value="<%= q %>" placeholder="Search name, phone, village…" class="p-2 border border-gray-300 rounded-lg text-sm w-56">
+    <input type="search" name="q" value="<%= q %>" placeholder="Search name, phone, village, job…" class="p-2 border border-gray-300 rounded-lg text-sm w-56">
+    <select name="group" class="p-2 border border-gray-300 rounded-lg text-sm" onchange="this.form.submit()">
+      <option value="">All life groups</option>
+      <% groups.forEach(g => { %><option value="<%= g %>" <%= group === g ? 'selected' : '' %>><%= g %></option><% }) %>
+    </select>
     <select name="status" class="p-2 border border-gray-300 rounded-lg text-sm" onchange="this.form.submit()">
       <option value="">Any status</option>
       <option value="pending" <%= status === 'pending' ? 'selected' : '' %>>Pending</option>
@@ -36,6 +40,7 @@
           <p class="font-bold text-gray-800 text-lg"><%= m.firstName %> <%= m.lastName %>
             <span class="text-sm font-normal text-gray-500">&middot; <%= cap(m.gender) %><%= age(m.dateOfBirth) !== '' ? ', ' + age(m.dateOfBirth) + ' yrs' : '' %></span></p>
           <p class="text-sm text-gray-500">
+            <% if (m.lifeGroup) { %><span class="font-semibold text-primary"><i class="fas fa-people-group mr-1"></i><%= m.lifeGroup %></span>&nbsp;&bull;&nbsp;<% } %>
             <i class="fas fa-map-marker-alt mr-1"></i><%= m.village %>, <%= m.city %>
             &nbsp;&bull;&nbsp;<a href="tel:<%= m.phone %>" class="text-primary hover:underline"><i class="fas fa-phone mr-1"></i><%= m.phone %></a>
             <% if (m.email) { %>&nbsp;&bull;&nbsp;<a href="mailto:<%= m.email %>" class="text-primary hover:underline"><i class="fas fa-envelope mr-1"></i><%= m.email %></a><% } %>
@@ -49,7 +54,8 @@
       <div class="px-6 pb-6">
         <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-sm bg-gray-50 rounded-lg p-4">
           <% [
-            ['Date of birth', m.dateOfBirth], ['Marital status', cap(m.maritalStatus)], ['Occupation', m.occupation],
+            ['Date of birth', m.dateOfBirth], ['Marital status', cap(m.maritalStatus)], ['Life group', m.lifeGroup],
+            ['Occupation', m.occupation], ['Job title / skills', m.skills],
             ['Country', m.country], ['Year saved', m.yearSaved],
             ['Water baptism', cap(m.waterBaptism) + (m.baptismYear ? ' (' + m.baptismYear + ')' : '')],
             ['Holy Spirit baptism', cap(m.holySpiritBaptism)], ['Previous church', m.previousChurch],

@@ -62,7 +62,17 @@
         </div>
         <div>
           <label class="<%= label %>" for="occupation">Occupation</label>
-          <input id="occupation" type="text" name="occupation" maxlength="120" value="<%= v.occupation || '' %>" placeholder="e.g. Teacher, Student" class="<%= input %>">
+          <select id="occupation" name="occupation" class="<%= input %>">
+            <option value="">Select…</option>
+            <% occupationOptions.forEach(o => { %>
+              <option value="<%= o %>" <%= v.occupation === o ? 'selected' : '' %>><%= o %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="<%= label %>" for="skills">Job Title / Skills</label>
+          <input id="skills" type="text" name="skills" maxlength="200" value="<%= v.skills || '' %>" placeholder="e.g. Nurse, electrician, plays keyboard, sewing" class="<%= input %>">
+          <p class="text-sm text-gray-500 mt-1">Optional – helps us see how you might serve in the church.</p>
         </div>
       </div>
     </fieldset>
@@ -101,6 +111,15 @@
         <div>
           <label class="<%= label %>" for="year-saved">Year Saved <%- req %></label>
           <input id="year-saved" type="number" name="year-saved" required min="1900" max="<%= thisYear %>" value="<%= v.yearSaved || '' %>" placeholder="e.g. 2015" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="life-group">Life Group <%- req %></label>
+          <select id="life-group" name="life-group" required class="<%= input %>">
+            <option value="">Select…</option>
+            <% lifeGroupOptions.forEach(g => { %>
+              <option value="<%= g %>" <%= v.lifeGroup === g ? 'selected' : '' %>><%= g %></option>
+            <% }) %>
+          </select>
         </div>
         <div>
           <label class="<%= label %>" for="previous-church">Previous Church</label>

@@ -1,11 +1,34 @@
 const nodemailer = require('nodemailer');
 const { getDb, loadJSON, byDisplayOrder } = require('../lib/db');
+const { getSettings } = require('../lib/settings');
 
 const COLLECTION = 'members';
 
 const GENDERS = ['male', 'female'];
 const MARITAL = ['single', 'married', 'widowed', 'divorced'];
 const YES_NO = ['yes', 'no'];
+const OCCUPATIONS = [
+  'Student / Learner',
+  'Employed (private sector)',
+  'Civil servant / Government',
+  'Teacher',
+  'Health worker',
+  'Factory / Textile worker',
+  'Mine worker',
+  'Farmer',
+  'Self-employed / Business owner',
+  'Domestic worker',
+  'Homemaker',
+  'Unemployed / Looking for work',
+  'Retired',
+  'Other',
+];
+const NO_GROUP = 'Not yet in a life group';
+
+async function lifeGroupNames() {
+  const { lifeGroups } = await getSettings();
+  return String(lifeGroups || '').split(',').map(s => s.trim()).filter(Boolean);
+}
 
 function escapeHtml(str) {
   return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -30,6 +53,8 @@ function summaryRows(m) {
     ['Holy Spirit baptism', cap(m.holySpiritBaptism) || '—'],
     ['Previous church', m.previousChurch || '—'],
     ['Occupation', m.occupation || '—'],
+    ['Job title / skills', m.skills || '—'],
+    ['Life group', m.lifeGroup || '—'],
     ['Ministry interests', m.ministries.length ? m.ministries.join(', ') : '—'],
     ['Emergency contact', m.emergencyName ? `${m.emergencyName} (${m.emergencyPhone || 'no number'})` : '—'],
   ];
@@ -72,6 +97,8 @@ async function renderForm(res, status, values, error) {
     lastModified: new Date().toLocaleString(),
     activePage: 'join',
     ministryOptions: await ministryNames(),
+    lifeGroupOptions: [...await lifeGroupNames(), NO_GROUP],
+    occupationOptions: OCCUPATIONS,
     values,
     error,
   });
@@ -111,7 +138,9 @@ exports.submit = async (req, res) => {
     baptismYear:      '',
     holySpiritBaptism: pick('holy-spirit-baptism', YES_NO),
     previousChurch:   field('previous-church', 200),
-    occupation:       field('occupation'),
+    occupation:       OCCUPATIONS.includes(field('occupation')) ? field('occupation') : '',
+    skills:           field('skills', 200),
+    lifeGroup:        [...await lifeGroupNames(), NO_GROUP].includes(field('life-group')) ? field('life-group') : '',
     ministries,
     emergencyName:    field('emergency-name'),
     emergencyPhone:   field('emergency-phone', 40),
@@ -131,6 +160,7 @@ exports.submit = async (req, res) => {
   if (!member.city) missing.push('city / town');
   if (!member.yearSaved) missing.push('year saved');
   if (!member.waterBaptism) missing.push('water baptism');
+  if (!member.lifeGroup) missing.push('life group');
   if (member.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) missing.push('a valid email address');
   if (!member.consent) missing.push('your consent to store these details');
 
