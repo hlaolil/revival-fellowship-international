@@ -62,7 +62,6 @@
         </div>
       </div>
     </fieldset>
-
     <!-- Contact & address -->
     <fieldset>
       <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-address-book mr-2"></i>Contact &amp; Address</legend>
@@ -89,7 +88,6 @@
         </div>
       </div>
     </fieldset>
-
     <!-- Spiritual journey -->
     <fieldset>
       <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-cross mr-2"></i>Spiritual Journey</legend>
@@ -108,10 +106,6 @@
           </select>
         </div>
         <div>
-          <label class="<%= label %>" for="previous-church">Previous Church</label>
-          <input id="previous-church" type="text" name="previous-church" maxlength="200" value="<%= v.previousChurch || '' %>" placeholder="If any" class="<%= input %>">
-        </div>
-        <div>
           <span class="<%= label %>">Baptised in Water? <%- req %></span>
           <div class="flex gap-6 pt-2">
             <label class="flex items-center gap-2 text-lg"><input type="radio" name="water-baptism" value="yes" required <%= checked('waterBaptism', 'yes') %> class="w-5 h-5 accent-primary" onchange="toggleBaptismYear()">Yes</label>
@@ -122,29 +116,8 @@
           <label class="<%= label %>" for="baptism-year">Year Baptised</label>
           <input id="baptism-year" type="number" name="baptism-year" min="1900" max="<%= thisYear %>" value="<%= v.baptismYear || '' %>" placeholder="e.g. 2016" class="<%= input %>">
         </div>
-        <div>
-          <span class="<%= label %>">Baptised in the Holy Spirit?</span>
-          <div class="flex gap-6 pt-2">
-            <label class="flex items-center gap-2 text-lg"><input type="radio" name="holy-spirit-baptism" value="yes" <%= checked('holySpiritBaptism', 'yes') %> class="w-5 h-5 accent-primary">Yes</label>
-            <label class="flex items-center gap-2 text-lg"><input type="radio" name="holy-spirit-baptism" value="no" <%= checked('holySpiritBaptism', 'no') %> class="w-5 h-5 accent-primary">No</label>
-          </div>
-        </div>
       </div>
     </fieldset>
-
-    <!-- Involvement -->
-    <% if (ministryOptions.length) { %>
-    <fieldset>
-      <legend class="text-2xl font-bold text-primary mb-2"><i class="fas fa-hands-helping mr-2"></i>Ministry Interests</legend>
-      <p class="text-gray-500 mb-4">Which ministries would you like to be part of? (Tick any)</p>
-      <div class="grid sm:grid-cols-2 gap-3">
-        <% const chosen = v.ministries || []; %>
-        <% ministryOptions.forEach(name => { %>
-          <label class="flex items-center gap-3 text-lg"><input type="checkbox" name="ministries" value="<%= name %>" <%= chosen.includes(name) ? 'checked' : '' %> class="w-5 h-5 accent-primary"><%= name %></label>
-        <% }) %>
-      </div>
-    </fieldset>
-    <% } %>
 
     <!-- Emergency contact -->
     <fieldset>
@@ -160,7 +133,6 @@
         </div>
       </div>
     </fieldset>
-
     <!-- Consent -->
     <label class="flex items-start gap-3 bg-teal-50 rounded-lg p-4">
       <input type="checkbox" name="consent" value="yes" required <%= v.consent ? 'checked' : '' %> class="w-5 h-5 mt-1 accent-primary flex-shrink-0">
