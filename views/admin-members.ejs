@@ -57,8 +57,6 @@
             ['Date of birth', m.dateOfBirth], ['Marital status', cap(m.maritalStatus)], ['Life group', m.lifeGroup],
             ['Country', m.country], ['Year saved', m.yearSaved],
             ['Water baptism', cap(m.waterBaptism) + (m.baptismYear ? ' (' + m.baptismYear + ')' : '')],
-            ['Holy Spirit baptism', cap(m.holySpiritBaptism)], ['Previous church', m.previousChurch],
-            ['Ministry interests', (m.ministries || []).join(', ')],
             ['Emergency contact', m.emergencyName ? m.emergencyName + (m.emergencyPhone ? ' – ' + m.emergencyPhone : '') : ''],
           ].forEach(([k, val]) => { %>
             <div><dt class="font-bold text-gray-600"><%= k %></dt><dd class="text-gray-800"><%= val || '—' %></dd></div>

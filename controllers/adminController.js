@@ -578,9 +578,8 @@ const MEMBER_COLS = [
   ['firstName', 'Name'], ['lastName', 'Surname'], ['gender', 'Gender'], ['dateOfBirth', 'Date of Birth'],
   ['maritalStatus', 'Marital Status'], ['phone', 'Contact Number'], ['email', 'Email'],
   ['village', 'Village'], ['city', 'City/Town'], ['country', 'Country'], ['yearSaved', 'Year Saved'],
-  ['waterBaptism', 'Water Baptism'], ['baptismYear', 'Year Baptised'], ['holySpiritBaptism', 'Holy Spirit Baptism'],
-  ['previousChurch', 'Previous Church'],
-  ['lifeGroup', 'Life Group'], ['ministries', 'Ministry Interests'],
+  ['waterBaptism', 'Water Baptism'], ['baptismYear', 'Year Baptised'],
+  ['lifeGroup', 'Life Group'],
   ['emergencyName', 'Emergency Contact'], ['emergencyPhone', 'Emergency Number'],
   ['status', 'Status'], ['submittedAt', 'Submitted'],
 ];

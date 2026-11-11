@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const { getDb, loadJSON, byDisplayOrder } = require('../lib/db');
+const { getDb } = require('../lib/db');
 const { getSettings } = require('../lib/settings');
 
 const COLLECTION = 'members';
@@ -34,10 +34,7 @@ function summaryRows(m) {
     ['Country', m.country],
     ['Year saved', m.yearSaved],
     ['Water baptism', cap(m.waterBaptism) + (m.waterBaptism === 'yes' && m.baptismYear ? ` (${m.baptismYear})` : '')],
-    ['Holy Spirit baptism', cap(m.holySpiritBaptism) || '—'],
-    ['Previous church', m.previousChurch || '—'],
     ['Life group', m.lifeGroup || '—'],
-    ['Ministry interests', m.ministries.length ? m.ministries.join(', ') : '—'],
     ['Emergency contact', m.emergencyName ? `${m.emergencyName} (${m.emergencyPhone || 'no number'})` : '—'],
   ];
 }
@@ -63,22 +60,12 @@ ${rows.map(([k, v]) => `  <tr><td style="padding:6px 12px;font-weight:bold">${es
   });
 }
 
-async function ministryNames() {
-  try {
-    const db = await getDb();
-    return (await db.collection('ministries').find({}).sort({ _id: 1 }).toArray()).sort(byDisplayOrder).map(m => m.name);
-  } catch {
-    return loadJSON('ministries.json').map(m => m.name);
-  }
-}
-
 async function renderForm(res, status, values, error) {
   res.status(status).render('membership', {
     title: 'Membership Form',
     currentYear: new Date().getFullYear(),
     lastModified: new Date().toLocaleString(),
     activePage: 'join',
-    ministryOptions: await ministryNames(),
     lifeGroupOptions: [...await lifeGroupNames(), NO_GROUP],
     values,
     error,
@@ -101,7 +88,6 @@ exports.submit = async (req, res) => {
   const dob = field('date-of-birth', 10);
   const validDob = /^\d{4}-\d{2}-\d{2}$/.test(dob) && !isNaN(Date.parse(dob)) && new Date(dob) < new Date();
 
-  const ministries = [].concat(req.body.ministries || []).map(s => String(s).trim().slice(0, 80)).filter(Boolean).slice(0, 20);
 
   const member = {
     firstName:        field('first-name'),
@@ -117,10 +103,7 @@ exports.submit = async (req, res) => {
     yearSaved:        year('year-saved'),
     waterBaptism:     pick('water-baptism', YES_NO),
     baptismYear:      '',
-    holySpiritBaptism: pick('holy-spirit-baptism', YES_NO),
-    previousChurch:   field('previous-church', 200),
     lifeGroup:        [...await lifeGroupNames(), NO_GROUP].includes(field('life-group')) ? field('life-group') : '',
-    ministries,
     emergencyName:    field('emergency-name'),
     emergencyPhone:   field('emergency-phone', 40),
     consent:          req.body.consent === 'yes',
