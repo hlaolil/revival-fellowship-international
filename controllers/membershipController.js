@@ -7,22 +7,6 @@ const COLLECTION = 'members';
 const GENDERS = ['male', 'female'];
 const MARITAL = ['single', 'married', 'widowed', 'divorced'];
 const YES_NO = ['yes', 'no'];
-const OCCUPATIONS = [
-  'Student / Learner',
-  'Employed (private sector)',
-  'Civil servant / Government',
-  'Teacher',
-  'Health worker',
-  'Factory / Textile worker',
-  'Mine worker',
-  'Farmer',
-  'Self-employed / Business owner',
-  'Domestic worker',
-  'Homemaker',
-  'Unemployed / Looking for work',
-  'Retired',
-  'Other',
-];
 const NO_GROUP = 'Not yet in a life group';
 
 async function lifeGroupNames() {
@@ -52,8 +36,6 @@ function summaryRows(m) {
     ['Water baptism', cap(m.waterBaptism) + (m.waterBaptism === 'yes' && m.baptismYear ? ` (${m.baptismYear})` : '')],
     ['Holy Spirit baptism', cap(m.holySpiritBaptism) || '—'],
     ['Previous church', m.previousChurch || '—'],
-    ['Occupation', m.occupation || '—'],
-    ['Job title / skills', m.skills || '—'],
     ['Life group', m.lifeGroup || '—'],
     ['Ministry interests', m.ministries.length ? m.ministries.join(', ') : '—'],
     ['Emergency contact', m.emergencyName ? `${m.emergencyName} (${m.emergencyPhone || 'no number'})` : '—'],
@@ -98,7 +80,6 @@ async function renderForm(res, status, values, error) {
     activePage: 'join',
     ministryOptions: await ministryNames(),
     lifeGroupOptions: [...await lifeGroupNames(), NO_GROUP],
-    occupationOptions: OCCUPATIONS,
     values,
     error,
   });
@@ -138,8 +119,6 @@ exports.submit = async (req, res) => {
     baptismYear:      '',
     holySpiritBaptism: pick('holy-spirit-baptism', YES_NO),
     previousChurch:   field('previous-church', 200),
-    occupation:       OCCUPATIONS.includes(field('occupation')) ? field('occupation') : '',
-    skills:           field('skills', 200),
     lifeGroup:        [...await lifeGroupNames(), NO_GROUP].includes(field('life-group')) ? field('life-group') : '',
     ministries,
     emergencyName:    field('emergency-name'),

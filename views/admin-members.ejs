@@ -5,7 +5,7 @@
 
 <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
   <form method="GET" action="/admin/members" class="flex flex-wrap gap-3">
-    <input type="search" name="q" value="<%= q %>" placeholder="Search name, phone, village, job…" class="p-2 border border-gray-300 rounded-lg text-sm w-56">
+    <input type="search" name="q" value="<%= q %>" placeholder="Search name, phone, village…" class="p-2 border border-gray-300 rounded-lg text-sm w-56">
     <select name="group" class="p-2 border border-gray-300 rounded-lg text-sm" onchange="this.form.submit()">
       <option value="">All life groups</option>
       <% groups.forEach(g => { %><option value="<%= g %>" <%= group === g ? 'selected' : '' %>><%= g %></option><% }) %>
@@ -55,7 +55,6 @@
         <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-sm bg-gray-50 rounded-lg p-4">
           <% [
             ['Date of birth', m.dateOfBirth], ['Marital status', cap(m.maritalStatus)], ['Life group', m.lifeGroup],
-            ['Occupation', m.occupation], ['Job title / skills', m.skills],
             ['Country', m.country], ['Year saved', m.yearSaved],
             ['Water baptism', cap(m.waterBaptism) + (m.baptismYear ? ' (' + m.baptismYear + ')' : '')],
             ['Holy Spirit baptism', cap(m.holySpiritBaptism)], ['Previous church', m.previousChurch],

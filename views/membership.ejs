@@ -60,20 +60,6 @@
             <% }) %>
           </select>
         </div>
-        <div>
-          <label class="<%= label %>" for="occupation">Occupation</label>
-          <select id="occupation" name="occupation" class="<%= input %>">
-            <option value="">Select…</option>
-            <% occupationOptions.forEach(o => { %>
-              <option value="<%= o %>" <%= v.occupation === o ? 'selected' : '' %>><%= o %></option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="md:col-span-2">
-          <label class="<%= label %>" for="skills">Job Title / Skills</label>
-          <input id="skills" type="text" name="skills" maxlength="200" value="<%= v.skills || '' %>" placeholder="e.g. Nurse, electrician, plays keyboard, sewing" class="<%= input %>">
-          <p class="text-sm text-gray-500 mt-1">Optional – helps us see how you might serve in the church.</p>
-        </div>
       </div>
     </fieldset>
 
