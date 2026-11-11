@@ -1,0 +1,24 @@
+<%- include('partials/header', { activePage: 'join' }) %>
+
+<section class="py-20 bg-gradient-to-b from-teal-50 to-white">
+  <div class="max-w-3xl mx-auto text-center px-6">
+    <i class="fas fa-check-circle text-9xl text-primary mb-8"></i>
+    <h1 class="text-5xl font-bold text-primary mb-6">Welcome, <%= member.firstName %>!</h1>
+    <p class="text-xl mb-8">Thank you for applying to become a member of Revival Fellowship International. A church leader will be in touch with you soon.</p>
+
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl">
+      <h2 class="text-3xl font-bold text-primary mb-8">Your Details</h2>
+      <dl class="text-left grid sm:grid-cols-[auto,1fr] gap-x-6 gap-y-3 text-lg">
+        <% rows.forEach(([k, val]) => { %>
+          <dt class="font-bold"><%= k %></dt>
+          <dd class="text-gray-700 break-words"><%= val %></dd>
+        <% }) %>
+      </dl>
+      <div class="mt-10 text-center">
+        <a href="/" class="inline-block bg-primary hover:bg-accent text-white font-bold py-4 px-10 rounded-full text-xl">Go Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

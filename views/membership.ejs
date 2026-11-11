@@ -1,0 +1,188 @@
+<%- include('partials/header', { activePage: 'join', title: 'Membership Form' }) %>
+
+<section class="hero relative h-96 overflow-hidden">
+  <%- include('partials/hero-image', { desktop: 'heroo.webp', mobile: 'hero1.webp' }) %>
+  <div class="absolute inset-0 inner-hero-overlay flex items-center justify-center">
+    <h1 class="text-5xl md:text-7xl font-bold text-white font-heading text-center px-4">Membership Form</h1>
+  </div>
+</section>
+
+<% const v = values || {};
+   const input = 'w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent';
+   const label = 'block text-lg font-bold mb-2';
+   const req = '<span class="text-red-500">*</span>';
+   const checked = (name, val) => v[name] === val ? 'checked' : '';
+   const thisYear = new Date().getFullYear(); %>
+
+<div class="max-w-3xl mx-auto px-6 py-16">
+  <p class="text-lg text-gray-600 text-center mb-10">
+    We are glad you want to become part of the Revival Fellowship International family.
+    Please fill in your details below. Fields marked <span class="text-red-500">*</span> are required.
+  </p>
+
+  <% if (error) { %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6">
+      <i class="fas fa-exclamation-circle mr-2"></i><%= error %>
+    </div>
+  <% } %>
+
+  <form method="POST" action="/membership" class="bg-white p-6 md:p-10 rounded-2xl shadow-2xl space-y-10">
+
+    <!-- Personal details -->
+    <fieldset>
+      <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-user mr-2"></i>Personal Details</legend>
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+        <div>
+          <label class="<%= label %>" for="first-name">Name <%- req %></label>
+          <input id="first-name" type="text" name="first-name" required maxlength="120" autocomplete="given-name" value="<%= v.firstName || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="last-name">Surname <%- req %></label>
+          <input id="last-name" type="text" name="last-name" required maxlength="120" autocomplete="family-name" value="<%= v.lastName || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <span class="<%= label %>">Gender <%- req %></span>
+          <div class="flex gap-6 pt-2">
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="gender" value="male" required <%= checked('gender', 'male') %> class="w-5 h-5 accent-primary">Male</label>
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="gender" value="female" <%= checked('gender', 'female') %> class="w-5 h-5 accent-primary">Female</label>
+          </div>
+        </div>
+        <div>
+          <label class="<%= label %>" for="date-of-birth">Date of Birth <%- req %></label>
+          <input id="date-of-birth" type="date" name="date-of-birth" required max="<%= new Date().toISOString().split('T')[0] %>" autocomplete="bday" value="<%= v.dateOfBirth || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="marital-status">Marital Status</label>
+          <select id="marital-status" name="marital-status" class="<%= input %>">
+            <option value="">Select…</option>
+            <% ['single', 'married', 'widowed', 'divorced'].forEach(s => { %>
+              <option value="<%= s %>" <%= v.maritalStatus === s ? 'selected' : '' %>><%= s[0].toUpperCase() + s.slice(1) %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Contact & address -->
+    <fieldset>
+      <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-address-book mr-2"></i>Contact &amp; Address</legend>
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+        <div>
+          <label class="<%= label %>" for="phone">Contact Number <%- req %></label>
+          <input id="phone" type="tel" name="phone" required maxlength="40" autocomplete="tel" value="<%= v.phone || '' %>" placeholder="+266 5000 0000" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="email">Email</label>
+          <input id="email" type="email" name="email" maxlength="200" autocomplete="email" value="<%= v.email || '' %>" placeholder="you@example.com" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="village">Village <%- req %></label>
+          <input id="village" type="text" name="village" required maxlength="120" value="<%= v.village || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="city">City / Town <%- req %></label>
+          <input id="city" type="text" name="city" required maxlength="120" autocomplete="address-level2" value="<%= v.city || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="country">Country</label>
+          <input id="country" type="text" name="country" maxlength="120" autocomplete="country-name" value="<%= v.country || 'Lesotho' %>" class="<%= input %>">
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Spiritual journey -->
+    <fieldset>
+      <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-cross mr-2"></i>Spiritual Journey</legend>
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+        <div>
+          <label class="<%= label %>" for="year-saved">Year Saved <%- req %></label>
+          <input id="year-saved" type="number" name="year-saved" required min="1900" max="<%= thisYear %>" value="<%= v.yearSaved || '' %>" placeholder="e.g. 2015" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="life-group">Life Group <%- req %></label>
+          <select id="life-group" name="life-group" required class="<%= input %>">
+            <option value="">Select…</option>
+            <% lifeGroupOptions.forEach(g => { %>
+              <option value="<%= g %>" <%= v.lifeGroup === g ? 'selected' : '' %>><%= g %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label class="<%= label %>" for="previous-church">Previous Church</label>
+          <input id="previous-church" type="text" name="previous-church" maxlength="200" value="<%= v.previousChurch || '' %>" placeholder="If any" class="<%= input %>">
+        </div>
+        <div>
+          <span class="<%= label %>">Baptised in Water? <%- req %></span>
+          <div class="flex gap-6 pt-2">
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="water-baptism" value="yes" required <%= checked('waterBaptism', 'yes') %> class="w-5 h-5 accent-primary" onchange="toggleBaptismYear()">Yes</label>
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="water-baptism" value="no" <%= checked('waterBaptism', 'no') %> class="w-5 h-5 accent-primary" onchange="toggleBaptismYear()">No</label>
+          </div>
+        </div>
+        <div id="baptism-year-wrap" class="<%= v.waterBaptism === 'yes' ? '' : 'hidden' %>">
+          <label class="<%= label %>" for="baptism-year">Year Baptised</label>
+          <input id="baptism-year" type="number" name="baptism-year" min="1900" max="<%= thisYear %>" value="<%= v.baptismYear || '' %>" placeholder="e.g. 2016" class="<%= input %>">
+        </div>
+        <div>
+          <span class="<%= label %>">Baptised in the Holy Spirit?</span>
+          <div class="flex gap-6 pt-2">
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="holy-spirit-baptism" value="yes" <%= checked('holySpiritBaptism', 'yes') %> class="w-5 h-5 accent-primary">Yes</label>
+            <label class="flex items-center gap-2 text-lg"><input type="radio" name="holy-spirit-baptism" value="no" <%= checked('holySpiritBaptism', 'no') %> class="w-5 h-5 accent-primary">No</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Involvement -->
+    <% if (ministryOptions.length) { %>
+    <fieldset>
+      <legend class="text-2xl font-bold text-primary mb-2"><i class="fas fa-hands-helping mr-2"></i>Ministry Interests</legend>
+      <p class="text-gray-500 mb-4">Which ministries would you like to be part of? (Tick any)</p>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <% const chosen = v.ministries || []; %>
+        <% ministryOptions.forEach(name => { %>
+          <label class="flex items-center gap-3 text-lg"><input type="checkbox" name="ministries" value="<%= name %>" <%= chosen.includes(name) ? 'checked' : '' %> class="w-5 h-5 accent-primary"><%= name %></label>
+        <% }) %>
+      </div>
+    </fieldset>
+    <% } %>
+
+    <!-- Emergency contact -->
+    <fieldset>
+      <legend class="text-2xl font-bold text-primary mb-6"><i class="fas fa-phone-volume mr-2"></i>Next of Kin / Emergency Contact</legend>
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+        <div>
+          <label class="<%= label %>" for="emergency-name">Full Name</label>
+          <input id="emergency-name" type="text" name="emergency-name" maxlength="120" value="<%= v.emergencyName || '' %>" class="<%= input %>">
+        </div>
+        <div>
+          <label class="<%= label %>" for="emergency-phone">Contact Number</label>
+          <input id="emergency-phone" type="tel" name="emergency-phone" maxlength="40" value="<%= v.emergencyPhone || '' %>" class="<%= input %>">
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Consent -->
+    <label class="flex items-start gap-3 bg-teal-50 rounded-lg p-4">
+      <input type="checkbox" name="consent" value="yes" required <%= v.consent ? 'checked' : '' %> class="w-5 h-5 mt-1 accent-primary flex-shrink-0">
+      <span class="text-gray-700">I agree that Revival Fellowship International may keep these details in its membership register and use them to contact me about church life. They will not be shared outside the church. <%- req %></span>
+    </label>
+
+    <!-- Honeypot: hidden from people, catches spam bots -->
+    <div class="hidden" aria-hidden="true">
+      <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="bg-primary hover:bg-accent text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg hover:shadow-xl transition">Submit Membership Form</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function toggleBaptismYear() {
+    var yes = document.querySelector('input[name="water-baptism"][value="yes"]').checked;
+    document.getElementById('baptism-year-wrap').classList.toggle('hidden', !yes);
+  }
+</script>
+
+<%- include('partials/footer') %>

@@ -7,6 +7,7 @@ const homeController        = require('./controllers/homeController');
 const aboutController       = require('./controllers/aboutController');
 const ministriesController  = require('./controllers/ministriesController');
 const joinController        = require('./controllers/joinController');
+const membershipController  = require('./controllers/membershipController');
 const newsController        = require('./controllers/newsController');
 const sermonsController     = require('./controllers/sermonsController');
 const galleryController     = require('./controllers/galleryController');
@@ -70,6 +71,8 @@ app.get('/events',      wrap(eventsController.index));
 app.get('/join',        joinController.index);
 app.get('/inquire',     joinController.inquire);
 app.post('/inquire',    wrap(joinController.submit));
+app.get('/membership',  wrap(membershipController.form));
+app.post('/membership', wrap(membershipController.submit));
 app.get('/news',        wrap(newsController.index));
 app.get('/news/:slug',  wrap(newsController.post));
 app.get('/sermons',     wrap(sermonsController.index));
@@ -141,6 +144,12 @@ app.get('/admin/submissions',             auth, wrap(adminController.submissions
 app.get('/admin/submissions/export',      auth, wrap(adminController.submissionsExport));
 app.post('/admin/submissions/:id/toggle', auth, wrap(adminController.submissionToggle));
 app.post('/admin/submissions/:id/delete', auth, wrap(adminController.submissionDelete));
+
+// Admin – membership register
+app.get('/admin/members',              auth, wrap(adminController.membersList));
+app.get('/admin/members/export',       auth, wrap(adminController.membersExport));
+app.post('/admin/members/:id/toggle',  auth, wrap(adminController.memberToggle));
+app.post('/admin/members/:id/delete',  auth, wrap(adminController.memberDelete));
 
 // Admin – site settings
 app.get('/admin/settings',         auth, wrap(adminController.settingsEdit));

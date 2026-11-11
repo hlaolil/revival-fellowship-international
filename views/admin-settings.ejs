@@ -67,6 +67,14 @@
     </section>
 
     <section class="bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-people-group mr-2"></i>Life Groups</h2>
+      <p class="text-sm text-gray-500 mb-6">The life groups members can choose on the membership form.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <%- input('lifeGroups', 'Life Group Names', { wide: true, placeholder: 'Eagles, Hope, Salvation', help: 'Separate names with commas.' }) %>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-lg p-8">
       <h2 class="text-lg font-bold text-primary mb-1"><i class="fas fa-hand-holding-heart mr-2"></i>Giving</h2>
       <p class="text-sm text-gray-500 mb-6">When switched on, a "Give" link appears in the menu and footer.</p>
       <label class="flex items-center gap-3 cursor-pointer mb-6">
